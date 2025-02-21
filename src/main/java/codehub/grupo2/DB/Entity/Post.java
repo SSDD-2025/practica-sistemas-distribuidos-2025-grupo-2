@@ -2,7 +2,8 @@ package codehub.grupo2.DB.Entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Post {
@@ -17,7 +18,7 @@ public class Post {
     private String text;
 
     @OneToMany(cascade=CascadeType.ALL)
-    private HashMap<Long,Comment> comments;
+    private List<Comment> comments;
 
     protected Post() {}
 
@@ -26,7 +27,7 @@ public class Post {
         this.title = title;
         this.text = text;
         this.date = LocalDate.now();
-        this.comments = new HashMap<Long,Comment>();
+        this.comments = new ArrayList<>();
     }
 
     public User getUsername(){
@@ -45,7 +46,7 @@ public class Post {
         return this.text;
     }
 
-    public HashMap<Long,Comment> getComments(){
+    public List<Comment> getComments(){
         return this.comments;
     }
     

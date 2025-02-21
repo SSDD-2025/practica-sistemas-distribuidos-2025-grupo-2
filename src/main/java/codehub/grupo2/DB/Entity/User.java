@@ -1,6 +1,7 @@
 package codehub.grupo2.DB.Entity;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -16,7 +17,7 @@ public class User {
     private String email;
 
     @OneToMany(cascade=CascadeType.ALL)
-    private HashMap<Long,Post> comments;
+    private List<Post> posts;
 
     protected User() {}
 
@@ -24,7 +25,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.comments = new HashMap<Long,Post>();
+        this.posts = new ArrayList<>();
     }
 
     public String getUsername(){
@@ -39,8 +40,8 @@ public class User {
         return this.email;
     }
 
-    public HashMap<Long,Post> getComments(){
-        return this.comments;
+    public List<Post> getComments(){
+        return this.posts;
     }
 
 }

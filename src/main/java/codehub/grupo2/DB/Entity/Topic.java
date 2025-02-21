@@ -1,6 +1,7 @@
 package codehub.grupo2.DB.Entity;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -14,20 +15,20 @@ public class Topic {
     private String topicName;
 
     @OneToMany(cascade=CascadeType.ALL)
-    private LinkedList<Post> posts;
+    private List<Post> posts;
 
     protected Topic() {}
 
     public Topic(String topicName){
         this.topicName = topicName;
-        this.posts = new LinkedList<Post>();
+        this.posts = new ArrayList<>();
     }       
 
     public String getTopicName(){
         return this.topicName;
     }
 
-    public LinkedList<Post> getPosts(){
+    public List<Post> getPosts(){
         return this.posts;
     }
 }

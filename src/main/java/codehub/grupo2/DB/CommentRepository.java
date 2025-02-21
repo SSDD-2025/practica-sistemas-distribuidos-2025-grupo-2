@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import codehub.grupo2.DB.Entity.*;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    
 }
