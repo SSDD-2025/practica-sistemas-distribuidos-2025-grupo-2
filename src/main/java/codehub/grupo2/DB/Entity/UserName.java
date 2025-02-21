@@ -6,7 +6,7 @@ import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
-public class User {
+public class UserName {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,9 +19,9 @@ public class User {
     @OneToMany(cascade=CascadeType.ALL)
     private List<Post> posts;
 
-    protected User() {}
+    protected UserName() {}
 
-    public User(String username, String password, String email){
+    public UserName(String username, String password, String email){
         this.username = username;
         this.password = password;
         this.email = email;

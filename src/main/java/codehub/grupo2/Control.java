@@ -2,7 +2,7 @@ package codehub.grupo2;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import codehub.grupo2.DB.*;
-import codehub.grupo2.DB.Entity.User;
+import codehub.grupo2.DB.Entity.UserName;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.boot.CommandLineRunner;
@@ -16,13 +16,13 @@ public class Control implements CommandLineRunner{
     private UserRepository UserBD;
     @Override
     public void run(String... args) throws Exception {
-        UserBD.save(new User("CazaMopis43", "Ensaimadas", "Ucendos"));
-        UserBD.save(new User("Sonaca", "Enanos", "Sonacas"));
+        UserBD.save(new UserName("CazaMopis43", "Ensaimadas", "Ucendos"));
+        UserBD.save(new UserName("Sonaca", "Enanos", "Sonacas"));
     }   
 
     @PostMapping("/login")
     public String Login(@RequestParam String username, @RequestParam String password){
-        User user = UserBD.findByUsername(username);
+        UserName user = UserBD.findByUsername(username);
         if(user == null){
             return "User not found";
         }

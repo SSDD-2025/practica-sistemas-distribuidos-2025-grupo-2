@@ -12,17 +12,18 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private User username;
+    
     private LocalDate date;
     private String title;
     private String text;
-
+    @ManyToOne
+    private UserName username;
     @OneToMany(cascade=CascadeType.ALL)
     private List<Comment> comments;
 
     protected Post() {}
 
-    public Post(User username, String title, String text){
+    public Post(UserName username, String title, String text){
         this.username = username;
         this.title = title;
         this.text = text;
@@ -30,7 +31,7 @@ public class Post {
         this.comments = new ArrayList<>();
     }
 
-    public User getUsername(){
+    public UserName getUsername(){
         return this.username;
     }
 

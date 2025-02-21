@@ -10,21 +10,22 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private User username;
+    
     private LocalDate date;
     private String title;
     private String text;
-
+    @ManyToOne
+    private UserName username;
     protected Comment() {}
 
-    public Comment(User username, String title, String text){
+    public Comment(UserName username, String title, String text){
         this.username = username;
         this.title = title;
         this.text = text;
         this.date = LocalDate.now();
     }
 
-    public User getUsername(){
+    public UserName getUsername(){
         return this.username;
     }
 
