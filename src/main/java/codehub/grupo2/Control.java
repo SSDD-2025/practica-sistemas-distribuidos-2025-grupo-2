@@ -5,7 +5,7 @@ import codehub.grupo2.DB.UserRepository;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class Controller {
+public class Control {
     @Autowired
     private UserRepository repository;
 
