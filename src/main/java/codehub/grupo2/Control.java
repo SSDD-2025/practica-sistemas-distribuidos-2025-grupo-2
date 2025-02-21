@@ -4,21 +4,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import codehub.grupo2.DB.*;
 import codehub.grupo2.DB.Entity.UserName;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 @Controller
+@Component
 public class Control implements CommandLineRunner{
     @Autowired
     private UserRepository UserBD;
     @Override
     public void run(String... args) throws Exception {
         UserBD.save(new UserName("CazaMopis43", "Ensaimadas", "Ucendos"));
-        UserBD.save(new UserName("Sonaca", "Enanos", "Sonacas"));
+        UserBD.save(new UserName("Sonaca", "Sonaca", "Sonacas"));
     }   
+
+    @GetMapping("/home")
+    public String getMethodName() {
+        return "home";
+    }
+    
 
     @PostMapping("/login")
     public String Login(@RequestParam String username, @RequestParam String password){
