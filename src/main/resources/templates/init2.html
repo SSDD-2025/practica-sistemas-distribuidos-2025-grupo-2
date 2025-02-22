@@ -8,34 +8,17 @@
 </head>
 <body>
 
-  <!-- Lluvia de caracteres -->
-  <div class="rain">
-    <span style="left: 10%;">C</span>
-    <span style="left: 15%;">O</span>
-    <span style="left: 20%;">D</span>
-    <span style="left: 25%;">E</span>
-    <span style="left: 30%;">H</span>
-    <span style="left: 35%;">U</span>
-    <span style="left: 40%;">B</span>
-    <span style="left: 45%;">Z</span>
-    <span style="left: 50%;">M</span>
-    <span style="left: 55%;">A</span>
-    <span style="left: 60%;">T</span>
-    <span style="left: 65%;">R</span>
-    <span style="left: 70%;">I</span>
-    <span style="left: 75%;">X</span>
-  </div>
-
   <div class="wrapper">
     <!-- Menú lateral -->
     <nav id="sidebar" class="sidebar">
       <ul>
         <li><a href="#">Inicio</a></li>
+        <li><a href="#">Search</a></li>
         <li><a href="#">Posts</a></li>
         <li><a href="#">What's New</a></li>
         <li>
           <form class="logout-form" action="/logOut" method="get">
-            <button type="submit">Cerrar Sesión</button>
+            <button type="submit">Log Out</button>
           </form>
         </li>
       </ul>
@@ -47,9 +30,15 @@
         <!-- Botón de tres puntos para desplegar el menú lateral -->
         <button id="toggle-menu" class="menu-toggle">&#x22EE;</button>
         <h1 class="title">CodeHub</h1>
-        {{#username}}
+        <!-- Botón de perfil en la esquina superior derecha -->
+        <form class="profile" action="/acc" method="post">
+          {{#user}}
+          <button type="submit" class="profile-button">{{username}}</button>
+          {{/user}}
+        </form>
+        {{#user}}
         <p class="welcome">Bienvenido, <strong>{{username}}</strong></p>
-        {{/username}}
+        {{/user}}
       </header>
 
       <!-- Contenido principal -->
@@ -63,4 +52,9 @@
   <script src="toggleMenu2.js"></script>
 </body>
 </html>
+
+
+
+
+
 

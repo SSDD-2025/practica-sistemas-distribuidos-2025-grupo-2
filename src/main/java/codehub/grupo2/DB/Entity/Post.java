@@ -16,15 +16,17 @@ public class Post {
     private LocalDate date;
     private String title;
     private String text;
+
     @ManyToOne
-    private UserName username;
+    @JoinColumn(name="user_id")
+    private UserName user;
     @OneToMany(cascade=CascadeType.ALL)
     private List<Comment> comments;
 
     protected Post() {}
 
     public Post(UserName username, String title, String text){
-        this.username = username;
+        this.user = username;
         this.title = title;
         this.text = text;
         this.date = LocalDate.now();
@@ -32,7 +34,7 @@ public class Post {
     }
 
     public UserName getUsername(){
-        return this.username;
+        return this.user;
     }
 
     public LocalDate getDate(){

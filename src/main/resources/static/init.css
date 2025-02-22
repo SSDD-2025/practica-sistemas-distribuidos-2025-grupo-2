@@ -36,20 +36,33 @@ body {
     text-align: center;
   }
   
-  /* Botón de menú */
-  .menu-toggle {
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    color: #00ff99;
-    cursor: pointer;
-    display: block;
-  }
-  
+/* Botón de menú */
+/* Botón de menú */
+.menu-toggle {
+  position: fixed;
+  left: 10px;
+  top: 20px;
+  background: none;
+  border: none;
+  font-size: 10; /* Tamaño del ícono (aumentado) */
+  color: #00ff99;
+  cursor: pointer;
+  display: flex;
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  width: 50px; /* Ancho fijo (ajustado) */
+  height: 50px; /* Alto fijo (ajustado) */
+  padding: 0; /* Sin padding */
+  margin: 0; /* Sin margen */
+  z-index: 2000; /* Asegura que esté por encima del menú */
+  border-radius: 5px; /* Bordes redondeados */
+  transition: background-color 0.3s ease; /* Transición suave para el hover */
+}
+
+/* Efecto hover para el botón de menú */
+.menu-toggle:hover {
+  background-color: rgba(0, 255, 153, 0.1); /* Fondo ligeramente visible al hacer hover */
+}
   /* Mensaje de bienvenida */
   .welcome {
     position: absolute;
@@ -71,6 +84,7 @@ body {
     padding: 20px;
     box-shadow: 4px 0 10px rgba(0, 255, 153, 0.7);
     transition: transform 0.3s ease;
+    z-index: 1000; /* Para que esté sobre el contenido */
   }
   
   .sidebar.active {
@@ -136,4 +150,35 @@ body {
   .content-wrapper.expanded {
     margin-left: 260px;
   }
+
+/* Ajustes para el botón de perfil */
+.profile {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+/* Ajustes para el botón dentro del formulario de perfil */
+.profile-button {
+  background: none;
+  border: none;
+  color: #00ff99;
+  font-size: 1em;
+  cursor: pointer;
+  padding: 5px 10px; /* Reducir el padding para evitar deformaciones */
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: inline-block; /* Evita que se expanda */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  max-width: 150px; /* Ajustar un ancho máximo */
+  overflow: hidden; /* Evita desbordamientos */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
+}
+
+/* Efecto hover */
+.profile-button:hover {
+  background-color: rgba(0, 255, 153, 0.1);
+  color: #fff;
+}
+
   

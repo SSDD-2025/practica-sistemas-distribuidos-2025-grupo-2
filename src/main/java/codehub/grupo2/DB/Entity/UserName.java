@@ -16,7 +16,7 @@ public class UserName {
     private String password;
     private String email;
 
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Post> posts;
 
     protected UserName() {}
@@ -40,7 +40,7 @@ public class UserName {
         return this.email;
     }
 
-    public List<Post> getComments(){
+    public List<Post> getPosts(){
         return this.posts;
     }
 

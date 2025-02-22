@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - CodeHub</title>
+  <style>
+    /* Estilos globales */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: 'Courier New', Courier, monospace;
+      color: #00ff99;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    /* Contenedor principal */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      background: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+      border-radius: 10px;
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    /* Header */
+    .header {
+      width: 100%;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 2em;
+      margin: 0;
+    }
+
+    /* Perfil */
+    .profile-info p {
+      margin: 8px 0;
+    }
+
+    /* Posts */
+    .posts {
+      text-align: left;
+      width: 100%;
+    }
+
+    .posts ul {
+      padding: 0;
+      list-style: none;
+    }
+
+    .posts li {
+      background: rgba(0, 255, 153, 0.1);
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #00ff99;
+    }
+
+    /* Botón de Logout */
+    .logout-form button {
+      width: 100%;
+      background-color: #00ff99;
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .logout-form button:hover {
+      background-color: #fff;
+      box-shadow: 0 0 12px #fff;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header class="header">
+      <h1 class="title">My Profile</h1>
+    </header>
+
+    <div class="profile-info">
+      {{#user}}
+        <p><strong>Username:</strong> {{username}}</p>
+        <p><strong>Email:</strong> {{email}}</p>
+      {{/user}}
+      <p><strong>Password:</strong> *******</p>
+    </div>
+
+    <div class="posts">
+      <h2>Posts</h2>
+      <ul>
+        {{#posts}}
+          <li><strong>{{title}}</strong> -> {{text}}</li>
+        {{/posts}}
+      </ul>
+    </div>
+
+    <form class="logout-form" action="/init2" method="get">
+      <button type="submit">Home Page</button>
+    </form>
+  </div>
+
+</body>
+</html>

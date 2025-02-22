@@ -1,8 +1,9 @@
 package codehub.grupo2;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import codehub.grupo2.DB.*;
-import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.DB.Entity.*;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Component;
@@ -22,10 +23,23 @@ public class Control implements CommandLineRunner {
     @Autowired
     private UserRepository UserBD;
 
+    @Autowired
+    private PostRepository PostBD;
+
     @Override
     public void run(String... args) throws Exception {
-        UserBD.save(new UserName("CazaMopis43", "Ensaimadas", "Ucendos"));
-        UserBD.save(new UserName("Sonaca", "Sonaca", "Sonacas"));
+        UserName Sonaca = new UserName("Sonaca", "Sonaca", "Sonaca");
+        UserName Admin = new UserName("Admin", "Admin", "Admin");
+        UserName User = new UserName("User", "User", "User");
+        UserBD.save(Sonaca);
+        UserBD.save(Admin);
+        UserBD.save(User);
+        Post post1 = new Post(Sonaca, "Post1", "Post1");
+        Post post2 = new Post(Sonaca, "Post2", "Post2");
+        Post post3 = new Post(Sonaca, "Post3", "Post3");
+        PostBD.save(post1);
+        PostBD.save(post2);
+        PostBD.save(post3);
     }
 
     @GetMapping("/home")
@@ -77,6 +91,18 @@ public class Control implements CommandLineRunner {
     @GetMapping("/logOut")
     public String Logout(HttpSession session) {
         session.removeAttribute("user");
+        session.invalidate();
         return "redirect:/home";
     }
+
+    @PostMapping("/acc")
+public String GoAcc(Model model, HttpSession session) {
+    UserName user = (UserName) session.getAttribute("user");
+    if (user == null) {
+        return "redirect:/home";
+    }
+    model.addAttribute("user", user); 
+    model.addAttribute("posts", user.getPosts());
+    return "myProfile";
+}
 }

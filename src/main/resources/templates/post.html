@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+</head>
+
+<body>
+    <div class = "post">
+        <h1>Post</h1>
+        <div class = "user">
+            <p> @ {{post.user}}</p>
+        </div>
+        <p><strong>{{post.title}}</strong></p>
+        <div class = "content">
+            <p>{{post.content}}</p>
+        </div>
+    </div>
+    <div class = "responses">
+        <h2>Responses</h2>
+        <p>{{post.answers}}</p>
+    </div>
+</body>
+</html>

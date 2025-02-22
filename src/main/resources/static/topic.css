@@ -1,0 +1,77 @@
+/* Estilos globales */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    color: #00ff99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2em;
+    color: #00ff99;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de la cuadrícula */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+    gap: 20px;
+    padding: 20px;
+    max-width: 960px;
+    width: 100%;
+}
+
+/* Estilos para cada tema */
+.grid > div {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #00ff99;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.7);
+    text-align: center;
+    font-size: 1.5em;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.grid > div:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 153, 1);
+}
+
+/* Estilo para las clases individuales */
+.Java { background-color: #2E8B57; }
+.Python { background-color: #306998; }
+.JavaScript { background-color: #F7DF1E; }
+.HTML { background-color: #E34F26; }
+.VSCode { background-color: #0078D4; }
+.IntelliJ { background-color: #000000; }
+.C { background-color: #00599C; }
+.Pascal { background-color: #E4A010; }
+.MacOs { background-color: #343434; }
+
+/* Efecto hover para cada tema */
+.grid > div:hover {
+    background-color: rgba(0, 255, 153, 0.1); /* Fondo más claro al pasar el ratón */
+    color: #000;
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+    }
+}
+
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr; /* 1 columna */
+    }
+}
