@@ -31,7 +31,14 @@ public class Control implements CommandLineRunner {
     @GetMapping("/home")
     public String ShowHome(Model model) {
         model.addAttribute("error", "");
+        model.addAttribute("check", "");
         return "home";
+    }
+
+    @GetMapping("/register")
+    public String ShowRegister(Model model) {
+        model.addAttribute("check", "");
+        return "register";
     }
 
     @PostMapping("/login")
@@ -57,5 +64,13 @@ public class Control implements CommandLineRunner {
         }
         model.addAttribute("user", user); 
         return "init";
+    }
+    
+    @PostMapping("/register")
+    public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model) {
+        UserBD.save(new UserName(username, password, email));
+       
+        model.addAttribute("check", "Usuario Registrado Correctamente");
+        return "home";
     }
 }

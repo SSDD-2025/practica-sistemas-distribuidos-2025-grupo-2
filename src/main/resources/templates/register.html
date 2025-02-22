@@ -9,21 +9,14 @@
 <body>
     <div class="rain"></div>
     <div class="container">
-        <form action="/login" method="post">
-            <h2>CodeHub - Login</h2>
-            {{#error}}
-            <p style="color: red;">{{error}}</p> <!-- Condicional, aunque en getMapping nos aseguremos de que este vacío aquí nos aseguramos--> 
-            {{/error}}
-            {{#check}}
-            <p style="color: rgb(115, 243, 9);">{{check}}</p> 
-            {{/check}}
+        <form action="/register" method="post">
+            <h2>CodeHub - Sign Up</h2>
+            <label for="email">email:</label><br>
+            <input type="text" id="email" name="email" required><br>
             <label for="username">User:</label><br>
             <input type="text" id="username" name="username" required><br>
             <label for="password">Password:</label><br>
             <input type="password" id="password" name="password" required><br><br>
-            <button type="submit">Log In</button>
-        </form>
-        <form action="/register" method="get">
             <button type="submit">Sign Up</button>
         </form>
     </div>
