@@ -1,0 +1,139 @@
+/* Estilos globales */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    color: #00ff99;
+    display: flex;
+    transition: all 0.3s ease;
+  }
+  
+  .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+    border-radius: 10px;
+    position: relative;
+  }
+  
+  .title {
+    font-size: 2em;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  /* Botón de menú */
+  .menu-toggle {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #00ff99;
+    cursor: pointer;
+    display: block;
+  }
+  
+  /* Mensaje de bienvenida */
+  .welcome {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    font-size: 1em;
+  }
+  
+  /* Menú lateral */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px; /* Oculto fuera de la pantalla */
+    width: 250px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    box-shadow: 4px 0 10px rgba(0, 255, 153, 0.7);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar.active {
+    transform: translateX(260px);
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 15px;
+  }
+  
+  .sidebar a {
+    color: #00ff99;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border: 2px solid #00ff99;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar a:hover {
+    background: #00ff99;
+    color: #000;
+  }
+  
+  /* Botón de Logout */
+  .logout-form button {
+    width: 100%;
+    background-color: #00ff99;
+    color: #000;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  
+  .logout-form button:hover {
+    background-color: #fff;
+    box-shadow: 0 0 12px #fff;
+  }
+  
+  /* Contenido principal */
+  .content-wrapper {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+    margin-top: 90px;
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .content-wrapper.expanded {
+    margin-left: 260px;
+  }
+  

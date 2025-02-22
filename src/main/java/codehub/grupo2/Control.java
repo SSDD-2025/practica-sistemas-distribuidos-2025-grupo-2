@@ -73,4 +73,10 @@ public class Control implements CommandLineRunner {
         model.addAttribute("check", "Usuario Registrado Correctamente");
         return "home";
     }
+
+    @GetMapping("/logOut")
+    public String Logout(HttpSession session) {
+        session.removeAttribute("user");
+        return "redirect:/home";
+    }
 }
