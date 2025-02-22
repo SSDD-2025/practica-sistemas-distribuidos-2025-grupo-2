@@ -50,20 +50,20 @@ public class Control implements CommandLineRunner {
         }
         if (sessionUser.getPassword().equals(password)) {
             session.setAttribute("user", sessionUser); 
-            return "redirect:/init"; 
+            return "redirect:/init2"; 
         }
         model.addAttribute("error", "Contraseña incorrecta.");
         return "home";
     }
 
-    @GetMapping("/init")
+    @GetMapping("/init2")
     public String init(HttpSession session, Model model) {
         UserName user = (UserName) session.getAttribute("user");
         if (user == null) {
             return "redirect:/home"; 
         }
         model.addAttribute("user", user); 
-        return "init";
+        return "init2";
     }
     
     @PostMapping("/register")

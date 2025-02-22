@@ -1,0 +1,199 @@
+/* Ajustes para dispositivos web */
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #0a0f0d;
+    color: #00ff99;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow: hidden;
+  }
+  
+  /* Contenedor principal para el layout */
+  .wrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+  }
+  
+  /* Menú lateral */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Empieza fuera de la pantalla */
+    height: 100%;
+    width: 250px;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: left 0.3s ease;
+    z-index: 2;
+  }
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    margin: 10px 0;
+  }
+  
+  .sidebar a {
+    color: #00ff99;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  
+  .sidebar a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Menú lateral visible cuando está desplegado */
+  .sidebar.open {
+    left: 0;
+  }
+  
+  /* Contenedor del contenido */
+  .container {
+    margin-left: 0; /* Inicia sin margen, se desplaza cuando el menú se abre */
+    padding: 40px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    transition: margin-left 0.3s ease; /* Desplaza el contenido cuando el menú se despliega */
+  }
+  
+  /* Título y contenido */
+  h1.title {
+    color: #f8f8f8;
+    text-shadow: 0 0 10px #00ff99;
+    margin: 20px 0;
+  }
+  
+  h2 {
+    color: #f8f8f8;
+    text-shadow: 0 0 10px #00ff99;
+    margin: 20px 0;
+  }
+  
+  label {
+    width: 250px;
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin-top: 12px;
+    color: #ffffff;
+  }
+  
+  input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border: 2px solid #00cc88;
+    background: #011a14;
+    color: #00ff99;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+  input:focus {
+    border-color: #ffffff;
+    box-shadow: 0 0 10px rgb(255, 255, 255);
+  }
+  
+  button {
+    width: 50%;
+    background-color: #00ff99;
+    color: #011a14;
+    border: none;
+    padding: 12px;
+    margin-top: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #ffffff;
+    box-shadow: 0 0 12px rgb(253, 253, 253);
+  }
+  
+  /* Animación de la lluvia */
+  .rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    color: #00ff99;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  
+  .rain span {
+    position: absolute;
+    top: -100%;
+    animation: fall 2s linear infinite;
+    opacity: 0;
+  }
+  
+  /* Creando la animación de caída */
+  @keyframes fall {
+    0% {
+      transform: translateY(-100%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh);
+      opacity: 0;
+    }
+  }
+  
+  /* Personalizando los caracteres que caen */
+  .rain span:nth-child(odd) {
+    animation-duration: 1.5s;
+  }
+  
+  .rain span:nth-child(even) {
+    animation-duration: 2s;
+  }
+  
+ 
+  
+/* Botón de tres puntos */
+.menu-toggle {
+    background: none;
+    border: none;
+    color: #00ff99;
+    font-size: 8px;  /* Hacer más pequeño solo el botón de tres puntos */
+    cursor: pointer;
+    position: absolute; /* O 'fixed' si deseas que se mantenga visible al hacer scroll */
+    top: 5px; /* Puedes ajustar la distancia desde la parte superior */
+    left: -10%; /* Alinea el botón a la izquierda con un pequeño margen */
+    z-index: 3; /* Asegura que el botón esté encima de otros elementos */
+}
+
+  

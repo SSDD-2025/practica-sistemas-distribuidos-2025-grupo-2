@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeHub</title>
+  <link rel="stylesheet" href="animations.css">
+</head>
+<body>
+
+  <!-- Lluvia de caracteres -->
+  <div class="rain">
+    <span style="left: 10%;">C</span>
+    <span style="left: 15%;">O</span>
+    <span style="left: 20%;">D</span>
+    <span style="left: 25%;">E</span>
+    <span style="left: 30%;">H</span>
+    <span style="left: 35%;">U</span>
+    <span style="left: 40%;">B</span>
+    <span style="left: 45%;">Z</span>
+    <span style="left: 50%;">M</span>
+    <span style="left: 55%;">A</span>
+    <span style="left: 60%;">T</span>
+    <span style="left: 65%;">R</span>
+    <span style="left: 70%;">I</span>
+    <span style="left: 75%;">X</span>
+  </div>
+
+  <div class="wrapper">
+    <!-- Menú lateral -->
+    <nav id="sidebar" class="sidebar">
+      <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Posts</a></li>
+        <li><a href="#">What's New</a></li>
+        <li>
+          <form class="logout-form" action="/logOut" method="get">
+            <button type="submit">Cerrar Sesión</button>
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+      <header class="header">
+        <!-- Botón de tres puntos para desplegar el menú lateral -->
+        <button id="toggle-menu" class="menu-toggle">&#x22EE;</button>
+        <h1 class="title">CodeHub</h1>
+        {{#username}}
+        <p class="welcome">Bienvenido, <strong>{{username}}</strong></p>
+        {{/username}}
+      </header>
+
+      <!-- Contenido principal -->
+      <main class="content-wrapper">
+        <h2>Página de inicio</h2>
+        <p>Bienvenido a CodeHub, tu plataforma de desarrollo.</p>
+      </main>
+    </div>
+  </div>
+
+  <script src="toggleMenu2.js"></script>
+</body>
+</html>
+
