@@ -11,6 +11,9 @@
     <div class="container">
         <form action="/login" method="post">
             <h2>CodeHub - Login</h2>
+            {{#error}}
+            <p style="color: red;">{{error}}</p> <!-- Condicional, aunque en getMapping nos aseguremos de que este vacío aquí nos aseguramos--> 
+            {{/error}}
             <label for="username">User:</label><br>
             <input type="text" id="username" name="username" required><br>
             <label for="password">Password:</label><br>

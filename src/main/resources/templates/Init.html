@@ -7,6 +7,9 @@
 </head>
 <body>
     <h1>Inicio</h1>
-    <p>{{user.getUsername()}}</p>
+    {{#user}}
+    <p>Usuario : {{username}}</p>
+    <p>Contraseña : {{password}}</p>
+    {{/user}}
 </body>
 </html>
