@@ -42,8 +42,13 @@ public class Control implements CommandLineRunner {
         Post post1 = new Post(Sonaca, "Post1", "Post1");
         Post post2 = new Post(Sonaca, "Post2", "Post2");
         Post post3 = new Post(Sonaca, "Post3", "Post3");
-        Topic post2 = new Post(Sonaca, "Post2", "Post2");
-        Post post3 = new Post(Sonaca, "Post3", "Post3");
+        Topic topic1 = new Topic("Python");
+        Topic topic2 = new Topic("Pascal");
+        Topic topic3 = new Topic("Java");
+        TopicBD.save(topic1);
+        TopicBD.save(topic2);
+        TopicBD.save(topic3);
+
 
         PostBD.save(post1);
         PostBD.save(post2);
