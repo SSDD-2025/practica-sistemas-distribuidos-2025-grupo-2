@@ -7,4 +7,4 @@ document.getElementById("toggle-menu").addEventListener("click", function() {
     sidebar.classList.toggle("open");
     container.classList.toggle("shifted"); // Desplaza el contenido hacia la derecha cuando el menú está abierto
   });
-  
+     

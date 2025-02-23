@@ -6,8 +6,9 @@ body {
     font-family: 'Courier New', Courier, monospace;
     color: #00ff99;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    flex-direction: column;
     min-height: 100vh;
     transition: all 0.3s ease;
 }
@@ -16,13 +17,14 @@ h1 {
     text-align: center;
     font-size: 2em;
     color: #00ff99;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
 /* Contenedor de la cuadricula */
 .grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     padding: 20px;
     max-width: 960px;
@@ -41,37 +43,70 @@ h1 {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Cuando el mouse pasa por encima */
 .grid > div:hover {
     transform: scale(1.1);
     box-shadow: 0 0 20px rgba(0, 255, 153, 1);
+    color: #fff; /* Cambia el color del texto para mayor contraste */
 }
 
 /* Estilo para las clases individuales */
 .Java { background-color: #2E8B57; }
 .Python { background-color: #306998; }
-.JavaScript { background-color: #F7DF1E; }
+.JavaScript { background-color: #F7DF1E; color: black; } /* Mejor contraste */
 .HTML { background-color: #E34F26; }
 .VSCode { background-color: #0078D4; }
 .IntelliJ { background-color: #000000; }
 .C { background-color: #00599C; }
-.Pascal { background-color: #E4A010; }
+.Pascal { background-color: #E4A010; color: black; } /* Mejor contraste */
 .MacOs { background-color: #343434; }
 
-/* Efecto hover para cada tema */
-.grid > div:hover {
-    background-color: rgba(0, 255, 153, 0.1); /* Fondo mas claro al pasar el raton */
+/* Botón flotante en la esquina inferior derecha y izquierda */
+.add-topic-btn {
+    position: fixed;
+    bottom: 20px;
+    padding: 20px 40px; /* Aumenta el tamaño del botón */
+    background-color: #00ff99;
     color: #000;
+    border: 2px solid #00ff99;
+    font-size: 1.5em; /* Aumenta el tamaño de la fuente */
+    font-family: 'Courier New', Courier, monospace;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.7);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    width: 200px; /* Asegura que ambos botones tengan el mismo ancho */
+    text-align: center;
 }
 
-/* Para pantallas pequenas */
+/* Efecto al pasar el mouse */
+.add-topic-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 153, 1);
+    background-color: #000;
+    color: #00ff99;
+}
+
+/* Posicionar el botón de la izquierda */
+.left-bottom-btn {
+    left: 20px; /* Distancia desde la parte izquierda */
+}
+
+/* Posicionar el botón de la derecha */
+.add-topic-btn:not(.left-bottom-btn) {
+    right: 20px; /* Distancia desde la parte derecha */
+}
+
+/* Para pantallas pequeñas */
 @media (max-width: 768px) {
     .grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 480px) {
     .grid {
-        grid-template-columns: 1fr; /* 1 columna */
+        grid-template-columns: 1fr;
     }
 }

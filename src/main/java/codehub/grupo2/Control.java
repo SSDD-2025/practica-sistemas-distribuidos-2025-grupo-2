@@ -124,5 +124,23 @@ public String GoAcc(Model model, HttpSession session) {
             model.addAttribute("topics", topiclist);
             return "topic";
         }
-        
+        @GetMapping("/addTopic")
+        public String showAddTopic(Model model) {
+            // Inicializa el atributo "check" con un valor vacío
+            model.addAttribute("check", "");
+            return "addTopic"; // Devuelve la vista "addTopic.html"
+        }
+    
+        // Manejar el envío del formulario (POST)
+        @PostMapping("/addTopic")
+        public String addTopic(@RequestParam String topicName, Model model) {
+            // Aquí asumo que tienes una clase TopicBD con el método save() que guarda el tema en la base de datos
+            TopicBD.save(new Topic(topicName));
+    
+            // Agregar el mensaje de éxito al modelo
+            model.addAttribute("check", "Tema Agregado Correctamente");
+    
+            // Redirigir de nuevo a la página para mostrar el mensaje
+            return "addTopic"; // Redirige a la misma página (addTopic.html) con el mensaje actualizado
+        }
 }

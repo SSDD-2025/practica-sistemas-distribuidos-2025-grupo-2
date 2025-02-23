@@ -44,13 +44,13 @@ body {
   top: 20px;
   background: none;
   border: none;
-  font-size: 10; /* Tamaño del ícono (aumentado) */
+  font-size: 120%; /* Tamaño del ícono (aumentado) */
   color: #00ff99;
   cursor: pointer;
   display: flex;
   align-items: center; /* Centra verticalmente */
   justify-content: center; /* Centra horizontalmente */
-  width: 50px; /* Ancho fijo (ajustado) */
+  width: 5px; /* Ancho fijo (ajustado) */
   height: 50px; /* Alto fijo (ajustado) */
   padding: 0; /* Sin padding */
   margin: 0; /* Sin margen */
