@@ -1,6 +1,8 @@
 package codehub.grupo2;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import codehub.grupo2.DB.*;
 import codehub.grupo2.DB.Entity.*;
@@ -25,6 +27,9 @@ public class Control implements CommandLineRunner {
 
     @Autowired
     private PostRepository PostBD;
+    
+    @Autowired
+    private TopicRepository TopicBD;
 
     @Override
     public void run(String... args) throws Exception {
@@ -37,6 +42,9 @@ public class Control implements CommandLineRunner {
         Post post1 = new Post(Sonaca, "Post1", "Post1");
         Post post2 = new Post(Sonaca, "Post2", "Post2");
         Post post3 = new Post(Sonaca, "Post3", "Post3");
+        Topic post2 = new Post(Sonaca, "Post2", "Post2");
+        Post post3 = new Post(Sonaca, "Post3", "Post3");
+
         PostBD.save(post1);
         PostBD.save(post2);
         PostBD.save(post3);
@@ -105,4 +113,11 @@ public String GoAcc(Model model, HttpSession session) {
     model.addAttribute("posts", user.getPosts());
     return "myProfile";
 }
+    @GetMapping("/topic")
+        public String Topic(Model model) {
+            List<Topic> topiclist = TopicBD.findAll();
+            model.addAttribute("topics", topiclist);
+            return "topic";
+        }
+        
 }

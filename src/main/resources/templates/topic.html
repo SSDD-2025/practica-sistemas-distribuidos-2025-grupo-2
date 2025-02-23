@@ -4,19 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Topics</title>
+    <link rel="stylesheet" href="topic.css">
 </head>
 <body>
     <h1>Topics</h1>
     <div class="grid">
-        <div class="Java">Topic 1</div>
-        <div class="Python">Topic 2</div>
-        <div class="JavaScript">Topic 3</div>
-        <div class="HTML">Topic 4</div>
-        <div class="VSCode">Topic 5</div>   
-        <div class="IntelliJ">Topic 6</div>
-        <div class="C">Topic 7</div>
-        <div class="Pascal">Topic 8</div>
-        <div class="MacOs">Topic 9</div>
+        {{#topics}}
+        <div class="topic-item {{name}}">{{name}}</div>
+        {{/topics}}
     </div>
 </body>
 </html>

@@ -19,7 +19,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Contenedor de la cuadrícula */
+/* Contenedor de la cuadricula */
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 columnas */
@@ -59,11 +59,11 @@ h1 {
 
 /* Efecto hover para cada tema */
 .grid > div:hover {
-    background-color: rgba(0, 255, 153, 0.1); /* Fondo más claro al pasar el ratón */
+    background-color: rgba(0, 255, 153, 0.1); /* Fondo mas claro al pasar el raton */
     color: #000;
 }
 
-/* Para pantallas pequeñas */
+/* Para pantallas pequenas */
 @media (max-width: 768px) {
     .grid {
         grid-template-columns: repeat(2, 1fr); /* 2 columnas */

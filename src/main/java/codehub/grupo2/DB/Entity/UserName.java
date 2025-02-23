@@ -16,6 +16,7 @@ public class UserName {
     private String password;
     private String email;
 
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Post> posts;
 
