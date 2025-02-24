@@ -13,8 +13,8 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Estilos para el contenedor del post */
-.post {
+/* Contenedor principal */
+.container {
     width: 80%;
     max-width: 800px;
     padding: 20px;
@@ -22,17 +22,31 @@ body {
     background: rgba(0, 0, 0, 0.8);
     box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
     margin-bottom: 20px;
-    text-align: center; /* Centra el contenido */
+    text-align: center; /* Centrado del contenido */
 }
 
-/* Títulos */
-h1, h2 {
+/* Cabecera con el título */
+.header {
+    margin-bottom: 30px;
+}
+
+.title {
+    font-size: 2.5em;
+    color: #00ff99;
     text-align: center;
-    border-bottom: 2px solid #00ff99;
-    padding-bottom: 10px;
+    text-shadow: 0 0 10px #fff;
+    margin: 0;
 }
 
-/* Estilo para el nombre del usuario */
+/* Títulos del post */
+h1 {
+    font-size: 2.5em;
+    color: #00ff99;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #fff;
+}
+
+/* Información del usuario */
 .user {
     font-weight: bold;
     color: #00ff99;
@@ -44,9 +58,12 @@ h1, h2 {
 .content {
     margin-top: 10px;
     text-align: justify;
+    font-size: 1.1em;
+    color: #fff;
+    line-height: 1.6;
 }
 
-/* Estilos para el botón (btn) */
+/* Estilo para el botón (btn) */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -61,7 +78,7 @@ h1, h2 {
     font-weight: bold;
     transition: background 0.3s ease, color 0.3s ease;
     text-decoration: none;
-    margin-top: 20px; /* Añadir algo de margen para separación */
+    margin-top: 30px; /* Añadir algo de margen para separación */
 }
 
 /* Efecto hover para el botón */
@@ -69,4 +86,13 @@ h1, h2 {
     background: #fff;
     color: #000;
     border-color: #fff;
+}
+
+/* Efectos adicionales para el fondo y el contenedor */
+.content-wrapper {
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+    margin-top: 40px;
 }

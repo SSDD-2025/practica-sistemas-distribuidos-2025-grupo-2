@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodeHub</title>
+  <link rel="stylesheet" href="init.css" />
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Menú lateral -->
+    <nav id="sidebar" class="sidebar">
+      <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Search</a></li>
+        <li><a href="/post">Posts</a></li>
+        <li><a href="/topic">Topics</a></li>
+        <li>
+          <form class="logout-form" action="/logOut" method="get">
+            <button type="submit" class="btn">Log Out</button>
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+      <header class="header">
+        <!-- Botón de tres puntos para el menú lateral -->
+        <button id="toggle-menu" class="menu-toggle">&#x22EE;</button>
+        <h1 class="title">CodeHub</h1>
+
+        <!-- Botón de usuario en la esquina superior derecha -->
+        {{#user}}
+        <form class="profile" action="/acc" method="post">
+          <button type="submit" class="btn profile-button">{{username}}</button>
+        </form>
+        {{/user}}
+      </header>
+
+      <main class="content-wrapper">
+        <!-- Barra de búsqueda en el centro -->
+        <form class="search-form" action="/search" method="get">
+          <input 
+            type="text" 
+            name="query" 
+            class="search-bar" 
+            placeholder="Buscar en CodeHub..."
+          />
+          <button type="submit" class="btn search-button">
+            <span class="search-text">Buscar</span>
+            <span class="search-icon">🔍</span>
+          </button>
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <script src="toggleMenu2.js"></script>
+</body>
+</html>

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 
+
+
 @Controller
 @Component
 public class Control implements CommandLineRunner {
@@ -42,6 +44,14 @@ public class Control implements CommandLineRunner {
         Post post1 = new Post(Sonaca, "Post1", "Post1");
         Post post2 = new Post(Sonaca, "Post2", "Post2");
         Post post3 = new Post(Sonaca, "Post3", "Post3");
+        Post post4 = new Post(Sonaca, "Post4", "Post4");
+        Post post5 = new Post(Sonaca, "Post5", "Post5");    
+        Post post6 = new Post(Sonaca, "Post6", "Post6");
+        Post post7 = new Post(Sonaca, "Post7", "Post7");
+        Post post8 = new Post(Sonaca, "Post8", "Post8");
+        Post post9 = new Post(Sonaca, "Post9", "Post9");
+        Post post10 = new Post(Sonaca, "Post10", "Post10");
+
         Topic topic1 = new Topic("Python");
         Topic topic2 = new Topic("Pascal");
         Topic topic3 = new Topic("Java");
@@ -53,7 +63,17 @@ public class Control implements CommandLineRunner {
         PostBD.save(post1);
         PostBD.save(post2);
         PostBD.save(post3);
+        PostBD.save(post4);
+        PostBD.save(post5);
+        PostBD.save(post6);
+        PostBD.save(post7);
+        PostBD.save(post8);
+        PostBD.save(post9);
+        PostBD.save(post10);
     }
+
+
+    //SESSION + PAGES OF SESSION
 
     @GetMapping("/home")
     public String ShowHome(Model model) {
@@ -77,20 +97,10 @@ public class Control implements CommandLineRunner {
         }
         if (sessionUser.getPassword().equals(password)) {
             session.setAttribute("user", sessionUser); 
-            return "redirect:/init2"; 
+            return "redirect:/init"; 
         }
         model.addAttribute("error", "Contraseña incorrecta.");
         return "home";
-    }
-
-    @GetMapping("/init2")
-    public String init(HttpSession session, Model model) {
-        UserName user = (UserName) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/home"; 
-        }
-        model.addAttribute("user", user); 
-        return "init2";
     }
     
     @PostMapping("/register")
@@ -108,39 +118,120 @@ public class Control implements CommandLineRunner {
         return "redirect:/home";
     }
 
-    @PostMapping("/acc")
-public String GoAcc(Model model, HttpSession session) {
-    UserName user = (UserName) session.getAttribute("user");
-    if (user == null) {
-        return "redirect:/home";
+
+    //POSTS
+    @GetMapping("/post")
+    public String Post(Model model) {
+        List<Post> postlist = PostBD.findAll();
+        model.addAttribute("posts", postlist);
+        return "post";
     }
-    model.addAttribute("user", user); 
-    model.addAttribute("posts", user.getPosts());
-    return "myProfile";
-}
+
+    @PostMapping("/showMorePost")
+    public String showMorePostPost(@RequestParam("id") long id, Model model) {
+        Post post = PostBD.findById(id).get();
+        if (post != null) {
+            model.addAttribute("post", post);
+            return "showMorePost";
+        } else {
+           //Programar error
+            return "redirect:/post";
+        }
+    }
+
+    @GetMapping("/showMorePost")
+    public String showMorePostGet(@RequestParam("id") long id, Model model) {
+        Post post = PostBD.findById(id).get();
+        if (post != null) {
+            model.addAttribute("post", post);
+            return "showMorePost";
+        } else {
+        //Programar error
+            return "redirect:/post";
+        }
+    }
+
+    
+    
+
+
+    //TOPICS
+
     @GetMapping("/topic")
         public String Topic(Model model) {
             List<Topic> topiclist = TopicBD.findAll();
             model.addAttribute("topics", topiclist);
             return "topic";
         }
+        
         @GetMapping("/addTopic")
         public String showAddTopic(Model model) {
-            // Inicializa el atributo "check" con un valor vacío
             model.addAttribute("check", "");
-            return "addTopic"; // Devuelve la vista "addTopic.html"
+            return "addTopic"; 
         }
-    
-        // Manejar el envío del formulario (POST)
+        
         @PostMapping("/addTopic")
         public String addTopic(@RequestParam String topicName, Model model) {
-            // Aquí asumo que tienes una clase TopicBD con el método save() que guarda el tema en la base de datos
             TopicBD.save(new Topic(topicName));
-    
-            // Agregar el mensaje de éxito al modelo
             model.addAttribute("check", "Tema Agregado Correctamente");
-    
-            // Redirigir de nuevo a la página para mostrar el mensaje
-            return "addTopic"; // Redirige a la misma página (addTopic.html) con el mensaje actualizado
+            return "addTopic";
         }
+
+
+    //MAIN MENU
+        
+    @GetMapping("/init")
+    public String init(HttpSession session, Model model) {
+        UserName user = (UserName) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/home"; 
+        }
+        model.addAttribute("user", user); 
+        return "init";
+    }
+
+        //USER PROFILE
+
+        @PostMapping("/acc")
+        public String GoAccPost(Model model, HttpSession session) {
+            UserName user = (UserName) session.getAttribute("user");
+            if (user == null) {
+                return "redirect:/home";
+            }
+            model.addAttribute("user", user); 
+            model.addAttribute("posts", user.getPosts());
+            return "myProfile";
+        }
+
+        @GetMapping("/acc")
+        public String GoAccGet(Model model, HttpSession session) {
+            UserName user = (UserName) session.getAttribute("user");
+            if (user == null) {
+                return "redirect:/home";
+            }
+            model.addAttribute("user", user); 
+            model.addAttribute("posts", user.getPosts());
+
+            Boolean showPassword = (Boolean) session.getAttribute("showPassword");
+            model.addAttribute("showPassword", showPassword != null ? showPassword : false);
+
+            return "myProfile";
+        }
+
+        @PostMapping("/showPassword")
+        public String showPassword(Model model, HttpSession session) {
+            session.setAttribute("showPassword", true);
+            return "redirect:/acc"; 
+        }
+    
+        @PostMapping("/hidePassword")
+        public String hidePassword(HttpSession session) {
+            session.setAttribute("showPassword", false);
+            return "redirect:/acc";
+        }
+
+
+        
+
+
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Completo</title>
+    <link rel="stylesheet" href="showMorePost.css"> <!-- Asegúrate de usar la ruta correcta -->
+</head>
+<body>
+    <!-- Contenedor principal -->
+    <div class="container">
+        
+        <!-- Cabecera con el título -->
+        <div class="header">
+            <div class="title">Post Completo <!-- Aquí va el TOPIC --> </div>
+        </div>
+
+        <!-- Contenido del post -->
+        <div class="content-wrapper">
+            {{#post}}
+            <h1>{{title}}</h1>
+            <div class="user">
+                <p><strong>Publicado por:</strong> {{user}}</p>
+            </div>
+            <div class="content">
+                <p>{{text}}</p>
+            </div>
+            {{/post}}
+
+            <!-- Botón para volver atrás o regresar a la lista de posts -->
+            <a href="/post" class="btn">Go Back</a>
+        </div>
+    </div>
+</body>
+</html>

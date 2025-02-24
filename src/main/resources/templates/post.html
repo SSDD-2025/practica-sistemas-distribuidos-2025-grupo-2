@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post</title>
+    <link rel="stylesheet" href="post.css"> <!-- Ruta al archivo de estilo CSS -->
 </head>
-
 <body>
-    <div class = "post">
-        <h1>Post</h1>
-        <div class = "user">
-            <p> @ {{post.user}}</p>
+    <div class="post">
+        {{#posts}}
+        <h1><p><strong>{{title}}</strong></p></h1>
+        <div class="user">
+            <p>{{user}}</p>
         </div>
-        <p><strong>{{post.title}}</strong></p>
-        <div class = "content">
-            <p>{{post.content}}</p>
+        <div class="content">
+            <p>{{text}}</p>
         </div>
-    </div>
-    <div class = "responses">
-        <h2>Responses</h2>
-        <p>{{post.answers}}</p>
+        <!-- Formulario para mostrar más detalles del post -->
+        <form action="/showMorePost" method="POST">
+            <input type="hidden" name="id" value="{{id}}">
+            <button type="submit" class="btn">Show more</button>
+        </form>
+        {{/posts}}
     </div>
 </body>
 </html>

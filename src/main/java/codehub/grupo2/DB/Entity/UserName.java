@@ -45,4 +45,9 @@ public class UserName {
         return this.posts;
     }
 
+    @Override
+    public String toString() {
+        return String.format("-> %s <-",username);
+    }
+
 }

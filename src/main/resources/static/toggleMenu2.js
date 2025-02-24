@@ -1,10 +1,12 @@
-// Script para alternar la barra lateral
-document.getElementById("toggle-menu").addEventListener("click", function() {
-    const sidebar = document.getElementById("sidebar");
-    const container = document.querySelector(".container");
-  
-    // Alterna la visibilidad de la barra lateral y ajusta el contenido
-    sidebar.classList.toggle("open");
-    container.classList.toggle("shifted"); // Desplaza el contenido hacia la derecha cuando el menú está abierto
+document.addEventListener("DOMContentLoaded", () => {
+  const menuToggle = document.getElementById("toggle-menu");
+  const sidebar = document.getElementById("sidebar");
+  const contentWrapper = document.querySelector(".content-wrapper");
+
+  menuToggle.addEventListener("click", () => {
+    // Alterna la clase .active en la barra lateral (para ocultar/mostrar)
+    sidebar.classList.toggle("active");
+    // Alterna la clase .expanded en el contenedor de contenido
+    contentWrapper.classList.toggle("expanded");
   });
-     
+});

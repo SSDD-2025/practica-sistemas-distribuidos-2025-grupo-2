@@ -53,11 +53,37 @@
     .profile-info p {
       margin: 8px 0;
     }
+    .password-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .password-wrapper p {
+      margin: 0;
+    }
+    .toggle-password {
+      padding: 6px 10px;
+      border: 2px solid #00ff99;
+      background: #00ff99;
+      color: #000;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .toggle-password:hover {
+      background: #fff;
+      color: #000;
+    }
 
     /* Posts */
     .posts {
       text-align: left;
       width: 100%;
+      max-height: 300px; /* Altura máxima para evitar páginas muy largas */
+      overflow-y: auto;
+      padding-right: 10px; /* Para que el scroll no tape el contenido */
     }
 
     .posts ul {
@@ -92,7 +118,6 @@
       background-color: #fff;
       box-shadow: 0 0 12px #fff;
     }
-
   </style>
 </head>
 <body>
@@ -107,19 +132,41 @@
         <p><strong>Username:</strong> {{username}}</p>
         <p><strong>Email:</strong> {{email}}</p>
       {{/user}}
-      <p><strong>Password:</strong> *******</p>
+      <div class="password-wrapper">
+        {{#showPassword}}
+          {{#user}}
+            <p><strong>Password:</strong> {{password}}</p>
+          {{/user}}
+          <form action="/hidePassword" method="post">
+            <button type="submit" class="toggle-password">Ocultar</button>
+          </form>
+        {{/showPassword}}
+        {{^showPassword}}
+          <p><strong>Password:</strong> *******</p>
+          <form action="/showPassword" method="post">
+            <button type="submit" class="toggle-password">Mostrar</button>
+          </form>
+        {{/showPassword}}
+      </div>
+      
     </div>
 
     <div class="posts">
       <h2>Posts</h2>
       <ul>
         {{#posts}}
-          <li><strong>{{title}}</strong> -> {{text}}</li>
+          <li>
+            <!-- Hacer que el post sea cliclable -->
+            <a href="/showMorePost?id={{id}}" style="color: #00ff99; text-decoration: none;">
+              <strong>{{title}}</strong> -> {{text}}
+            </a>
+          </li>
         {{/posts}}
       </ul>
     </div>
+    
 
-    <form class="logout-form" action="/init2" method="get">
+    <form class="logout-form" action="/init" method="get">
       <button type="submit">Home Page</button>
     </form>
   </div>
