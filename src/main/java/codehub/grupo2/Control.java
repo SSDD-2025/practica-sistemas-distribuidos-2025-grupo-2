@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import codehub.grupo2.DB.*;
 import codehub.grupo2.DB.Entity.*;
+import codehub.grupo2.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Component
 public class Control implements CommandLineRunner {
     @Autowired
-    private UserRepository UserBD;
+    private UserService UserService;
 
     @Autowired
     private PostRepository PostBD;
@@ -35,22 +36,21 @@ public class Control implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        UserName Sonaca = new UserName("Sonaca", "Sonaca", "Sonaca");
-        UserName Admin = new UserName("Admin", "Admin", "Admin");
-        UserName User = new UserName("User", "User", "User");
-        UserBD.save(Sonaca);
-        UserBD.save(Admin);
-        UserBD.save(User);
-        Post post1 = new Post(Sonaca, "Post1", "Post1");
-        Post post2 = new Post(Sonaca, "Post2", "Post2");
-        Post post3 = new Post(Sonaca, "Post3", "Post3");
-        Post post4 = new Post(Sonaca, "Post4", "Post4");
-        Post post5 = new Post(Sonaca, "Post5", "Post5");    
-        Post post6 = new Post(Sonaca, "Post6", "Post6");
-        Post post7 = new Post(Sonaca, "Post7", "Post7");
-        Post post8 = new Post(Sonaca, "Post8", "Post8");
-        Post post9 = new Post(Sonaca, "Post9", "Post9");
-        Post post10 = new Post(Sonaca, "Post10", "Post10");
+               
+        UserService.registerUsername("Sonaca", "Sonaca", "Sonaca");
+        UserService.registerUsername("Admin", "Admin", "Admin");
+        UserService.registerUsername("User", "User", "User");
+
+        Post post1 = new Post(UserService.getUser("Sonaca"), "Post1", "Post1");
+        Post post2 = new Post(UserService.getUser("Sonaca"), "Post2", "Post2");
+        Post post3 = new Post(UserService.getUser("Sonaca"), "Post3", "Post3");
+        Post post4 = new Post(UserService.getUser("Sonaca"), "Post4", "Post4");
+        Post post5 = new Post(UserService.getUser("Sonaca"), "Post5", "Post5");    
+        Post post6 = new Post(UserService.getUser("Sonaca"), "Post6", "Post6");
+        Post post7 = new Post(UserService.getUser("Sonaca"), "Post7", "Post7");
+        Post post8 = new Post(UserService.getUser("Sonaca"), "Post8", "Post8");
+        Post post9 = new Post(UserService.getUser("Sonaca"), "Post9", "Post9");
+        Post post10 = new Post(UserService.getUser("Sonaca"), "Post10", "Post10");
 
         Topic topic1 = new Topic("Python");
         Topic topic2 = new Topic("Pascal");
@@ -90,7 +90,7 @@ public class Control implements CommandLineRunner {
 
     @PostMapping("/login")
     public String Login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model) {
-        UserName sessionUser = UserBD.findByUsername(username);
+        UserName sessionUser = UserService.getUser(username);
         if (sessionUser == null) {
             model.addAttribute("error", "Usuario no encontrado.");
             return "home";
@@ -105,8 +105,7 @@ public class Control implements CommandLineRunner {
     
     @PostMapping("/register")
     public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model) {
-        UserBD.save(new UserName(username, password, email));
-       
+        UserService.registerUsername(username, password, email);
         model.addAttribute("check", "Usuario Registrado Correctamente");
         return "home";
     }
