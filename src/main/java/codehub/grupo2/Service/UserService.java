@@ -17,13 +17,13 @@ public class UserService {
         return UserBD.findByUsername(username);
     }
 
-    public UserName registerUsername(String name,String password ,String email){
-
-        //meter validación de campos.
-
+    public String registerUsername(String name,String password ,String email){
+        if(password.length()<5){
+            return "Contrasena demasiado corta";
+        }
         UserName user = new UserName(name,password,email);
         UserBD.save(user);
-        return user;
+        return name;
     }
 
     public List<UserName> getAllUsers(){

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import codehub.grupo2.DB.Entity.*;
 
+
 @Repository
 public interface UserRepository extends JpaRepository<UserName, Long> {
     UserName findByUsername(String username);

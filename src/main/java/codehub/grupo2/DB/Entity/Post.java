@@ -18,19 +18,26 @@ public class Post {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private UserName user;
-    @OneToMany(cascade=CascadeType.ALL)
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @ManyToOne
+    private Topic topic;
+
 
     protected Post() {}
 
-    public Post(UserName username, String title, String text){
+    public Post(UserName username, String title, String text, Topic topic){
         this.user = username;
         this.title = title;
         this.text = text;
         this.date = LocalDate.now();
         this.comments = new ArrayList<>();
+        this.topic = topic;
     }
 
     public UserName getUsername(){
@@ -52,5 +59,39 @@ public class Post {
     public List<Comment> getComments(){
         return this.comments;
     }
+
+    public Topic getTopic(){
+        return this.topic;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setUser(UserName user) {
+        this.user = user;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
+
+    
     
 }

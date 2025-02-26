@@ -16,13 +16,19 @@ public class Comment {
     private String text;
     @ManyToOne
     private UserName username;
-    protected Comment() {}
+    
+    @ManyToOne
+    private Post post;
 
-    public Comment(UserName username, String title, String text){
+
+    protected Comment() {}
+    
+    public Comment(UserName username, String title, String text, Post post){
         this.username = username;
         this.title = title;
         this.text = text;
         this.date = LocalDate.now();
+        this.post=post;
     }
 
     public UserName getUsername(){
