@@ -259,4 +259,22 @@ public class Control implements CommandLineRunner {
             session.setAttribute("showPassword", false);
             return "redirect:/acc";
         }
+
+        @PostMapping("/deleteUserConfirmation")
+        public String deleteUserConfirmation() {
+            return "deleteUser";
+        }
+
+        @PostMapping("/deleteUserDefinitive")
+        public String deleteUserDefinitive(HttpSession session, Model model) {
+            UserName user = (UserName) session.getAttribute("user");
+            UserService.deleteUser(user.getUsername());
+            session.removeAttribute("user");
+            session.invalidate();
+            model.addAttribute("check", "Usuario Eliminado Correctamente");
+            return "home";
+        }
+
+
+
 }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delete User - CodeHub</title>
+  <style>
+    /* Estilos globales */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: 'Courier New', Courier, monospace;
+      color: #00ff99;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    /* Contenedor principal */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      background: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+      border-radius: 10px;
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    /* Header */
+    .header {
+      width: 100%;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 2em;
+      margin: 0;
+    }
+
+    /* Botones */
+    .button {
+      width: 100%; /* Mismo ancho para ambos botones */
+      background-color: transparent; /* Fondo transparente por defecto */
+      color: #00ff99; /* Texto verde */
+      border: 2px solid #00ff99; /* Borde verde */
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+    }
+
+    /* Efecto hover para "Cancel" */
+    .button.cancel:hover {
+      background-color: #00ff99; /* Fondo verde al pasar el ratón */
+      color: #000; /* Texto negro */
+      box-shadow: 0 0 12px #00ff99; /* Sombra verde */
+    }
+
+    /* Efecto hover para "Confirm" */
+    .button.confirm:hover {
+      background-color: #ff0000; /* Fondo rojo al pasar el ratón */
+      color: #000; /* Texto negro */
+      border-color: #ff0000; /* Borde rojo */
+      box-shadow: 0 0 12px #ff0000; /* Sombra roja */
+    }
+
+    /* Contenedor de botones */
+    .button-wrapper {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      width: 100%; /* Asegura que el contenedor ocupe el ancho completo */
+    }
+
+    /* Ajustes específicos para el formulario */
+    .button-wrapper form {
+      width: 100%; /* El formulario ocupa el mismo ancho que el enlace */
+      margin: 0; /* Elimina márgenes predeterminados */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="title">Delete User</h1>
+    </div>
+    <div class="profile-info">
+      <p>Are you sure you want to delete your account?</p>
+      <div class="button-wrapper">
+        <form action="/acc" method="post">
+            <button type="submit" class="button cancel">Cancel</button>
+          </form>
+        <form action="/deleteUserDefinitive" method="post">
+          <button type="submit" class="button confirm">Confirm</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
