@@ -55,5 +55,9 @@ public class PostService {
         }
         return p;
     }
+
+    public List<Post> getPostByTopic(Topic topic){
+        return PostBD.findByTopic(topic);
+    }
     
 }

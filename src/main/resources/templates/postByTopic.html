@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts in {{topicName}}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff99;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .post-container {
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        .post {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff99;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(0, 255, 153, 0.5);
+        }
+        .post h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .post .user {
+            font-size: 0.9em;
+            color: #00cc77;
+            margin: 5px 0;
+        }
+        .post .content {
+            font-size: 1em;
+            margin: 10px 0;
+        }
+        .btn {
+            background-color: #00ff99;
+            color: #000;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #fff;
+            box-shadow: 0 0 12px #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="post-container">
+        <h1>Posts in {{topicName}}</h1>
+        {{#posts}}
+        <div class="post">
+            <h1><strong>{{title}}</strong></h1>
+            <div class="user">Posted by: {{username}}</div>
+            <div class="content">{{text}}</div>
+            <form action="/showMorePost" method="POST">
+                <input type="hidden" name="id" value="{{id}}">
+                <button type="submit" class="btn">Show more</button>
+            </form>
+        </div>
+        {{/posts}}
+    </div>
+</body>
+</html>

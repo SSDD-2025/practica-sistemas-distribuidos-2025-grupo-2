@@ -16,6 +16,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 
@@ -62,6 +63,7 @@ public class Control implements CommandLineRunner {
         PostService.registerPost(user, post3.getTitle(), post3.getText(), post3.getTopic());
         PostService.registerPost(user, post4.getTitle(), post4.getText(), post4.getTopic());
         PostService.registerPost(user, post5.getTitle(), post5.getText(), post5.getTopic());
+        
     }
 
 
@@ -119,23 +121,23 @@ public class Control implements CommandLineRunner {
         return "post";
     }
 
-    @PostMapping("/showMorePost")
+    @PostMapping("/showMorePost/{id}")
     public String showMorePostPost(@RequestParam("id") long id, Model model) {
         Post post = PostService.getPostById(id);
         if (post != null) {
-            model.addAttribute("post", post);
-            return "showMorePost";
+            model.addAttribute("posts", post);
+            return "showMorePost/{id}";
         } else {
            //Programar error
             return "redirect:/post";
         }
     }
 
-    @GetMapping("/showMorePost")
+    @GetMapping("/showMorePost/{id}")
     public String showMorePostGet(@RequestParam("id") long id, Model model) {
         Post post = PostService.getPostById(id);
         if (post != null) {
-            model.addAttribute("post", post);
+            model.addAttribute("posts", post);
             return "showMorePost";
         } else {
         //Programar error
@@ -160,7 +162,6 @@ public class Control implements CommandLineRunner {
         return "addPost";
     }
 
-
     
     @PostMapping("/deletePost")
     public String deletePost(@RequestParam long id, HttpSession session) {
@@ -170,6 +171,17 @@ public class Control implements CommandLineRunner {
         }
         PostService.deletePost(PostService.getPostById(id).getTitle());
         return "redirect:/acc";
+    }
+
+    @GetMapping("/editPost")
+    public String showEditPost(@RequestParam long id, HttpSession session, Model model) {
+        UserName user = (UserName) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/home";
+        }
+        Post post = PostService.getPostById(id);
+        model.addAttribute("post", post);
+        return "editPost";        
     }
     
 
@@ -207,7 +219,40 @@ public class Control implements CommandLineRunner {
             return "addTopic";
         }
 
+    @GetMapping("/topic/{id}")
+    public String showTopicPost(@PathVariable Long id, Model model) {
+        Optional<Topic> topic = TopicService.getTopicById(id);
+        if (topic.isPresent()) {
+            List<Post> posts = PostService.getPostByTopic(topic.get());
+            model.addAttribute("posts", posts);
+            model.addAttribute("topicName", topic.get().getTopicName());
+            return "postByTopic"; 
+        } else {
+            return "redirect:/topic"; 
+        }
+    }
 
+    //COMMENTS
+
+    @GetMapping("createComment")
+    public String showCreateComment(@RequestParam long id, Model model) {
+        model.addAttribute("postId", id);
+        return "createComment";
+    }
+
+    @PostMapping("createComment")
+    public String createComment(@RequestParam long id, @RequestParam String text, HttpSession session, Model model) {
+        UserName user = (UserName) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/home";
+        }
+        Post post = PostService.getPostById(id);
+        CommentService.registerComment(user, post, text);
+        model.addAttribute("check", "Comentario Agregado Correctamente");
+        return "createComment";
+    }
+        
+    
     //MAIN MENU
         
     @GetMapping("/init")
@@ -274,7 +319,4 @@ public class Control implements CommandLineRunner {
             model.addAttribute("check", "Usuario Eliminado Correctamente");
             return "home";
         }
-
-
-
 }

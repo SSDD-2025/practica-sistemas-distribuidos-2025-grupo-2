@@ -12,12 +12,12 @@
         
         <!-- Cabecera con el título -->
         <div class="header">
-            <div class="title">Post Completo <!-- Aquí va el TOPIC --> </div>
+            <div class="title">{{topic}}</div>
         </div>
 
-        <!-- Contenido del post -->
+        <!-- Contenido de la lista de posts -->
+        {{#posts}}
         <div class="content-wrapper">
-            {{#post}}
             <h1>{{title}}</h1>
             <div class="user">
                 <p><strong>Publicado por:</strong> {{user}}</p>
@@ -25,11 +25,11 @@
             <div class="content">
                 <p>{{text}}</p>
             </div>
-            {{/post}}
-
-            <!-- Botón para volver atrás o regresar a la lista de posts -->
-            <a href="/post" class="btn">Go Back</a>
         </div>
+        {{/posts}}
+
+        <!-- Botón para volver atrás o regresar a la lista de posts -->
+        <a href="/post" class="btn">Go Back</a>
     </div>
 </body>
 </html>

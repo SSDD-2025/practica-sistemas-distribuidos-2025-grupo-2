@@ -31,4 +31,9 @@ public class Topic {
     public List<Post> getPosts(){
         return this.posts;
     }
+
+    @Override
+    public String toString(){
+        return this.topicName;
+    }
 }
