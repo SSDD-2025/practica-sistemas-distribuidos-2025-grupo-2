@@ -40,29 +40,28 @@ public class Control implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Topic topic1 = new Topic("Python");
-        Topic topic2 = new Topic("Pascal");
-        Topic topic3 = new Topic("Java");
-
-        TopicService.newTopic(topic1.getTopicName());
-        TopicService.newTopic(topic2.getTopicName());
-        TopicService.newTopic(topic3.getTopicName());
-               
+        Topic topic1 = TopicService.newTopic("Python");
+        Topic topic2 = TopicService.newTopic("Pascal");
+    
         UserService.registerUsername("Sonaca", "Sonaca", "Sonaca");
         UserService.registerUsername("Admin", "Admin", "Admin");
         UserService.registerUsername("User", "User", "User");
-        
-        Post post1 = new Post(UserService.getUser("Sonaca"), "Post1", "Post1",topic2);
-        Post post2 = new Post(UserService.getUser("Sonaca"), "Post2", "Post2",topic1);
-        Post post3 = new Post(UserService.getUser("Sonaca"), "Post3", "Post3",topic1);
-        Post post4 = new Post(UserService.getUser("Sonaca"), "Post4", "Post4",topic1);
-        Post post5 = new Post(UserService.getUser("Sonaca"), "Post5", "Post5",topic1);    
 
-        PostService.registerPost(post1.getUsername(),post1.getTitle(),post1.getText(),post1.getTopic());
-        PostService.registerPost(post2.getUsername(),post1.getTitle(),post1.getText(),post1.getTopic());
-        PostService.registerPost(post3.getUsername(),post1.getTitle(),post1.getText(),post1.getTopic());
-        PostService.registerPost(post4.getUsername(),post1.getTitle(),post1.getText(),post1.getTopic());
-        PostService.registerPost(post5.getUsername(),post1.getTitle(),post1.getText(),post1.getTopic());
+        UserName user = UserService.getUser("Sonaca");
+    
+
+        Post post1 = new Post(user, "Post1", "Post1", topic2);
+        Post post2 = new Post(user, "Post2", "Post2", topic1);
+        Post post3 = new Post(user, "Post3", "Post3", topic1);
+        Post post4 = new Post(user, "Post4", "Post4", topic1);
+        Post post5 = new Post(user, "Post5", "Post5", topic1);
+    
+
+        PostService.registerPost(user, post1.getTitle(), post1.getText(), post1.getTopic());
+        PostService.registerPost(user, post2.getTitle(), post2.getText(), post2.getTopic());
+        PostService.registerPost(user, post3.getTitle(), post3.getText(), post3.getTopic());
+        PostService.registerPost(user, post4.getTitle(), post4.getText(), post4.getTopic());
+        PostService.registerPost(user, post5.getTitle(), post5.getText(), post5.getTopic());
     }
 
 
@@ -260,15 +259,4 @@ public class Control implements CommandLineRunner {
             session.setAttribute("showPassword", false);
             return "redirect:/acc";
         }
-
-        @GetMapping("/error")
-        public String GetError(@RequestParam String param) {
-            return new String();
-        }
-        
-
-
-        
-
-
 }

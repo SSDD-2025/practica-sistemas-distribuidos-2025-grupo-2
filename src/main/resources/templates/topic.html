@@ -10,7 +10,9 @@
     <h1>Topics</h1>
     <div class="grid">
         {{#topics}}
-        <div class="topic-item {{topicName}}">{{topicName}}</div>
+        <a href="/topic/{{topicName}}" class="topic-link">
+            <div class="topic-item {{topicName}}">{{topicName}}</div>
+        </a>
         {{/topics}}
     </div>
     <a href="/addTopic">

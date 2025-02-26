@@ -118,6 +118,25 @@
       background-color: #fff;
       box-shadow: 0 0 12px #fff;
     }
+
+    /* Botón de Eliminar */
+    .delete-button {
+      width: 100%;
+      background-color: #00ff99;
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+    .delete-button:hover {
+      background-color: #ff0000;
+      box-shadow: 0 0 12px #ff0000;
+    }
   </style>
 </head>
 <body>
@@ -147,11 +166,7 @@
             <button type="submit" class="toggle-password">Mostrar</button>
           </form>
         {{/showPassword}}
-        <form class="deleteUser" action="/deleteUser" method="POST">
-          <button type="submit"> DELETE ACCOUNT</button>
-        </form>
       </div>
-      
     </div>
 
     <div class="posts">
@@ -167,8 +182,13 @@
         {{/posts}}
       </ul>
     </div>
-    
 
+    <!-- Botón de Eliminar debajo de los posts -->
+    <form action="/deleteUser" method="post">
+      <button type="submit" class="delete-button">DELETE ACCOUNT</button>
+    </form>
+
+    <!-- Botón de Home Page -->
     <form class="logout-form" action="/init" method="get">
       <button type="submit">Home Page</button>
     </form>

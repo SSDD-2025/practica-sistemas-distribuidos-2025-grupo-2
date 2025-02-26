@@ -27,6 +27,8 @@ public class PostService {
         }
         Post post = new Post(user,title,text,topic);
         PostBD.save(post);
+        user.getPosts().add(post);
+        topic.getPosts().add(post);
         return title;
     }
 

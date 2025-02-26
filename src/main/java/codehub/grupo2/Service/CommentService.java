@@ -23,6 +23,7 @@ public class CommentService {
         }
         Comment comment = new Comment(user,title,text,post);
         CommentBD.save(comment);
+        post.getComments().add(comment);
         return title;
     }
     public List<Comment> getAllComments(){
