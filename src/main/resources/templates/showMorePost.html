@@ -4,29 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Completo</title>
-    <link rel="stylesheet" href="showMorePost.css"> <!-- Asegúrate de usar la ruta correcta -->
+    <link rel="stylesheet" href="/static/showMorePost.css">
+
 </head>
 <body>
-    <!-- Contenedor principal -->
+   
     <div class="container">
         
-        <!-- Cabecera con el título -->
+       
         <div class="header">
-            <div class="title">{{topic}}</div>
+            <div class="title">{{post.topic.name}}</div> 
         </div>
 
-        <!-- Contenido de la lista de posts -->
-        {{#posts}}
+        <!-- Contenido del post -->
         <div class="content-wrapper">
-            <h1>{{title}}</h1>
+            <h1>{{post.title}}</h1>
             <div class="user">
-                <p><strong>Publicado por:</strong> {{user}}</p>
+                <p><strong>Publicado por:</strong> {{post.user.username}}</p> <!-- Ajusta la variable según el objeto -->
             </div>
             <div class="content">
-                <p>{{text}}</p>
+                <p>{{post.text}}</p>
             </div>
         </div>
-        {{/posts}}
 
         <!-- Botón para volver atrás o regresar a la lista de posts -->
         <a href="/post" class="btn">Go Back</a>

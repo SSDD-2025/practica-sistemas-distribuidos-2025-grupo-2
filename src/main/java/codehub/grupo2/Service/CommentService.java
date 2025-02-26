@@ -14,6 +14,12 @@ public class CommentService {
     @Autowired
     private CommentRepository CommentBD;
 
+
+
+    public Comment getCommentById(long id) {
+        return CommentBD.findById(id).orElse(null); 
+    }
+
     public Comment getComment(String title){
         return CommentBD.findByTitle(title);
     }
@@ -33,4 +39,10 @@ public class CommentService {
         Comment comment = CommentBD.findByTitle(title);
         CommentBD.delete(comment);
     }   
+
+    public void editComment(long id, String text){
+        Comment comment = CommentBD.findById(id).orElse(null);
+        comment.setText(text);
+        CommentBD.save(comment);
+    }
 }

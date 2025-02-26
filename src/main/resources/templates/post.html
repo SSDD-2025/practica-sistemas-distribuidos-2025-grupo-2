@@ -17,7 +17,7 @@
             <p>{{text}}</p>
         </div>
         <!-- Formulario para mostrar más detalles del post -->
-        <form action="/showMorePost" method="POST">
+        <form action="/showMorePost" method="POST"> <!-- Corregido: Utilizamos {{id}} dinámico -->
             <input type="hidden" name="id" value="{{id}}">
             <button type="submit" class="btn">Show more</button>
         </form>

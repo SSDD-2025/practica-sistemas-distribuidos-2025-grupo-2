@@ -122,28 +122,28 @@ public class Control implements CommandLineRunner {
     }
 
     @PostMapping("/showMorePost/{id}")
-    public String showMorePostPost(@RequestParam("id") long id, Model model) {
-        Post post = PostService.getPostById(id);
-        if (post != null) {
-            model.addAttribute("posts", post);
-            return "showMorePost/{id}";
-        } else {
-           //Programar error
-            return "redirect:/post";
-        }
+public String showMorePostPost(@PathVariable("id") long id, Model model) {
+    Post post = PostService.getPostById(id);
+    if (post != null) {
+        model.addAttribute("posts", post);  
+        return "redirect:/showMorePost";  
+    } else {
+       
+        return "redirect:/post";
     }
+}
 
-    @GetMapping("/showMorePost/{id}")
-    public String showMorePostGet(@RequestParam("id") long id, Model model) {
-        Post post = PostService.getPostById(id);
-        if (post != null) {
-            model.addAttribute("posts", post);
-            return "showMorePost";
-        } else {
-        //Programar error
-            return "redirect:/post";
-        }
+@GetMapping("/showMorePost/{id}")
+public String showMorePostGet(@PathVariable("id") long id, Model model) {
+    Post post = PostService.getPostById(id);
+    if (post != null) {
+        model.addAttribute("posts", post);  
+        return "redirect:/showMorePost";  
+    } else {
+        return "redirect:/post";
     }
+}
+
 
      @GetMapping("/addPost")
     public String showAddPost(Model model) {
@@ -247,9 +247,41 @@ public class Control implements CommandLineRunner {
             return "redirect:/home";
         }
         Post post = PostService.getPostById(id);
-        CommentService.registerComment(user, post, text);
+        CommentService.registerComment(user, text, text, post);
         model.addAttribute("check", "Comentario Agregado Correctamente");
         return "createComment";
+    }
+
+
+    @PostMapping("deleteComment")
+    public String deleteComment(@RequestParam long id, HttpSession session) {
+        UserName user = (UserName) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/home";
+        }
+        CommentService.deleteComment(String.valueOf(id));
+        return "redirect:/acc";
+    }
+
+    @GetMapping("editComment")
+    public String showEditComment(@RequestParam long id, HttpSession session, Model model) {
+        UserName user = (UserName) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/home";
+        }
+        Comment comment = CommentService.getCommentById(id);
+        model.addAttribute("comment", comment);
+        return "editComment";        
+    }
+    
+    @PostMapping("editComment")
+    public String editComment(@RequestParam long id, HttpSession session, Model model,@RequestParam Optional<String> text){
+        UserName user = (UserName) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/home";
+        }
+        CommentService.editComment(id,text);
+        return "redirect:/acc";
     }
         
     

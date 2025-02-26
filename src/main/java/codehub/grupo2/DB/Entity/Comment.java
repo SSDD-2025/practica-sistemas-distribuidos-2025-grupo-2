@@ -46,5 +46,9 @@ public class Comment {
     public String getText(){
         return this.text;
     }
+
+    public String setText(String text){
+        return this.text = text;
+    }
     
 }
