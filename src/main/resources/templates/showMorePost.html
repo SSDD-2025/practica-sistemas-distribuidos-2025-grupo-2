@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Completo</title>
     <link rel="stylesheet" href="/showMorePost.css">
-
 </head>
 <body>
    
     <div class="container">
-        
-       
         <div class="header">
             <div class="title">{{posts.topic}}</div> 
         </div>
@@ -20,15 +17,18 @@
         <div class="content-wrapper">
             <h1>{{posts.title}}</h1>
             <div class="user">
-                <p><strong>Publicado por:</strong> {{posts.user.username}}</p> <!-- Ajusta la variable según el objeto -->
+                <p><strong>Publicado por:</strong> {{posts.user.username}}</p> 
             </div>
             <div class="content">
                 <p>{{posts.text}}</p>
             </div>
         </div>
 
-        <!-- Botón para volver atrás o regresar a la lista de posts -->
+        
         <a href="/post" class="btn">Go Back</a>
     </div>
+    <a href="/createComment?id={{posts.id}}" class="right-bottom-btn">Add Comment</a>
+
 </body>
 </html>
+

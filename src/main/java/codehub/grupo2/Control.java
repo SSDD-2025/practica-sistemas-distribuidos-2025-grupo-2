@@ -243,34 +243,46 @@ public class Control implements CommandLineRunner {
 
     @PostMapping("/deleteTopic")
     public String deleteTopic(@RequestParam long id, HttpSession session) {
-        UserName user = (UserName) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/home";
+         UserName user = (UserName) session.getAttribute("user");
+            if (user == null) {
+                  return "redirect:/home";
+            }
+             Optional<Topic> topicOpt = TopicService.getTopicById(id);
+            if (!topicOpt.isPresent()) {
+                 return "redirect:/topic"; 
+             }
+        
+             Topic topic = topicOpt.get();
+             List<Post> posts = PostService.getPostByTopic(topic);
+             for (Post p : posts) {
+             PostService.deletePost(p.getTitle()); 
+             }
+            TopicService.deleteTopic(id);
+        
+        return "redirect:/topic";
         }
-        TopicService.deleteTopic(id);
-        return "redirect:/init";
-    }
 
     //COMMENTS
-
     @GetMapping("createComment")
     public String showCreateComment(@RequestParam long id, Model model) {
-        model.addAttribute("postId", id);
-        return "createComment";
+        model.addAttribute("postId", id);  
+        return "addComment";  
     }
-
+    
     @PostMapping("createComment")
-    public String createComment(@RequestParam long id, @RequestParam String text, HttpSession session, Model model) {
+    public String showCreateComment(@RequestParam long id, @RequestParam String content, HttpSession session, Model model) {
         UserName user = (UserName) session.getAttribute("user");
         if (user == null) {
-            return "redirect:/home";
+            return "redirect:/home";  
         }
         Post post = PostService.getPostById(id);
-        CommentService.registerComment(user, text, text, post);
+        CommentService.registerComment(user, content, content, post);
         model.addAttribute("check", "Comentario Agregado Correctamente");
-        return "createComment";
+        return "addComment";
     }
+    
 
+    
 
     @PostMapping("deleteComment")
     public String deleteComment(@RequestParam long id, HttpSession session) {

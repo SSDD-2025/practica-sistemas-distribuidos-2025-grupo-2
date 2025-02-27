@@ -63,8 +63,8 @@ h1 {
     line-height: 1.6;
 }
 
-/* Estilo para el botón (btn) */
-.btn {
+/* Estilo para los botones generales */
+.btn, .right-bottom-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -78,11 +78,11 @@ h1 {
     font-weight: bold;
     transition: background 0.3s ease, color 0.3s ease;
     text-decoration: none;
-    margin-top: 30px; /* Añadir algo de margen para separación */
+    margin-top: 30px; /* Espaciado para separación */
 }
 
-/* Efecto hover para el botón */
-.btn:hover {
+/* Efecto hover para los botones */
+.btn:hover, .right-bottom-btn:hover {
     background: #fff;
     color: #000;
     border-color: #fff;
@@ -95,4 +95,18 @@ h1 {
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
     margin-top: 40px;
+}
+
+/* Botón Add Comment en la esquina inferior derecha */
+.right-bottom-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+/* Botón Return en la esquina inferior izquierda */
+.left-bottom-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
 }
