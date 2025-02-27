@@ -41,7 +41,7 @@ public class CommentService {
     }   
 
     public void editComment(long id, String text){
-        Comment comment = CommentBD.findById(id).orElse(null);
+        Comment comment = CommentBD.findById(id).get();
         comment.setText(text);
         CommentBD.save(comment);
     }

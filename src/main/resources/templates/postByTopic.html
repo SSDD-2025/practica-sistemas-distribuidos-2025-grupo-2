@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Posts in {{topicName}}</title>
     <style>
         body {
             margin: 0;
@@ -56,14 +51,14 @@
             background-color: #fff;
             box-shadow: 0 0 12px #fff;
         }
-        /* Estilos para el contenedor del título y el botón de borrar */
         .topic-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            width: 100%;
         }
         .topic-header .delete-btn {
-            background-color: #ff0000; /* Rojo para el botón de borrar */
+            background-color: #ff0000;
             color: #fff;
             font-weight: bold;
             padding: 8px 15px;
@@ -78,22 +73,26 @@
 </head>
 <body>
     <div class="post-container">
-        <h1>Posts in {{topicName}}</h1>
+        <div class="topic-header">
+            <h1>Posts in {{topicName}}</h1>
+            <form action="/acc" method="post">
+                <input type="hidden" name="id" value="{{id}}">
+                <button type="submit" class="btn delete-btn">Borrar Topic</button>
+            </form>
+        </div>
+        
         {{#posts}}
         <div class="post">
-            <!-- Contenedor del título y el botón de borrar -->
             <div class="topic-header">
                 <h1><strong>{{title}}</strong></h1>
-                <!-- Botón de borrar con el mismo estilo -->
-                <form action="/deleteTopic" method="POST">
+                <form action="/home" method="post">
                     <input type="hidden" name="id" value="{{id}}">
-                    <button type="submit" class="btn delete-btn">Borrar Topic</button>
+                    <button type="submit" class="btn delete-btn">Borrar Post</button>
                 </form>
             </div>
             <div class="user">Posted by: {{username}}</div>
             <div class="content">{{text}}</div>
-            <!-- Botón para mostrar más detalles -->
-            <form action="/showMorePost" method="POST">
+            <form action="/showMorePost" method="post">
                 <input type="hidden" name="id" value="{{id}}">
                 <button type="submit" class="btn">Show more</button>
             </form>
@@ -101,4 +100,5 @@
         {{/posts}}
     </div>
 </body>
+
 </html>

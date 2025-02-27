@@ -275,7 +275,7 @@ public String showMorePostGet(@PathVariable("id") long id, Model model) {
     }
     
     @PostMapping("editComment")
-    public String editComment(@RequestParam long id, HttpSession session, Model model,@RequestParam Optional<String> text){
+    public String editComment(@RequestParam long id, HttpSession session, Model model,@RequestParam String text){
         UserName user = (UserName) session.getAttribute("user");
         if (user == null) {
             return "redirect:/home";
