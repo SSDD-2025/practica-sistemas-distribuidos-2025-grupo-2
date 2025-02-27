@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import codehub.grupo2.DB.TopicRepository;
+import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.Topic;
 
 
@@ -13,6 +14,9 @@ import codehub.grupo2.DB.Entity.Topic;
 public class TopicService {
     @Autowired
     private TopicRepository TopicBD;
+
+    @Autowired
+    private PostService ps;
 
     public Optional<Topic> getTopicById(Long id){
         if(TopicBD.existsById(id)){
@@ -29,4 +33,15 @@ public class TopicService {
     public List<Topic> getAllTopics(){
         return TopicBD.findAll();
     }
+
+    public void deleteTopic(Long id) {
+        if (TopicBD.existsById(id)) {
+            Topic topic = TopicBD.findById(id).get();
+            for (Post p : topic.getPosts()) {
+                ps.deletePost(p.getTitle()); 
+            }
+            TopicBD.deleteById(id);
+        }
+    }
+    
 }

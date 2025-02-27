@@ -76,6 +76,13 @@ public class Control implements CommandLineRunner {
         return "home";
     }
 
+    @GetMapping("/")
+    public String ShowHome2(Model model) {
+        model.addAttribute("error", "");
+        model.addAttribute("check", "");
+        return "home";
+    }
+
     @GetMapping("/register")
     public String ShowRegister(Model model) {
         model.addAttribute("check", "");
@@ -120,29 +127,30 @@ public class Control implements CommandLineRunner {
         model.addAttribute("posts", postlist);
         return "post";
     }
-
-    @PostMapping("/showMorePost/{id}")
-public String showMorePostPost(@PathVariable("id") long id, Model model) {
-    Post post = PostService.getPostById(id);
-    if (post != null) {
-        model.addAttribute("posts", post);  
-        return "redirect:/showMorePost";  
-    } else {
-       
-        return "redirect:/post";
+    @PostMapping("/showMoreP/{id}")
+    public String showMorePostPost(@PathVariable("id") long id, Model model) {
+        Post post = PostService.getPostById(id);
+        if (post != null) {
+            model.addAttribute("posts", post);
+            return "showMorePost";
+        } else {
+            return "redirect:/post";
+        }
     }
-}
+    
 
-@GetMapping("/showMorePost/{id}")
-public String showMorePostGet(@PathVariable("id") long id, Model model) {
-    Post post = PostService.getPostById(id);
-    if (post != null) {
-        model.addAttribute("posts", post);  
-        return "redirect:/showMorePost";  
-    } else {
-        return "redirect:/post";
+    @GetMapping("/showMoreP/{id}")
+    public String showMorePostGet(@PathVariable("id") long id, Model model) {
+        Post post = PostService.getPostById(id);
+        if (post != null) {
+            model.addAttribute("posts", post);  
+            return "showMorePost"; 
+        } else {
+            return "redirect:/post";
+        }
     }
-}
+    
+    
 
 
      @GetMapping("/addPost")
@@ -170,7 +178,7 @@ public String showMorePostGet(@PathVariable("id") long id, Model model) {
             return "redirect:/home";
         }
         PostService.deletePost(PostService.getPostById(id).getTitle());
-        return "redirect:/acc";
+        return "redirect:/init";
     }
 
     @GetMapping("/editPost")
@@ -230,6 +238,16 @@ public String showMorePostGet(@PathVariable("id") long id, Model model) {
         } else {
             return "redirect:/topic"; 
         }
+    }
+
+    @PostMapping("/deleteTopic")
+    public String deleteTopic(@RequestParam long id, HttpSession session) {
+        UserName user = (UserName) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/home";
+        }
+        TopicService.deleteTopic(id);
+        return "redirect:/topic";
     }
 
     //COMMENTS

@@ -75,7 +75,7 @@
     <div class="post-container">
         <div class="topic-header">
             <h1>Posts in {{topicName}}</h1>
-            <form action="/acc" method="post">
+            <form action="/deleteTopic" method="post">
                 <input type="hidden" name="id" value="{{id}}">
                 <button type="submit" class="btn delete-btn">Borrar Topic</button>
             </form>
@@ -85,17 +85,14 @@
         <div class="post">
             <div class="topic-header">
                 <h1><strong>{{title}}</strong></h1>
-                <form action="/home" method="post">
+                <form action="/deletePost" method="post">
                     <input type="hidden" name="id" value="{{id}}">
                     <button type="submit" class="btn delete-btn">Borrar Post</button>
                 </form>
             </div>
             <div class="user">Posted by: {{username}}</div>
             <div class="content">{{text}}</div>
-            <form action="/showMorePost" method="post">
-                <input type="hidden" name="id" value="{{id}}">
-                <button type="submit" class="btn">Show more</button>
-            </form>
+            <a href="/showMoreP/{{id}}" class="btn">Show more</a>
         </div>
         {{/posts}}
     </div>

@@ -38,8 +38,10 @@ public class PostService {
 
     public void deletePost(String title){
         Post post = PostBD.findByTitle(title);
-        PostBD.delete(post);
-    }   
+        if (post != null) { 
+            PostBD.delete(post);
+        }
+    } 
 
     public Post getPostById(Long id){
         return PostBD.findById(id).get();
