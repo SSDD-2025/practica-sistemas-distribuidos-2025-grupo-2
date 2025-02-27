@@ -14,7 +14,7 @@ public class Topic {
 
     private String topicName;
 
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
     protected Topic() {}
@@ -31,6 +31,10 @@ public class Topic {
     public List<Post> getPosts(){
         return this.posts;
     }
+
+    public Long getId(){
+        return this.id;
+    }   
 
     @Override
     public String toString(){

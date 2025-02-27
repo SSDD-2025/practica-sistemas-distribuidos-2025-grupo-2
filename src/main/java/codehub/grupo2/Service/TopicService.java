@@ -4,7 +4,9 @@ import java.util.Optional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import codehub.grupo2.DB.PostRepository;
 import codehub.grupo2.DB.TopicRepository;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.Topic;
@@ -16,7 +18,10 @@ public class TopicService {
     private TopicRepository TopicBD;
 
     @Autowired
-    private PostService ps;
+    private PostService PostBD;
+
+    @Autowired
+    private PostRepository pr;
 
     public Optional<Topic> getTopicById(Long id){
         if(TopicBD.existsById(id)){
@@ -34,14 +39,13 @@ public class TopicService {
         return TopicBD.findAll();
     }
 
-    public void deleteTopic(Long id) {
-        if (TopicBD.existsById(id)) {
-            Topic topic = TopicBD.findById(id).get();
-            for (Post p : topic.getPosts()) {
-                ps.deletePost(p.getTitle()); 
-            }
-            TopicBD.deleteById(id);
+    @Transactional
+    public void deleteTopic(long id) {
+        Topic topic = TopicBD.findById(id).get();  
+        for(Post t : topic.getPosts()){
+            PostBD.deletePost(t.getTitle());
         }
+        TopicBD.delete(topic);
     }
     
 }

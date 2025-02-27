@@ -43,6 +43,7 @@ public class Control implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Topic topic1 = TopicService.newTopic("Python");
         Topic topic2 = TopicService.newTopic("Pascal");
+        Topic topic3 = TopicService.newTopic("Java");
     
         UserService.registerUsername("Sonaca", "Sonaca", "Sonaca");
         UserService.registerUsername("Admin", "Admin", "Admin");
@@ -247,7 +248,7 @@ public class Control implements CommandLineRunner {
             return "redirect:/home";
         }
         TopicService.deleteTopic(id);
-        return "redirect:/topic";
+        return "redirect:/init";
     }
 
     //COMMENTS
