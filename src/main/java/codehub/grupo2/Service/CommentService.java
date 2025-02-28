@@ -14,6 +14,9 @@ public class CommentService {
     @Autowired
     private CommentRepository CommentBD;
 
+    @Autowired
+    private UserService userService;
+
 
 
     public Comment getCommentById(long id) {
@@ -23,15 +26,17 @@ public class CommentService {
     public Comment getComment(String title){
         return CommentBD.findByTitle(title);
     }
-     public String registerComment(UserName user ,String title,String text, Post post){
+     public String registerComment(UserName user ,String title, String text, Post post){
         if(text.length() > 140){
             return "Numero de caracteres escedido";
         }
+        userService.addComment(user);
         Comment comment = new Comment(user,title,text,post);
         CommentBD.save(comment);
         post.getComments().add(comment);
         return title;
     }
+
     public List<Comment> getAllComments(){
         return CommentBD.findAll();
     }

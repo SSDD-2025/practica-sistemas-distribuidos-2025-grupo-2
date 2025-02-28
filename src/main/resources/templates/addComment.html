@@ -11,16 +11,16 @@
     <div class="container">
         <h1>Crear un nuevo Comentario</h1>
         <form action="/createComment" method="post">
-            <input type="hidden" name="id" th:value="${postId}">  <!-- Usa ${postId} para obtener el valor del modelo -->
+            <input type="hidden" name="id">
             <div class="form-group">
                 <label for="content">Comentario:</label>
                 <textarea id="content" name="content" placeholder="Escribe tu comentario" required></textarea>
             </div>
         
-            <button type="submit">Añadir comentario</button>
+            <button type="submit">Anadir comentario</button>
         </form>
 
-        <a href="/init">Volver a la página principal</a>
+        <a href="/init">Volver a la pagina principal</a>
     </div>
 
 </body>

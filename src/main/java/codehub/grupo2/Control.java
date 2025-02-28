@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import codehub.grupo2.Component.*;
 import codehub.grupo2.DB.Entity.*;
 import codehub.grupo2.Service.*;
 import jakarta.servlet.http.HttpSession;
@@ -37,6 +39,12 @@ public class Control implements CommandLineRunner {
 
     @Autowired
     private CommentService CommentService;
+
+    @Autowired
+    private UserComponent userComponent;
+
+    @Autowired
+    private PostComponent postComponent;
     
 
     @Override
@@ -55,7 +63,7 @@ public class Control implements CommandLineRunner {
         Post post1 = new Post(user, "Post1", "Post1", topic2);
         Post post2 = new Post(user, "Post2", "Post2", topic1);
         Post post3 = new Post(user, "Post3", "Post3", topic1);
-        Post post4 = new Post(user, "Post4", "Post4", topic1);
+        Post post4 = new Post(user, "Post4", "Post4", topic3);
         Post post5 = new Post(user, "Post5", "Post5", topic1);
     
 
@@ -91,14 +99,14 @@ public class Control implements CommandLineRunner {
     }
 
     @PostMapping("/login")
-    public String Login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model) {
+    public String Login(@RequestParam String username, @RequestParam String password, Model model) {
         UserName sessionUser = UserService.getUser(username);
         if (sessionUser == null) {
             model.addAttribute("error", "Usuario no encontrado.");
             return "home";
         }
         if (sessionUser.getPassword().equals(password)) {
-            session.setAttribute("user", sessionUser); 
+            userComponent.setUser(sessionUser);
             return "redirect:/init"; 
         }
         model.addAttribute("error", "Contrasena incorrecta.");
@@ -115,7 +123,7 @@ public class Control implements CommandLineRunner {
 
     @GetMapping("/logOut")
     public String Logout(HttpSession session) {
-        session.removeAttribute("user");
+        userComponent.logout();
         session.invalidate();
         return "redirect:/home";
     }
@@ -131,6 +139,7 @@ public class Control implements CommandLineRunner {
     @PostMapping("/showMoreP/{id}")
     public String showMorePostPost(@PathVariable("id") long id, Model model) {
         Post post = PostService.getPostById(id);
+        postComponent.setPost(post);
         if (post != null) {
             model.addAttribute("posts", post);
             return "showMorePost";
@@ -143,6 +152,7 @@ public class Control implements CommandLineRunner {
     @GetMapping("/showMoreP/{id}")
     public String showMorePostGet(@PathVariable("id") long id, Model model) {
         Post post = PostService.getPostById(id);
+        postComponent.setPost(post);
         if (post != null) {
             model.addAttribute("posts", post);  
             return "showMorePost"; 
@@ -160,21 +170,21 @@ public class Control implements CommandLineRunner {
         return "addPost"; 
     }
     @PostMapping("/addPost")
-    public String showwaddPost(@RequestParam String title,  @RequestParam String content, @RequestParam Topic topic,  HttpSession session,  Model model) {
-        UserName user = (UserName) session.getAttribute("user");
+    public String showwaddPost(@RequestParam String title,  @RequestParam String content, @RequestParam Topic topic,Model model) {
+        UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home"; 
         }
     
         PostService.registerPost(user, title, content, topic);
-    
+
         return "addPost"; 
     }
     
     
     @PostMapping("/deletePost")
-    public String deletePost(@RequestParam long id, HttpSession session) {
-        UserName user = (UserName) session.getAttribute("user");
+    public String deletePost(@RequestParam long id) {
+        UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
         }
@@ -183,8 +193,8 @@ public class Control implements CommandLineRunner {
     }
 
     @GetMapping("/editPost")
-    public String showEditPost(@RequestParam long id, HttpSession session, Model model) {
-        UserName user = (UserName) session.getAttribute("user");
+    public String showEditPost(@RequestParam long id, Model model) {
+        UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
         }
@@ -195,8 +205,8 @@ public class Control implements CommandLineRunner {
     
 
     @PostMapping("/editPost")
-    public String editPost(@RequestParam long id, HttpSession session, Model model,@RequestParam Optional<String> title,@RequestParam Optional<String> text){
-        UserName user = (UserName) session.getAttribute("user");
+    public String editPost(@RequestParam long id,  Model model,@RequestParam Optional<String> title,@RequestParam Optional<String> text){
+        UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
         }
@@ -242,8 +252,8 @@ public class Control implements CommandLineRunner {
     }
 
     @PostMapping("/deleteTopic")
-    public String deleteTopic(@RequestParam long id, HttpSession session) {
-         UserName user = (UserName) session.getAttribute("user");
+    public String deleteTopic(@RequestParam long id) {
+         UserName user = userComponent.getUser();
             if (user == null) {
                   return "redirect:/home";
             }
@@ -270,26 +280,23 @@ public class Control implements CommandLineRunner {
 }
 
  @PostMapping("/createComment")
- public String showCreateComment(@RequestParam long id, @RequestParam String content, HttpSession session, Model model) {
-    UserName user = (UserName) session.getAttribute("user");
+ public String showCreateComment(@RequestParam String content, Model model) {
+    UserName user = userComponent.getUser();
     if (user == null) {
         return "redirect:/home";  
     }
-    if (id == 0) {
-     return "error";  
-    }
-    Post post = PostService.getPostById(id);  // Obtener el post según el id
-    CommentService.registerComment(user, content, content, post);  // Registrar el comentario
-    model.addAttribute("check" , "Comentario Agregado Correctamente");  // Mensaje de éxito
-    return "addComment";  // Retorna la vista addComment
+    Post post = postComponent.getPost();
+    CommentService.registerComment(user, content, content, post);
+    model.addAttribute("check" , "Comentario Agregado Correctamente"); 
+    return "redirect:/post"; 
 }
 
 
     
 
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam long id, HttpSession session) {
-        UserName user = (UserName) session.getAttribute("user");
+    public String deleteComment(@RequestParam long id) {
+        UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
         }
@@ -298,8 +305,8 @@ public class Control implements CommandLineRunner {
     }
 
     @GetMapping("/editComment")
-    public String showEditComment(@RequestParam long id, HttpSession session, Model model) {
-        UserName user = (UserName) session.getAttribute("user");
+    public String showEditComment(@RequestParam long id,  Model model) {
+        UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
         }
@@ -309,8 +316,8 @@ public class Control implements CommandLineRunner {
     }
     
     @PostMapping("/editComment")
-    public String editComment(@RequestParam long id, HttpSession session, Model model,@RequestParam String text){
-        UserName user = (UserName) session.getAttribute("user");
+    public String editComment(@RequestParam long id, Model model,@RequestParam String text){
+        UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
         }
@@ -322,8 +329,8 @@ public class Control implements CommandLineRunner {
     //MAIN MENU
         
     @GetMapping("/init")
-    public String init(HttpSession session, Model model) {
-        UserName user = (UserName) session.getAttribute("user");
+    public String init( Model model) {
+        UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home"; 
         }
@@ -334,8 +341,8 @@ public class Control implements CommandLineRunner {
         //USER PROFILE
 
         @PostMapping("/acc")
-        public String GoAccPost(Model model, HttpSession session) {
-            UserName user = (UserName) session.getAttribute("user");
+        public String GoAccPost(Model model) {
+            UserName user = userComponent.getUser();
             if (user == null) {
                 return "redirect:/home";
             }
@@ -346,7 +353,7 @@ public class Control implements CommandLineRunner {
 
         @GetMapping("/acc")
         public String GoAccGet(Model model, HttpSession session) {
-            UserName user = (UserName) session.getAttribute("user");
+            UserName user = userComponent.getUser();
             if (user == null) {
                 return "redirect:/home";
             }
@@ -377,10 +384,10 @@ public class Control implements CommandLineRunner {
         }
 
         @PostMapping("/deleteUserDefinitive")
-        public String deleteUserDefinitive(HttpSession session, Model model) {
-            UserName user = (UserName) session.getAttribute("user");
+        public String deleteUserDefinitive( Model model,HttpSession session) {
+            UserName user = userComponent.getUser();
             UserService.deleteUser(user.getUsername());
-            session.removeAttribute("user");
+            userComponent.logout();
             session.invalidate();
             model.addAttribute("check", "Usuario Eliminado Correctamente");
             return "home";

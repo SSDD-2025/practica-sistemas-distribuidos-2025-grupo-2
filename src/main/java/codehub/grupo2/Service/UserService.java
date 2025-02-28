@@ -35,5 +35,9 @@ public class UserService {
         UserBD.delete(user);
     }   
 
+    public void addComment(UserName user){
+        UserBD.save(user);
+    }
+
 
 }
