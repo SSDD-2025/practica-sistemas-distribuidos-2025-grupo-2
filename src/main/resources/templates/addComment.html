@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Comment</title>
-    <link rel="stylesheet" href="addComment.css"> 
+    <title>Añadir Comentario</title>
+    <link rel="stylesheet" href="addComment.css">
 </head>
 <body>
 
     <div class="container">
         <h1>Crear un nuevo Comentario</h1>
         <form action="/createComment" method="post">
-            <input type="hidden" name="id" value="{{Id}}">
-            
+            <input type="hidden" name="id" th:value="${postId}">  <!-- Usa ${postId} para obtener el valor del modelo -->
             <div class="form-group">
                 <label for="content">Comentario:</label>
                 <textarea id="content" name="content" placeholder="Escribe tu comentario" required></textarea>
             </div>
-
+        
             <button type="submit">Añadir comentario</button>
         </form>
 

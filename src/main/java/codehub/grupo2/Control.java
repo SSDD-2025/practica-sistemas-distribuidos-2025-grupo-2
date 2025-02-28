@@ -265,22 +265,25 @@ public class Control implements CommandLineRunner {
     //COMMENTS
     @GetMapping("createComment")
     public String showCreateComment(@RequestParam long id, Model model) {
-        model.addAttribute("postId", id);  
-        return "addComment";  
+    model.addAttribute("postId", id);  
+    return "addComment";  
+}
+
+ @PostMapping("createComment")
+ public String showCreateComment(@RequestParam long id, @RequestParam String content, HttpSession session, Model model) {
+    UserName user = (UserName) session.getAttribute("user");
+    if (user == null) {
+        return "redirect:/home";  
     }
-    
-    @PostMapping("createComment")
-    public String showCreateComment(@RequestParam long id, @RequestParam String content, HttpSession session, Model model) {
-        UserName user = (UserName) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/home";  
-        }
-        Post post = PostService.getPostById(id);
-        CommentService.registerComment(user, content, content, post);
-        model.addAttribute("check", "Comentario Agregado Correctamente");
-        return "addComment";
+    if (id == 0) {
+     return "error";  
     }
-    
+    Post post = PostService.getPostById(id);  // Obtener el post según el id
+    CommentService.registerComment(user, content, content, post);  // Registrar el comentario
+    model.addAttribute("check" , "Comentario Agregado Correctamente");  // Mensaje de éxito
+    return "addComment";  // Retorna la vista addComment
+}
+
 
     
 
