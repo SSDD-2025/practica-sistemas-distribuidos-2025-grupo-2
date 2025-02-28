@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Post</title>
+    <link rel="stylesheet" href="addComment.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Crear un nuevo Post</h1>
+        <form action="/addPost" method="post">
+            <input type="hidden" name="topic" th:value="${topic}">  <!-- Usa ${postId} para obtener el valor del modelo -->
+            <div class="form-group">
+                <label for="title">Titulo:</label>
+                <textarea id="title" name="title" placeholder="Titulo del post" required></textarea>
+                <label for="content">Post:</label>
+                <textarea id="content" name="content" placeholder="Escribe tu Post" required></textarea>
+            </div>
+        
+            <button type="submit">Añadir comentario</button>
+        </form>
+
+        <a href="/init">Volver a la página principal</a>
+    </div>
+
+</body>
+</html>

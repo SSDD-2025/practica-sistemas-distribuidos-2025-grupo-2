@@ -46,6 +46,9 @@
             font-weight: bold;
             text-transform: uppercase;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
         .btn:hover {
             background-color: #fff;
@@ -68,6 +71,26 @@
         .topic-header .delete-btn:hover {
             background-color: #ff6666;
             box-shadow: 0 0 12px #ff6666;
+        }
+        .right-bottom-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border: 2px solid #00ff99;
+            background: #00ff99;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease, color 0.3s ease;
+            text-decoration: none;
+        }
+        .right-bottom-btn:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+            box-shadow: 0 0 12px #fff;
         }
     </style>
 </head>
@@ -96,6 +119,6 @@
         </div>
         {{/posts}}
     </div>
+    <a href="/addPost" class="right-bottom-btn">Añadir Post</a>
 </body>
-
 </html>

@@ -159,18 +159,18 @@ public class Control implements CommandLineRunner {
         model.addAttribute("check", "");
         return "addPost"; 
     }
-
     @PostMapping("/addPost")
-    public String addPost(@RequestParam String title, @RequestParam String content, HttpSession session, Model model, @RequestParam Topic topic) {
+    public String showwaddPost(@RequestParam String title,  @RequestParam String content, @RequestParam Topic topic,  HttpSession session,  Model model) {
         UserName user = (UserName) session.getAttribute("user");
         if (user == null) {
-            return "redirect:/home";
+            return "redirect:/home"; 
         }
-        PostService.registerPost(user, title, content,topic);
-        model.addAttribute("check", "Post Agregado Correctamente");
-        return "addPost";
+    
+        PostService.registerPost(user, title, content, topic);
+    
+        return "addPost"; 
     }
-
+    
     
     @PostMapping("/deletePost")
     public String deletePost(@RequestParam long id, HttpSession session) {
@@ -263,13 +263,13 @@ public class Control implements CommandLineRunner {
         }
 
     //COMMENTS
-    @GetMapping("createComment")
+    @GetMapping("/createComment")
     public String showCreateComment(@RequestParam long id, Model model) {
     model.addAttribute("postId", id);  
     return "addComment";  
 }
 
- @PostMapping("createComment")
+ @PostMapping("/createComment")
  public String showCreateComment(@RequestParam long id, @RequestParam String content, HttpSession session, Model model) {
     UserName user = (UserName) session.getAttribute("user");
     if (user == null) {
@@ -287,7 +287,7 @@ public class Control implements CommandLineRunner {
 
     
 
-    @PostMapping("deleteComment")
+    @PostMapping("/deleteComment")
     public String deleteComment(@RequestParam long id, HttpSession session) {
         UserName user = (UserName) session.getAttribute("user");
         if (user == null) {
@@ -297,7 +297,7 @@ public class Control implements CommandLineRunner {
         return "redirect:/acc";
     }
 
-    @GetMapping("editComment")
+    @GetMapping("/editComment")
     public String showEditComment(@RequestParam long id, HttpSession session, Model model) {
         UserName user = (UserName) session.getAttribute("user");
         if (user == null) {
@@ -308,7 +308,7 @@ public class Control implements CommandLineRunner {
         return "editComment";        
     }
     
-    @PostMapping("editComment")
+    @PostMapping("/editComment")
     public String editComment(@RequestParam long id, HttpSession session, Model model,@RequestParam String text){
         UserName user = (UserName) session.getAttribute("user");
         if (user == null) {
