@@ -23,32 +23,29 @@
       </ul>
     </nav>
 
-    <!-- Contenedor principal -->
     <div class="container">
       <header class="header">
-        <!-- Botón de tres puntos para el menú lateral -->
         <button id="toggle-menu" class="menu-toggle">&#x22EE;</button>
         <h1 class="title">CodeHub</h1>
-
-        <!-- Botón de usuario en la esquina superior derecha -->
+        {{#error}}
+            <p style="color: red;">{{error}}</p> 
+        {{/error}}
         {{#user}}
         <form class="profile" action="/acc" method="post">
           <button type="submit" class="btn profile-button">{{username}}</button>
         </form>
         {{/user}}
       </header>
-
       <main class="content-wrapper">
-        <!-- Barra de búsqueda en el centro -->
         <form class="search-form" action="/search" method="get">
           <input 
             type="text" 
             name="query" 
             class="search-bar" 
-            placeholder="Buscar en CodeHub..."
+            placeholder="Search in CodeHub..."
           />
           <button type="submit" class="btn search-button">
-            <span class="search-text">Buscar</span>
+            <span class="search-text">Shearch</span>
             <span class="search-icon">🔍</span>
           </button>
         </form>

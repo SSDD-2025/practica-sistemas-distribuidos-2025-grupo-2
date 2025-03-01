@@ -17,10 +17,6 @@ public class PostComponent {
         this.post = post;
     }
 
-    public void logout() {
-        this.post = null;   
-    }
-
     public boolean isEmpty() {
         return this.post != null;
     }
@@ -28,4 +24,5 @@ public class PostComponent {
     public boolean isPost(Post post) {
         return this.post.equals(post);
     }
+    
 }

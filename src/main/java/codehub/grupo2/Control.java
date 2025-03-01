@@ -17,8 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 
@@ -53,7 +55,7 @@ public class Control implements CommandLineRunner {
         Topic topic2 = TopicService.newTopic("Pascal");
         Topic topic3 = TopicService.newTopic("Java");
     
-        UserService.registerUsername("Sonaca", "Sonaca", "Sonaca");
+        UserService.registerUsername("Sonaca", "12345678901234567890", "sonaca@gmail.com");
         UserService.registerUsername("Admin", "Admin", "Admin");
         UserService.registerUsername("User", "User", "User");
 
@@ -100,22 +102,19 @@ public class Control implements CommandLineRunner {
 
     @PostMapping("/login")
     public String Login(@RequestParam String username, @RequestParam String password, Model model) {
-        UserName sessionUser = UserService.getUser(username);
-        if (sessionUser == null) {
-            model.addAttribute("error", "Usuario no encontrado.");
+        if(UserService.login(username, password)){
+            userComponent.setUser(UserService.getUser(username));
+            model.addAttribute("error", "");
+            return "redirect:/init";
+        }
+        else{
+            model.addAttribute("error", "Invalid username or password");
             return "home";
         }
-        if (sessionUser.getPassword().equals(password)) {
-            userComponent.setUser(sessionUser);
-            return "redirect:/init"; 
-        }
-        model.addAttribute("error", "Contrasena incorrecta.");
-        return "home";
     }
     
     @PostMapping("/register")
     public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model) {
-        UserService.registerUsername(username, password, email);
         model.addAttribute("check", UserService.registerUsername(username, password, email));
         return "home";
     }
@@ -136,11 +135,13 @@ public class Control implements CommandLineRunner {
         model.addAttribute("posts", postlist);
         return "post";
     }
+
+
     @PostMapping("/showMoreP/{id}")
     public String showMorePostPost(@PathVariable("id") long id, Model model) {
         Post post = PostService.getPostById(id);
-        postComponent.setPost(post);
         if (post != null) {
+            postComponent.setPost(post);
             model.addAttribute("posts", post);
             return "showMorePost";
         } else {
@@ -152,8 +153,8 @@ public class Control implements CommandLineRunner {
     @GetMapping("/showMoreP/{id}")
     public String showMorePostGet(@PathVariable("id") long id, Model model) {
         Post post = PostService.getPostById(id);
-        postComponent.setPost(post);
         if (post != null) {
+            postComponent.setPost(post);
             model.addAttribute("posts", post);  
             return "showMorePost"; 
         } else {
@@ -162,7 +163,6 @@ public class Control implements CommandLineRunner {
     }
     
     
-
 
      @GetMapping("/addPost")
     public String showAddPost(Model model) {
@@ -175,9 +175,7 @@ public class Control implements CommandLineRunner {
         if (user == null) {
             return "redirect:/home"; 
         }
-    
         PostService.registerPost(user, title, content, topic);
-
         return "addPost"; 
     }
     
@@ -189,38 +187,18 @@ public class Control implements CommandLineRunner {
             return "redirect:/home";
         }
         PostService.deletePost(PostService.getPostById(id).getTitle());
-        return "redirect:/init";
+        return "redirect:/post";
     }
-
-    @GetMapping("/editPost")
-    public String showEditPost(@RequestParam long id, Model model) {
-        UserName user = userComponent.getUser();
-        if (user == null) {
-            return "redirect:/home";
-        }
-        Post post = PostService.getPostById(id);
-        model.addAttribute("post", post);
-        return "editPost";        
-    }
-    
-
-    @PostMapping("/editPost")
-    public String editPost(@RequestParam long id,  Model model,@RequestParam Optional<String> title,@RequestParam Optional<String> text){
-        UserName user = userComponent.getUser();
-        if (user == null) {
-            return "redirect:/home";
-        }
-        PostService.editPost(id,title,text);
-        return "redirect:/acc";
-    }
-    
-
 
     //TOPICS
 
     @GetMapping("/topic")
         public String Topic(Model model) {
             List<Topic> topiclist = TopicService.getAllTopics();
+            if(topiclist.isEmpty()){
+                model.addAttribute("error", "No topics avadible");
+                return "redirect:/topic";
+            }
             model.addAttribute("topics", topiclist);
             return "topic";
         }
@@ -287,7 +265,7 @@ public class Control implements CommandLineRunner {
     }
     Post post = postComponent.getPost();
     CommentService.registerComment(user, content, content, post);
-    model.addAttribute("check" , "Comentario Agregado Correctamente"); 
+    model.addAttribute("check" , "Comment added correctly"); 
     return "redirect:/post"; 
 }
 
@@ -335,6 +313,7 @@ public class Control implements CommandLineRunner {
             return "redirect:/home"; 
         }
         model.addAttribute("user", user); 
+        model.addAttribute("error", "");
         return "init";
     }
 
@@ -392,4 +371,13 @@ public class Control implements CommandLineRunner {
             model.addAttribute("check", "Usuario Eliminado Correctamente");
             return "home";
         }
+
+        @PostMapping("/profilePicture/new")
+	        public String newPost(Model model, Post post, MultipartFile image) throws Exception {
+            UserName user = userComponent.getUser();
+            UserService.save(user, image);
+		    return "saved_post";
+	    }
+
 }
+     

@@ -8,6 +8,9 @@
 </head>
 <body>
     <h1>Topics</h1>
+    {{#error}}
+            <p style="color: red;">{{error}}</p> 
+    {{/error}}
     <div class="grid">
         {{#topics}}
         <a href="/topic/{{id}}" class="topic-link">

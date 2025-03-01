@@ -81,9 +81,9 @@
     .posts {
       text-align: left;
       width: 100%;
-      max-height: 300px; /* Altura máxima para evitar páginas muy largas */
+      max-height: 300px; 
       overflow-y: auto;
-      padding-right: 10px; /* Para que el scroll no tape el contenido */
+      padding-right: 10px; 
     }
 
     .posts ul {
@@ -99,7 +99,7 @@
       border: 1px solid #00ff99;
     }
 
-    /* Botón de Logout */
+
     .logout-form button {
       width: 100%;
       background-color: #00ff99;
@@ -119,7 +119,7 @@
       box-shadow: 0 0 12px #fff;
     }
 
-    /* Botón de Eliminar */
+
     .delete-button {
       width: 100%;
       background-color: #00ff99;
@@ -174,7 +174,6 @@
       <ul>
         {{#posts}}
           <li>
-            <!-- Hacer que el post sea cliclable -->
             <a href="/showMorePost?id={{id}}" style="color: #00ff99; text-decoration: none;">
               <strong>{{title}}</strong> -> {{text}}
             </a>
@@ -183,12 +182,10 @@
       </ul>
     </div>
 
-    <!-- Botón de Eliminar debajo de los posts -->
     <form action="/deleteUserConfirmation" method="post">
       <button type="submit" class="delete-button">DELETE ACCOUNT</button>
     </form>
 
-    <!-- Botón de Home Page -->
     <form class="logout-form" action="/init" method="get">
       <button type="submit">Home Page</button>
     </form>

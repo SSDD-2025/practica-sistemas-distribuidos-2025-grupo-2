@@ -1,5 +1,7 @@
 package codehub.grupo2.Component;
 
+import java.sql.Blob;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -31,4 +33,11 @@ public boolean isUser(UserName user) {
     return this.user.equals(user);
 }
 
+public void setProfilePicture(Blob profilePicture) {
+    this.user.setProfilePicture(profilePicture);
+}
+
+public Blob getProfilePicture() {
+    return this.user.getProfilePicture();
+}
 }

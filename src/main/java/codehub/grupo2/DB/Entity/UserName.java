@@ -1,7 +1,9 @@
 package codehub.grupo2.DB.Entity;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
+
 
 import jakarta.persistence.*;
 
@@ -15,6 +17,9 @@ public class UserName {
     private String username;
     private String password;
     private String email;
+    
+    @Lob
+    private Blob profilePicture;
 
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
@@ -50,4 +55,11 @@ public class UserName {
         return String.format("-> %s <-",username);
     }
 
+    public void setProfilePicture(Blob profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public Blob getProfilePicture() {
+        return this.profilePicture;
+    }
 }
