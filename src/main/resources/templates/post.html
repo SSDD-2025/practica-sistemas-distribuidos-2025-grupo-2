@@ -4,24 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post</title>
-    <link rel="stylesheet" href="post.css"> <!-- Ruta al archivo de estilo CSS -->
+    <link rel="stylesheet" href="post.css"> 
 </head>
 <body>
-    <div class="post">
+    <div class="post-container">
         {{#posts}}
-        <h1><p><strong>{{title}}</strong></p></h1>
-        <div class="user">
-            <p>{{user}}</p>
+        <div class="post">
+            <form action="/deletePost" method="post">
+                <input type="hidden" name="id" value="{{id}}">
+                <button type="submit" class="btn delete-btn">Delete</button>
+            </form>
+            <h1><strong>{{title}}</strong></h1>
+            <div class="user">
+                <p>Posted by: {{user}}</p>
+            </div>
+            <div class="content">
+                <p>{{text}}</p>
+            </div>
+            <a href="/showMoreP/{{id}}" class="btn">Show more</a>
         </div>
-        <div class="content">
-            <p>{{text}}</p>
-        </div>
-        <a href="/showMoreP/{{id}}" class="btn">Show more</a>
         {{/posts}}
     </div>
+    
     <a href="/init"> 
-        <button class="add-topic-btn left-bottom-btn">Return</button>
+        <button class="btn left-bottom-btn">Return</button>
     </a>
-    <a href="/addPost" class="right-bottom-btn">Añadir Post</a>
+    <a href="/addPost" class="right-bottom-btn">Add Post</a>
 </body>
 </html>

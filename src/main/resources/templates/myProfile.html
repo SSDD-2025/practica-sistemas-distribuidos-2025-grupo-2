@@ -157,13 +157,13 @@
             <p><strong>Password:</strong> {{password}}</p>
           {{/user}}
           <form action="/hidePassword" method="post">
-            <button type="submit" class="toggle-password">Ocultar</button>
+            <button type="submit" class="toggle-password">Hide</button>
           </form>
         {{/showPassword}}
         {{^showPassword}}
           <p><strong>Password:</strong> *******</p>
           <form action="/showPassword" method="post">
-            <button type="submit" class="toggle-password">Mostrar</button>
+            <button type="submit" class="toggle-password">Show</button>
           </form>
         {{/showPassword}}
       </div>

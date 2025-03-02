@@ -22,7 +22,7 @@ public class Post {
     private UserName user;
 
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     @ManyToOne

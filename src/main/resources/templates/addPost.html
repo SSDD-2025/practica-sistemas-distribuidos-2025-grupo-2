@@ -11,18 +11,23 @@
     <div class="container">
         <h1>Crear un nuevo Post</h1>
         <form action="/addPost" method="post">
-            <input type="hidden" name="topic" th:value="${topic}">  <!-- Usa ${postId} para obtener el valor del modelo -->
             <div class="form-group">
-                <label for="title">Titulo:</label>
-                <textarea id="title" name="title" placeholder="Titulo del post" required></textarea>
+                <label for="title">Title:</label>
+                <textarea id="title" name="title" placeholder="Post Title" required></textarea>
                 <label for="content">Post:</label>
-                <textarea id="content" name="content" placeholder="Escribe tu Post" required></textarea>
+                <textarea id="content" name="content" placeholder="Write your post" required></textarea>
+                <label for="topic">Topic:</label>
+                <select id="topic" name="tid" required>
+                    <option value="" disabled selected>Select a topic</option>
+                    {{#topics}}
+                        <option value="{{id}}">{{topicName}}</option>
+                    {{/topics}}
+                </select>
             </div>
-        
-            <button type="submit">Añadir comentario</button>
+            <button type="submit">Add Post</button>
         </form>
 
-        <a href="/init">Volver a la página principal</a>
+        <a href="/init">Return to main page</a>
     </div>
 
 </body>

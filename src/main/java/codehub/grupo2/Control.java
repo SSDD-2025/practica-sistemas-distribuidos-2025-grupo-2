@@ -164,19 +164,23 @@ public class Control implements CommandLineRunner {
     
     
 
-     @GetMapping("/addPost")
+    @GetMapping("/addPost")
     public String showAddPost(Model model) {
+        List<Topic> topics = TopicService.getAllTopics();
+        model.addAttribute("topics", topics);
         model.addAttribute("check", "");
         return "addPost"; 
     }
+
     @PostMapping("/addPost")
-    public String showwaddPost(@RequestParam String title,  @RequestParam String content, @RequestParam Topic topic,Model model) {
+    public String showwaddPost(@RequestParam String title,  @RequestParam String content,@RequestParam long tid,Model model) {
         UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home"; 
         }
+        Topic topic = TopicService.getTopicById(tid).get();
         PostService.registerPost(user, title, content, topic);
-        return "addPost"; 
+        return "redirect:/post"; 
     }
     
     
@@ -213,7 +217,7 @@ public class Control implements CommandLineRunner {
         public String addTopic(@RequestParam String topicName, Model model) {
             TopicService.newTopic(topicName);
             model.addAttribute("check", "Tema Agregado Correctamente");
-            return "addTopic";
+            return "redirect:/topic";
         }
 
     @GetMapping("/topic/{id}")
@@ -254,23 +258,21 @@ public class Control implements CommandLineRunner {
     @GetMapping("/createComment")
     public String showCreateComment(@RequestParam long id, Model model) {
     model.addAttribute("postId", id);  
+    postComponent.setPost(PostService.getPostById(id));
     return "addComment";  
 }
 
- @PostMapping("/createComment")
- public String showCreateComment(@RequestParam String content, Model model) {
-    UserName user = userComponent.getUser();
-    if (user == null) {
-        return "redirect:/home";  
+    @PostMapping("/createComment")
+    public String showCreateComment(@RequestParam String content, Model model) {
+        UserName user = userComponent.getUser();
+        if (user == null) {
+            return "redirect:/home";  
+        }
+        Post post = postComponent.getPost();
+        CommentService.registerComment(user, content, content, post);
+        model.addAttribute("check" , "Comment added correctly"); 
+        return "redirect:/post"; 
     }
-    Post post = postComponent.getPost();
-    CommentService.registerComment(user, content, content, post);
-    model.addAttribute("check" , "Comment added correctly"); 
-    return "redirect:/post"; 
-}
-
-
-    
 
     @PostMapping("/deleteComment")
     public String deleteComment(@RequestParam long id) {
@@ -368,7 +370,7 @@ public class Control implements CommandLineRunner {
             UserService.deleteUser(user.getUsername());
             userComponent.logout();
             session.invalidate();
-            model.addAttribute("check", "Usuario Eliminado Correctamente");
+            model.addAttribute("check", "User deleted correctly");
             return "home";
         }
 

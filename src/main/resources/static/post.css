@@ -2,117 +2,148 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #000;
+    background-color: #000; /* Fondo negro */
     font-family: 'Courier New', Courier, monospace;
-    color: #00ff99;
+    color: #00ff99; /* Texto verde neón */
     display: flex;
-    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
-    justify-content: center;
+    flex-direction: column;
     min-height: 100vh;
     transition: all 0.3s ease;
 }
 
-/* Estilos para el contenedor del post */
+h1 {
+    text-align: center;
+    font-size: 2em;
+    color: #00ff99;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de la cuadrícula de posts */
+.post-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 posts por fila */
+    gap: 20px; /* Espacio entre posts */
+    padding: 20px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Estilos para cada post */
 .post {
-    width: 80%;
-    max-width: 800px;
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+    color: #00ff99; /* Texto verde neón */
     padding: 20px;
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
-    margin-bottom: 20px;
-    text-align: center; /* Centra el contenido */
-}
-
-/* Títulos */
-h1, h2 {
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.7); /* Sombra verde neón */
     text-align: center;
-    border-bottom: 2px solid #00ff99;
-    padding-bottom: 10px;
+    font-size: 1.2em;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative; /* Para posicionar el botón de eliminar */
 }
 
-/* Estilo para el nombre del usuario */
-.user {
+/* Efecto hover para los posts */
+.post:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 153, 1); /* Sombra más intensa al hacer hover */
+}
+
+/* Botón de eliminar */
+.delete-btn {
+    font-family: 'Courier New', Courier, monospace;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff0000; /* Fondo rojo */
+    color: #fff; /* Texto blanco */
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
     font-weight: bold;
-    color: #00ff99;
-    text-align: center;
-    margin-bottom: 10px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
 }
 
-/* Estilo para el contenido del post */
-.content {
+/* Efecto hover del botón de eliminar */
+.delete-btn:hover {
+    background-color: #ff6666; /* Rojo más claro al hacer hover */
+    box-shadow: 0 0 12px #ff6666; /* Sombra roja al hacer hover */
+}
+
+/* Botón "Show more" */
+.post .btn {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #00ff99; /* Fondo verde neón */
+    color: #000; /* Texto negro */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
     margin-top: 10px;
-    text-align: justify;
 }
 
-/* Estilos para el botón (btn) */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+/* Efecto hover para el botón "Show more" */
+.post .btn:hover {
+    background-color: #00cc77; /* Verde más oscuro al hacer hover */
+    box-shadow: 0 0 12px #00cc77; /* Sombra verde al hacer hover */
+}
+
+/* Botones flotantes en la esquina inferior */
+.left-bottom-btn, .right-bottom-btn {
+    position: fixed;
+    bottom: 20px;
     padding: 10px 20px;
+    background-color: #00ff99; /* Fondo verde neón */
+    color: #000; /* Texto negro */
     border: 2px solid #00ff99;
-    background: #00ff99;
-    color: #000;
-    cursor: pointer;
+    font-size: 1.2em;
+    font-family: 'Courier New', Courier, monospace;
     border-radius: 5px;
-    font-weight: bold;
-    transition: background 0.3s ease, color 0.3s ease;
-    text-decoration: none;
-    margin-top: 20px; /* Añadir algo de margen para separación */
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.7); /* Sombra verde neón */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    width: 150px;
+    text-align: center;
 }
 
-/* Efecto hover para el botón */
-.btn:hover {
-    background: #fff;
-    color: #000;
-    border-color: #fff;
+/* Efecto hover para los botones flotantes */
+.left-bottom-btn:hover, .right-bottom-btn:hover {
+    font-family: 'Courier New', Courier, monospace;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 153, 1); /* Sombra más intensa al hacer hover */
+    background-color: #000; /* Fondo negro al hacer hover */
+    color: #ff0000; /* Texto verde neón al hacer hover */
 }
 
-/* Botón de volver en la esquina inferior izquierda */
+/* Posicionar el botón de la izquierda */
 .left-bottom-btn {
-    position: fixed;
-    bottom: 20px;
     left: 20px;
-    padding: 10px 20px;
-    border: 2px solid #00ff99;
-    background: #00ff99;
-    color: #000;
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background 0.3s ease, color 0.3s ease;
-    text-decoration: none;
 }
 
-/* Efecto hover */
-.left-bottom-btn:hover {
-    background: #fff;
-    color: #000;
-    border-color: #fff;
-}
-
-/* Botón Añadir Post en la esquina inferior derecha */
+/* Posicionar el botón de la derecha */
 .right-bottom-btn {
-    position: fixed;
-    bottom: 20px;
     right: 20px;
-    padding: 10px 20px;
-    border: 2px solid #00ff99;
-    background: #00ff99;
-    color: #000;
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background 0.3s ease, color 0.3s ease;
-    text-decoration: none;
 }
 
-/* Efecto hover */
-.right-bottom-btn:hover {
-    background: #fff;
-    color: #000;
-    border-color: #fff;
+/* Ajustes responsive */
+@media (max-width: 768px) {
+    .post-container {
+        grid-template-columns: repeat(3, 1fr); /* 2 posts por fila en pantallas medianas */
+    }
+}
+
+@media (max-width: 480px) {
+    .post-container {
+        grid-template-columns: 1fr; /* 1 post por fila en pantallas pequeñas */
+    }
 }
