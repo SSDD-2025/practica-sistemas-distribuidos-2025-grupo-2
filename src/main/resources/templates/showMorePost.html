@@ -22,6 +22,14 @@
             <div class="content">
                 <p>{{posts.text}}</p>
             </div>
+            <div class="comments">
+                <h2>Comments</h2>
+                {{#posts.comments}}
+                    <div class="comment">
+                        <p><strong>{{username.username}}:</strong> {{text}}</p>
+                    </div>
+                {{/posts.comments}}
+            </div>            
         </div>
 
        

@@ -100,7 +100,7 @@
             <h1>Posts in {{topicName}}</h1>
             <form action="/deleteTopic" method="post">
                 <input type="hidden" name="id" value="{{id}}">
-                <button type="submit" class="btn delete-btn">Borrar Topic</button>
+                <button type="submit" class="btn delete-btn">Delete Topic</button>
             </form>
         </div>
         
@@ -110,7 +110,7 @@
                 <h1><strong>{{title}}</strong></h1>
                 <form action="/deletePost" method="post">
                     <input type="hidden" name="id" value="{{id}}">
-                    <button type="submit" class="btn delete-btn">Borrar Post</button>
+                    <button type="submit" class="btn delete-btn">Delete Post</button>
                 </form>
             </div>
             <div class="user">Posted by: {{username}}</div>
@@ -119,6 +119,6 @@
         </div>
         {{/posts}}
     </div>
-    <a href="/addPost" class="right-bottom-btn">Añadir Post</a>
+    <a href="/addPost" class="right-bottom-btn">Add Post</a>
 </body>
 </html>

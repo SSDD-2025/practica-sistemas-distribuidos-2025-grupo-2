@@ -71,18 +71,18 @@ h1 {
 .add-topic-btn {
     position: fixed;
     bottom: 20px;
-    padding: 20px 40px;
+    padding: 10px 20px;
     background-color: #00ff99;
     color: #000;
     border: 2px solid #00ff99;
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-family: 'Courier New', Courier, monospace;
-    border-radius: 10px;
+    border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 255, 153, 0.7);
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
-    width: 200px;
+    width: 150px;
     text-align: center;
 }
 

@@ -47,7 +47,7 @@ h1 {
     margin-bottom: 5px;
 }
 
-.form-group input, .form-group textarea {
+.form-group input, .form-group textarea, .form-group select {
     padding: 10px;
     border: 2px solid #00ff99;
     background: rgba(0, 0, 0, 0.7);
