@@ -32,7 +32,7 @@ body {
   transform: translateX(0);
 }
 
-/* Ajuste del espaciado de los elementos de la barra lateral */
+
 .sidebar ul {
   margin-top: 200px;
   list-style: none;
@@ -42,14 +42,14 @@ body {
 }
 
 .sidebar li {
-  margin-bottom: 30px; /* Menos espacio vertical para que sean más cortos */
+  margin-bottom: 30px; 
 }
 
 .sidebar a {
   color: #00ff99;
   text-decoration: none;
   display: block;
-  padding: 6px 10px;  /* Reducido para hacerlos más cortos */
+  padding: 6px 10px;  
   border: 2px solid #00ff99;
   border-radius: 5px;
   transition: all 0.3s ease;
@@ -61,12 +61,12 @@ body {
   border-color: #fff;
 }
 
-/* Botón de Logout (hereda estilo btn) */
+
 .logout-form .btn {
   width: 100%;
 }
 
-/* ========== CONTENEDOR PRINCIPAL ========== */
+
 .container {
   flex: 1;
   display: flex;
@@ -94,7 +94,7 @@ body {
   text-shadow: 0 0 10px #fff;
 }
 
-/* ========== BOTÓN DE MENÚ ========== */
+
 .menu-toggle {
   position: fixed;
   left: 10px;
@@ -120,7 +120,7 @@ body {
   background-color: rgba(0, 255, 153, 0.1);
 }
 
-/* ========== CONTENIDO PRINCIPAL ========== */
+
 .content-wrapper {
   flex: 1;
   background: rgba(0, 0, 0, 0.8);
@@ -136,7 +136,7 @@ body {
   margin-left: 250px;
 }
 
-/* ========== BARRA DE BÚSQUEDA ========== */
+
 .search-form {
   display: flex;
   justify-content: center;
@@ -154,7 +154,7 @@ body {
   font-size: 1em;
 }
 
-/* ========== ESTILO UNIFICADO PARA BOTONES (Buscar, Perfil, Logout) ========== */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -176,7 +176,7 @@ body {
   color: #000;
 }
 
-/* ========== BOTÓN DE USUARIO (ESQUINA SUPERIOR DERECHA) ========== */
+
 .profile {
   position: absolute;
   top: 20px;

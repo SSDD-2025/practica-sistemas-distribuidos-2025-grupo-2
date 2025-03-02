@@ -1,4 +1,4 @@
-/* Estilos globales */
+
 body {
     margin: 0;
     padding: 0;
@@ -13,7 +13,7 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Contenedor principal */
+
 .container {
     width: 80%;
     max-width: 800px;
@@ -22,10 +22,10 @@ body {
     background: rgba(0, 0, 0, 0.8);
     box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
     margin-bottom: 20px;
-    text-align: center; /* Centrado del contenido */
+    text-align: center; 
 }
 
-/* Cabecera con el título */
+
 .header {
     margin-bottom: 30px;
 }
@@ -38,7 +38,7 @@ body {
     margin: 0;
 }
 
-/* Títulos del post */
+
 h1 {
     font-size: 2.5em;
     color: #00ff99;
@@ -46,7 +46,7 @@ h1 {
     text-shadow: 0 0 10px #fff;
 }
 
-/* Información del usuario */
+
 .user {
     font-weight: bold;
     color: #00ff99;
@@ -54,7 +54,7 @@ h1 {
     margin-bottom: 10px;
 }
 
-/* Estilo para el contenido del post */
+
 .content {
     margin-top: 10px;
     text-align: justify;
@@ -63,7 +63,7 @@ h1 {
     line-height: 1.6;
 }
 
-/* Estilo para los botones generales */
+
 .btn, .right-bottom-btn {
     display: inline-flex;
     align-items: center;
@@ -78,17 +78,17 @@ h1 {
     font-weight: bold;
     transition: background 0.3s ease, color 0.3s ease;
     text-decoration: none;
-    margin-top: 30px; /* Espaciado para separación */
+    margin-top: 30px; 
 }
 
-/* Efecto hover para los botones */
+
 .btn:hover, .right-bottom-btn:hover {
     background: #fff;
     color: #000;
     border-color: #fff;
 }
 
-/* Efectos adicionales para el fondo y el contenedor */
+
 .content-wrapper {
     padding: 30px;
     background: rgba(0, 0, 0, 0.8);
@@ -97,14 +97,14 @@ h1 {
     margin-top: 40px;
 }
 
-/* Botón Add Comment en la esquina inferior derecha */
+
 .right-bottom-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
 }
 
-/* Botón Return en la esquina inferior izquierda */
+
 .left-bottom-btn {
     position: fixed;
     bottom: 20px;
