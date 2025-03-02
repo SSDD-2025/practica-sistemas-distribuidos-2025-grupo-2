@@ -1,5 +1,6 @@
 package codehub.grupo2.Service;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class CommentService {
 
 
     public Comment getCommentById(long id) {
-        return CommentBD.findById(id).orElse(null); 
+        return CommentBD.findById(id);
     }
 
     public Comment getComment(String title){
@@ -37,16 +38,22 @@ public class CommentService {
         return title;
     }
 
-    public List<Comment> getAllComments(){
+    public List<Comment> getAllComments(){ 
         return CommentBD.findAll();
     }
-     public void deleteComment(String title){
-        Comment comment = CommentBD.findByTitle(title);
-        CommentBD.delete(comment);
+     public int deleteComment(Long id){ 
+        Optional<Comment> c = CommentBD.findById(id);
+        if(c.isPresent()){
+            CommentBD.delete(c.get());
+            return 0;
+        }
+        else{
+            return 1;
+        }
     }   
 
     public void editComment(long id, String text){
-        Comment comment = CommentBD.findById(id).get();
+        Comment comment = CommentBD.findById(id);
         comment.setText(text);
         CommentBD.save(comment);
     }

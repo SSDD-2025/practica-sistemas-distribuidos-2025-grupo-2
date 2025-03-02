@@ -13,7 +13,6 @@
             <div class="title">{{posts.topic}}</div> 
         </div>
 
-        <!-- Contenido del post -->
         <div class="content-wrapper">
             <h1>{{posts.title}}</h1>
             <div class="user">
@@ -22,11 +21,16 @@
             <div class="content">
                 <p>{{posts.text}}</p>
             </div>
+
             <div class="comments">
                 <h2>Comments</h2>
                 {{#posts.comments}}
                     <div class="comment">
                         <p><strong>{{username.username}}:</strong> {{text}}</p>
+                        <form action="/deleteComment" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="{{id}}">
+                            <button type="submit" class="delete-btn">Delete Comment</button>
+                        <form>
                     </div>
                 {{/posts.comments}}
             </div>            

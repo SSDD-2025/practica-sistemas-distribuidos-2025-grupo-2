@@ -270,8 +270,7 @@ public class Control implements CommandLineRunner {
         }
         Post post = postComponent.getPost();
         CommentService.registerComment(user, content, content, post);
-        model.addAttribute("check" , "Comment added correctly"); 
-        return "redirect:/post"; 
+        return "redirect:/showMoreP/" + postComponent.getPost().getId();
     }
 
     @PostMapping("/deleteComment")
@@ -280,8 +279,17 @@ public class Control implements CommandLineRunner {
         if (user == null) {
             return "redirect:/home";
         }
-        CommentService.deleteComment(String.valueOf(id));
-        return "redirect:/acc";
+        Post p = CommentService.getCommentById(id).getPost();
+        PostService.deleteComment(p.getId(), id);
+        int comp = CommentService.deleteComment(id);
+        postComponent.getPost().getComments().remove(CommentService.getCommentById(id));
+        if(comp == 0){
+            return "redirect:/showMoreP/" + postComponent.getPost().getId();
+        }
+        else{
+            //add error model return statement
+            return "redirect:/init";
+        }
     }
 
     @GetMapping("/editComment")
@@ -372,6 +380,27 @@ public class Control implements CommandLineRunner {
             session.invalidate();
             model.addAttribute("check", "User deleted correctly");
             return "home";
+        }
+
+        @GetMapping("/editProfile")
+        public String showEditProfile(Model model) {
+            UserName user = userComponent.getUser();
+            if (user == null) {
+                return "redirect:/home";
+            }
+            model.addAttribute("user", user);
+            return "editProfile";
+        }
+
+        @PostMapping("/updateProfile")
+        public String updateProfile(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model) {
+            UserName user = userComponent.getUser();
+            if (user == null) {
+                return "redirect:/home";
+            }
+            UserService.editUser(username, password, email, user.getId());
+            userComponent.setUser(UserService.getUser(username));
+            return "redirect:/acc";
         }
 
         @PostMapping("/profilePicture/new")

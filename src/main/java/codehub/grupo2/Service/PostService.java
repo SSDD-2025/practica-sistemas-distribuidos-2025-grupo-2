@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codehub.grupo2.DB.PostRepository;
 import codehub.grupo2.DB.TopicRepository;
+import codehub.grupo2.DB.Entity.Comment;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.Topic;
 import codehub.grupo2.DB.Entity.UserName;
@@ -76,5 +77,17 @@ public class PostService {
 
     public List<Post> getPostByTopic(Topic topic){
         return PostBD.findByTopic(topic);
+    }
+
+    public int deleteComment(Long idPost,Long idComment){
+        Post post = PostBD.findById(idPost).orElse(null);
+        List<Comment> l = post.getComments();
+        for (Comment c : l) {
+            if (c.getId() == idComment) {
+                l.remove(c);
+                return 0;
+            }
+        }
+        return 1;
     }
 }

@@ -69,6 +69,10 @@ public class Post {
         this.id = id;
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
     public void setDate(LocalDate date) {
         this.date = date;
     }

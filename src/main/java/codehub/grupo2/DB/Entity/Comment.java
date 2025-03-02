@@ -51,4 +51,11 @@ public class Comment {
         return this.text = text;
     }
     
+    public Post getPost(){
+        return this.post;
+    }
+
+    public Long getId(){
+        return this.id;
+    }
 }

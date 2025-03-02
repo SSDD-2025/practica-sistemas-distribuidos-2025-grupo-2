@@ -50,6 +50,26 @@ public class UserName {
         return this.posts;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public Long getId(){
+        return this.id;
+    }
+
     @Override
     public String toString() {
         return String.format("-> %s <-",username);

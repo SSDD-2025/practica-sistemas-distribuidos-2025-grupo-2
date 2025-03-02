@@ -1,6 +1,7 @@
 package codehub.grupo2.Service;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,35 @@ public class UserService {
         if(!profilePicture.isEmpty()){
             user.setProfilePicture(BlobProxy.generateProxy(profilePicture.getInputStream(), profilePicture.getSize()));
         }
-        this.save(user, profilePicture);
+        UserBD.save(user);
+    }
+
+    public int editUser(String username, String password, String email, Long id){
+        Optional<UserName> currentUser = UserBD.findById(id);
+        if(password.length()<12){
+            return 1;
+        }
+        UserName userN = UserBD.findByUsername(username);
+        if(userN != null && userN.getId() != id){
+            return 1;
+        }
+        UserName userE = UserBD.findByEmail(email);
+        if(userE != null && userE.getId() != id){
+            return 1;
+        }
+        if(email.contains("@") == false){
+            return 1;
+        }
+        if(currentUser.isPresent()){
+            currentUser.get().setPassword(password);
+            currentUser.get().setEmail(email);
+            currentUser.get().setUsername(username);
+            UserBD.save(currentUser.get());
+            return 0;
+        }
+        else{
+            return 1;
+        }
     }
 
 
