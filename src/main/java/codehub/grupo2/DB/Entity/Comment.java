@@ -7,15 +7,17 @@ import java.time.LocalDate;
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     
     private LocalDate date;
     private String title;
     private String text;
+
     @ManyToOne
-    private UserName username;
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserName user;
     
     @ManyToOne
     private Post post;
@@ -23,8 +25,8 @@ public class Comment {
 
     protected Comment() {}
     
-    public Comment(UserName username, String title, String text, Post post){
-        this.username = username;
+    public Comment(UserName user, String title, String text, Post post){
+        this.user = user;
         this.title = title;
         this.text = text;
         this.date = LocalDate.now();
@@ -32,7 +34,7 @@ public class Comment {
     }
 
     public UserName getUsername(){
-        return this.username;
+        return this.user;
     }
 
     public LocalDate getDate(){

@@ -106,6 +106,7 @@ public class Control {
     public String Post(Model model) {
         List<Post> postlist = PostService.getAllPost();
         model.addAttribute("posts", postlist);
+        model.addAttribute("error", "");
         return "post";
     }
 
@@ -118,6 +119,7 @@ public class Control {
             model.addAttribute("posts", post);
             return "showMorePost";
         } else {
+            model.addAttribute("error", "No post found");   
             return "redirect:/post";
         }
     }
@@ -131,6 +133,7 @@ public class Control {
             model.addAttribute("posts", post);  
             return "showMorePost"; 
         } else {
+            model.addAttribute("error", "Post Not Found");
             return "redirect:/post";
         }
     }
@@ -153,17 +156,19 @@ public class Control {
         }
         Topic topic = TopicService.getTopicById(tid).get();
         PostService.registerPost(user, title, content, topic);
+        model.addAttribute("error", "");
         return "redirect:/post"; 
     }
     
     
     @PostMapping("/deletePost")
-    public String deletePost(@RequestParam long id) {
+    public String deletePost(@RequestParam long id,Model model) {
         UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
         }
         PostService.deletePost(PostService.getPostById(id).getTitle());
+        model.addAttribute("error", "");
         return "redirect:/post";
     }
 
@@ -197,6 +202,9 @@ public class Control {
     @GetMapping("/topic/{id}")
     public String showTopicPost(@PathVariable Long id, Model model) {
         Optional<Topic> topic = TopicService.getTopicById(id);
+        if(topic == null){
+            return "redirect:/topic"; 
+        }
         if (topic.isPresent()) {
             List<Post> posts = PostService.getPostByTopic(topic.get());
             model.addAttribute("posts", posts);
@@ -243,6 +251,10 @@ public class Control {
             return "redirect:/home";  
         }
         Post post = postComponent.getPost();
+        if(post==null || PostService.getPostById(post.getId()) == null){
+            model.addAttribute("error", "Post not found or deleted");
+            return "redirect:/post";    
+        }
         CommentService.registerComment(user, content, content, post);
         return "redirect:/showMoreP/" + postComponent.getPost().getId();
     }

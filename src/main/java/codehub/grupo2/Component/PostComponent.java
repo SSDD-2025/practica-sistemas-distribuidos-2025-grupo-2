@@ -9,8 +9,8 @@ import codehub.grupo2.DB.Entity.Post;
 public class PostComponent {
     private Post post;
 
-    public Post getPost() {
-        return post;
+    public Post getPost(){
+        return this.post;
     }
 
     public void setPost(Post post) {
