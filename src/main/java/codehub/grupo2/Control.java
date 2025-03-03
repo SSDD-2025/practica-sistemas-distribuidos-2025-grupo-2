@@ -18,7 +18,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 @Component
-public class Control implements CommandLineRunner {
+public class Control {
     @Autowired
     private UserService UserService;
 
@@ -51,36 +50,6 @@ public class Control implements CommandLineRunner {
 
     @Autowired
     private PostComponent postComponent;
-    
-
-    @Override
-    public void run(String... args) throws Exception {
-        Topic topic1 = TopicService.newTopic("Python");
-        Topic topic2 = TopicService.newTopic("Pascal");
-        Topic topic3 = TopicService.newTopic("Java");
-    
-        UserService.registerUsername("Sonaca", "12345678901234567890", "sonaca@gmail.com");
-        UserService.registerUsername("Admin", "Admin", "Admin");
-        UserService.registerUsername("User", "User", "User");
-
-        UserName user = UserService.getUser("Sonaca");
-    
-
-        Post post1 = new Post(user, "Post1", "Post1", topic2);
-        Post post2 = new Post(user, "Post2", "Post2", topic1);
-        Post post3 = new Post(user, "Post3", "Post3", topic1);
-        Post post4 = new Post(user, "Post4", "Post4", topic3);
-        Post post5 = new Post(user, "Post5", "Post5", topic1);
-    
-
-        PostService.registerPost(user, post1.getTitle(), post1.getText(), post1.getTopic());
-        PostService.registerPost(user, post2.getTitle(), post2.getText(), post2.getTopic());
-        PostService.registerPost(user, post3.getTitle(), post3.getText(), post3.getTopic());
-        PostService.registerPost(user, post4.getTitle(), post4.getText(), post4.getTopic());
-        PostService.registerPost(user, post5.getTitle(), post5.getText(), post5.getTopic());
-        
-    }
-
 
     //SESSION + PAGES OF SESSION
 
@@ -206,7 +175,7 @@ public class Control implements CommandLineRunner {
             List<Topic> topiclist = TopicService.getAllTopics();
             if(topiclist.isEmpty()){
                 model.addAttribute("error", "No topics avadible");
-                return "redirect:/topic";
+                return "topic";
             }
             model.addAttribute("topics", topiclist);
             return "topic";
@@ -429,7 +398,5 @@ public class Control implements CommandLineRunner {
         }
         return "redirect:/acc";
     }
-
-
 }
      
