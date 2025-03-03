@@ -1,8 +1,12 @@
 package codehub.grupo2;
 
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+
+import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -194,8 +198,9 @@ public class Control implements CommandLineRunner {
         return "redirect:/post";
     }
 
-    //TOPICS
 
+
+    //TOPICS
     @GetMapping("/topic")
         public String Topic(Model model) {
             List<Topic> topiclist = TopicService.getAllTopics();
@@ -330,22 +335,26 @@ public class Control implements CommandLineRunner {
         //USER PROFILE
 
         @PostMapping("/acc")
-        public String GoAccPost(Model model) {
+        public String GoAccPost(Model model) throws SQLException, IOException {
             UserName user = userComponent.getUser();
             if (user == null) {
                 return "redirect:/home";
             }
+            String profilePictureBase64 = UserService.convertBlobToBase64(user.getProfilePicture());
+            model.addAttribute("profilePictureBase64", profilePictureBase64);
             model.addAttribute("user", user); 
             model.addAttribute("posts", user.getPosts());
             return "myProfile";
         }
 
         @GetMapping("/acc")
-        public String GoAccGet(Model model, HttpSession session) {
+        public String GoAccGet(Model model, HttpSession session) throws SQLException, IOException {
             UserName user = userComponent.getUser();
             if (user == null) {
                 return "redirect:/home";
             }
+            String profilePictureBase64 = UserService.convertBlobToBase64(user.getProfilePicture());
+            model.addAttribute("profilePicture", profilePictureBase64);
             model.addAttribute("user", user); 
             model.addAttribute("posts", user.getPosts());
 
@@ -403,12 +412,24 @@ public class Control implements CommandLineRunner {
             return "redirect:/acc";
         }
 
-        @PostMapping("/profilePicture/new")
-	        public String newPost(Model model, Post post, MultipartFile image) throws Exception {
-            UserName user = userComponent.getUser();
-            UserService.save(user, image);
-		    return "saved_post";
-	    }
+        @GetMapping("/uploadProfilePicture")
+        public String getMethodName() {
+            return "uploadProfilePicture";
+        }
+
+        @PostMapping("/uploadProfilePicture")
+    public String uploadProfilePicture(@RequestParam MultipartFile file) throws IOException, SerialException, SQLException {
+        UserName user = userComponent.getUser();
+        try {
+            byte[] bytes = file.getBytes();
+            UserService.saveProfilePicture(user, bytes);
+            userComponent.setUser(UserService.getUser(user.getUsername()));
+        } catch (IOException e) {
+            return "uploadProfilePicture";
+        }
+        return "redirect:/acc";
+    }
+
 
 }
      

@@ -1,12 +1,16 @@
 package codehub.grupo2.Service;
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.engine.jdbc.BlobProxy;
+import javax.sql.rowset.serial.SerialException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.UserName;
@@ -62,12 +66,12 @@ public class UserService {
     public void addComment(UserName user){
         UserBD.save(user);
     }
-
-    public void save(UserName user, MultipartFile profilePicture) throws IOException {
-        if(!profilePicture.isEmpty()){
-            user.setProfilePicture(BlobProxy.generateProxy(profilePicture.getInputStream(), profilePicture.getSize()));
+    public void saveProfilePicture(UserName user, byte[] profilePicture) throws IOException, SerialException, SQLException {
+        if (profilePicture != null && profilePicture.length > 0) {
+            Blob blob = new javax.sql.rowset.serial.SerialBlob(profilePicture);
+            user.setProfilePicture(blob);
+            UserBD.save(user);
         }
-        UserBD.save(user);
     }
 
     public int editUser(String username, String password, String email, Long id){
@@ -95,6 +99,17 @@ public class UserService {
         }
         else{
             return 1;
+        }
+    }
+    
+
+    public String convertBlobToBase64(Blob blob) throws SQLException, IOException {
+        if (blob == null) {
+            return null; 
+        }
+        try (InputStream inputStream = blob.getBinaryStream()) {
+            byte[] bytes = inputStream.readAllBytes();
+            return Base64.getEncoder().encodeToString(bytes); 
         }
     }
 

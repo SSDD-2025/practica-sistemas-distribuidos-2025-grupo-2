@@ -1,7 +1,9 @@
 package codehub.grupo2.DB.Entity;
 
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -31,6 +33,7 @@ public class UserName {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.profilePicture = null;
         this.posts = new ArrayList<>();
     }
 
@@ -81,5 +84,18 @@ public class UserName {
 
     public Blob getProfilePicture() {
         return this.profilePicture;
+    }
+
+        public String getProfilePictureBase64() {
+        if (this.profilePicture == null) {
+            return null;
+        }
+        try {
+            byte[] bytes = this.profilePicture.getBytes(1, (int) this.profilePicture.length());
+            return Base64.getEncoder().encodeToString(bytes);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
