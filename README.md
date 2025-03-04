@@ -51,7 +51,7 @@ El ususario tiene un atributo llamado profilePicture que es la foto de perfil
 
 
 # Diagrama de pantallas 
-![Description]([READMEDATA\EsquemaPantallas.png](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/READMEDATA/EsquemaPantallas.png))
+![Description](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/be52f2e3edc68241efd73321902ef7782eb00303/READMEDATA/EsquemaPantallas.png)
 
 # 🧭 NAVIGATION
 
