@@ -81,6 +81,21 @@ Para crear un comment necesitarmeos estar dentro de un post y se nos solicitará
 
 Este es el apartado de perfil, en el podremos ver tanto nuestro user como el mail, así como la foto que hemos puesto de perfil y podremos mostrar nuestra constaseña si así lo queremos
 
+# Instrucciones de ejecución
+
+1.Descargar el repositorio y descomprimirlo en una carpeta.
+
+2.Descargar MySQL Configurator y MySQL Worckbench.
+
+3.En MySQL Configurator poner Usuario: root, Password: grupo15SQL y el puerto predeterminado (3306).
+
+4.En MySQL Worckbench añadir una conexión con el usuario y password previamente introducidos.
+
+5.Crear un esquema llamado bookshop en la conexión anterior.
+
+6.Ejecutar la aplicación.
+
+7.Ir a http://localhost:8080/
 
 
 
