@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 
 import codehub.grupo2.Component.*;
 import codehub.grupo2.DB.Entity.*;
@@ -32,7 +33,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 @Component
-public class Control {
+public class Control implements CommandLineRunner{
+
+    @Autowired
+    InitializerService initializerService;
+
     @Autowired
     private UserService UserService;
 
@@ -259,7 +264,7 @@ public class Control {
             model.addAttribute("error", "Post not found or deleted");
             return "redirect:/post";    
         }
-        CommentService.registerComment(user, content, content, post);
+        CommentService.registerComment(user,content, post);
         return "redirect:/showMoreP/" + postComponent.getPost().getId();
     }
 
@@ -414,5 +419,10 @@ public class Control {
         }
         return "redirect:/acc";
     }
+
+        @Override
+        public void run(String... args) throws Exception {
+            initializerService.initialize();
+        }
 }
      

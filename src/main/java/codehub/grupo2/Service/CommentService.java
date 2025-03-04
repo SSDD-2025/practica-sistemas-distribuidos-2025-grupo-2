@@ -23,19 +23,16 @@ public class CommentService {
     public Comment getCommentById(long id) {
         return CommentBD.findById(id);
     }
-
-    public Comment getComment(String title){
-        return CommentBD.findByTitle(title);
-    }
-     public String registerComment(UserName user ,String title, String text, Post post){
+    
+     public String registerComment(UserName user , String text, Post post){
         if(text.length() > 140){
             return "Numero de caracteres escedido";
         }
         userService.addComment(user);
-        Comment comment = new Comment(user,title,text,post);
+        Comment comment = new Comment(user,text,post);
         CommentBD.save(comment);
         post.getComments().add(comment);
-        return title;
+        return text;
     }
 
     public List<Comment> getAllComments(){ 

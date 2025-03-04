@@ -12,7 +12,6 @@ public class Comment {
 
     
     private LocalDate date;
-    private String title;
     private String text;
 
     @ManyToOne
@@ -25,9 +24,8 @@ public class Comment {
 
     protected Comment() {}
     
-    public Comment(UserName user, String title, String text, Post post){
+    public Comment(UserName user, String text, Post post){
         this.user = user;
-        this.title = title;
         this.text = text;
         this.date = LocalDate.now();
         this.post=post;
@@ -39,10 +37,6 @@ public class Comment {
 
     public LocalDate getDate(){
         return this.date;
-    }
-
-    public String getTitle(){
-        return this.title;
     }
 
     public String getText(){
