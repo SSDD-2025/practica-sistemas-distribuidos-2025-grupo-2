@@ -24,7 +24,7 @@ Comment-> Son los comentarios de una Publicación
 
 # Diagrama de Entidades
 
-![Description](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/READMEDATA/EntityDiagram.jpg)
+![Description](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/dac41fde31372ecd60a01eebe83601655cca6538/READMEDATA/Screen/EntityDiagram.jpg)
 
 # Diagrama de la base de Datos
 
