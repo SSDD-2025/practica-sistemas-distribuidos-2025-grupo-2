@@ -1,3 +1,59 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff99;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            color: #00ff99;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .return-home {
+            padding: 10px 20px;
+            background-color: #00ff99;
+            color: #000;
+            border: 2px solid #00ff99;
+            font-size: 1.2em;
+            font-family: 'Courier New', Courier, monospace;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 255, 153, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .return-home:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 153, 1);
+            background-color: #000;
+            color: #00ff99;
+        }
+    </style>
+</head>
+<body>
     <h1>Error {{message}}</h1>
+    <a href="/" class="return-home">Return Home</a>
+</body>
 </html>

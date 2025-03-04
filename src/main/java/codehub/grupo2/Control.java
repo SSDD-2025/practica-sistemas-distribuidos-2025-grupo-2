@@ -106,7 +106,11 @@ public class Control {
     public String Post(Model model) {
         List<Post> postlist = PostService.getAllPost();
         model.addAttribute("posts", postlist);
-        model.addAttribute("error", "");
+        if(postlist.isEmpty()==true){
+            model.addAttribute("error", "No posts avaiable");
+            return "post";
+        }
+        
         return "post";
     }
 
@@ -179,7 +183,7 @@ public class Control {
         public String Topic(Model model) {
             List<Topic> topiclist = TopicService.getAllTopics();
             if(topiclist.isEmpty()){
-                model.addAttribute("error", "No topics avadible");
+                model.addAttribute("error", "No topics avaiable");
                 return "topic";
             }
             model.addAttribute("topics", topiclist);
@@ -260,7 +264,7 @@ public class Control {
     }
 
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam long id) {
+    public String deleteComment(@RequestParam long id, Model model) {
         UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
@@ -273,12 +277,12 @@ public class Control {
             return "redirect:/showMoreP/" + postComponent.getPost().getId();
         }
         else{
-            //add error model return statement
+            model.addAttribute("error", "Comment not found or deleted");
             return "redirect:/init";
         }
     }
 
-    @GetMapping("/editComment")
+    @GetMapping("/editComment")//habría que eliminarlos porque no se usan
     public String showEditComment(@RequestParam long id,  Model model) {
         UserName user = userComponent.getUser();
         if (user == null) {
@@ -289,7 +293,7 @@ public class Control {
         return "editComment";        
     }
     
-    @PostMapping("/editComment")
+    @PostMapping("/editComment")//habría que eliminarlos porque no se usan
     public String editComment(@RequestParam long id, Model model,@RequestParam String text){
         UserName user = userComponent.getUser();
         if (user == null) {
@@ -298,7 +302,7 @@ public class Control {
         CommentService.editComment(id,text);
         return "redirect:/acc";
     }
-        
+    
     
     //MAIN MENU
         
