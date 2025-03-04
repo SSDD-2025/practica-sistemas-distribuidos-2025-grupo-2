@@ -93,7 +93,7 @@ Esta es la pantalla para crear un topic, en ella se solicita el nombre que se qu
 
 Esta es la pantalla que expande un topic. En ella podemos ver todos los posts asociados así como el poder borrar un post o expandirlo, o eliminar el topic.
 
-## ** CREATE COMMENT**
+## **CREATE COMMENT**
 
 
 ![CreateComent](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/a7083cc08cae2846530de436f0a0792c0db97e4b/READMEDATA/Screen/CreateComent.png)
