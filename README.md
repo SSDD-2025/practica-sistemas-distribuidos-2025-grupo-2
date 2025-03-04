@@ -17,7 +17,7 @@ Topic-> Entidad que referencia los Temas
 
 Post-> Entidad que referencia a las Publicaciones
 
-Comment-> Son los comentarios de una Publicaciónç
+Comment-> Son los comentarios de una Publicación
 
 # Herramientas
 Para la realización de esta práctica hemos utilizado la extensión de Visual Studio de Live Share, la cual nos ha permitido trabajar simultáneamente sin necesidad de estar haciendo diversos commits para tener el codigo actualizado
