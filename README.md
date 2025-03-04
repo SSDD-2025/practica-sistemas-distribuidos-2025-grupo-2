@@ -6,8 +6,28 @@
 | [CazaMopis43](https://github.com/CazaMopis43) | Marc Burgos Ucendo           | m.burgos.2022@alumnos.urjc.es |
 | [ASastre03](https://github.com/ASastre03)    | Alberto Sastre Zorrilla      | a.sastrez.2022@alumnos.urjc.es |
 
+
+
+
+# Entidades
+
+Username-> Es la entidad del usuario
+
+Topic-> Entidad que referencia los Temas
+
+Post-> Entidad que referencia a las Publicaciones
+
+Comment-> Son los comentarios de una Publicación
+
+# Diagrama de clases y Templates
 ![Description](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/READMEDATA/DDC.svg)
+
+# Diagrama de Entidades
+
 ![Description](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/READMEDATA/EntityDiagram.jpg)
+
+# Diagrama de la base de Datos
+
 ![Description](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/READMEDATA/SQLDiagram.jpg)
 # 🧭 NAVIGATION
 
