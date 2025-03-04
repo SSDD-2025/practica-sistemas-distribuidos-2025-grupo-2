@@ -211,6 +211,18 @@ public class Control implements CommandLineRunner{
     @GetMapping("/topic/{id}")
     public String showTopicPost(@PathVariable Long id, Model model) {
         Optional<Topic> topic = TopicService.getTopicById(id);
+        if(!topic.isPresent()){
+            model.addAttribute("error", "Topic not found");
+            return "redirect:/topic"; 
+        }
+            List<Post> posts = PostService.getPostByTopic(topic.get());
+            model.addAttribute("posts", posts);
+            model.addAttribute("topicName", topic.get().getTopicName());
+            return "postByTopic"; 
+    }
+
+    /*public String showTopicPost(@PathVariable Long id, Model model) {
+        Optional<Topic> topic = TopicService.getTopicById(id);
         if(topic == null){
             return "redirect:/topic"; 
         }
@@ -222,7 +234,8 @@ public class Control implements CommandLineRunner{
         } else {
             return "redirect:/topic"; 
         }
-    }
+    }*/
+    
 
     @PostMapping("/deleteTopic")
     public String deleteTopic(@RequestParam long id) {
@@ -286,6 +299,26 @@ public class Control implements CommandLineRunner{
             return "redirect:/init";
         }
     }
+
+    /* @PostMapping("/deleteComment")
+    public String deleteComment(@RequestParam long id, Model model) {
+        UserName user = userComponent.getUser();
+        if (user == null) {
+            return "redirect:/home";
+        }
+        Post p = CommentService.getCommentById(id).getPost();
+        PostService.deleteComment(p.getId(), id);
+        int comp = CommentService.deleteComment(id);
+        postComponent.getPost().getComments().remove(CommentService.getCommentById(id));
+        if(comp == 0){
+            return "redirect:/showMoreP/" + postComponent.getPost().getId();
+        }
+        else{
+            model.addAttribute("error", "Comment not found or deleted");
+            return "redirect:/init";
+        }
+    }*/
+    
 
     @GetMapping("/editComment")//habría que eliminarlos porque no se usan
     public String showEditComment(@RequestParam long id,  Model model) {
@@ -408,17 +441,17 @@ public class Control implements CommandLineRunner{
         }
 
         @PostMapping("/uploadProfilePicture")
-    public String uploadProfilePicture(@RequestParam MultipartFile file) throws IOException, SerialException, SQLException {
-        UserName user = userComponent.getUser();
-        try {
-            byte[] bytes = file.getBytes();
-            UserService.saveProfilePicture(user, bytes);
-            userComponent.setUser(UserService.getUser(user.getUsername()));
-        } catch (IOException e) {
-            return "uploadProfilePicture";
+        public String uploadProfilePicture(@RequestParam MultipartFile file) throws IOException, SerialException, SQLException {
+            UserName user = userComponent.getUser();
+            try {
+                byte[] bytes = file.getBytes();
+                UserService.saveProfilePicture(user, bytes);
+                userComponent.setUser(UserService.getUser(user.getUsername()));
+            } catch (IOException e) {
+                return "uploadProfilePicture";
+            }
+            return "redirect:/acc";
         }
-        return "redirect:/acc";
-    }
 
         @Override
         public void run(String... args) throws Exception {
