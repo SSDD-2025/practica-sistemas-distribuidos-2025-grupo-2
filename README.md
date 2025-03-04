@@ -17,7 +17,13 @@ Topic-> Entidad que referencia los Temas
 
 Post-> Entidad que referencia a las Publicaciones
 
-Comment-> Son los comentarios de una Publicación
+Comment-> Son los comentarios de una Publicaciónç
+
+# Herramientas
+Para la realización de esta práctica hemos utilizado la extensión de Visual Studio de Live Share, la cual nos ha permitido trabajar simultáneamente sin necesidad de estar haciendo diversos commits para tener el codigo actualizado
+
+# Imágenes
+El ususario tiene un atributo llamado profilePicture que es la foto de perfil
 
 # Diagrama de clases y Templates
 ![Description](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/READMEDATA/DDC.svg)
