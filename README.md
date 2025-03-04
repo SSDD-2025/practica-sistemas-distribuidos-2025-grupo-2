@@ -1,4 +1,4 @@
-# CodeHub
+# CodeHub 
 
 | Usuario de GitHub       | Nombre                            | Correo electrónico                           |
 |-------------------------|-----------------------------------|----------------------------------------------|
@@ -6,10 +6,22 @@
 | [CazaMopis43](https://github.com/CazaMopis43) | Marc Burgos Ucendo           | m.burgos.2022@alumnos.urjc.es |
 | [ASastre03](https://github.com/ASastre03)    | Alberto Sastre Zorrilla      | a.sastrez.2022@alumnos.urjc.es |
 
+# Indice
+-[Entidades](#Entidades)
 
+-[Herramientas](#Herramientas)
 
+-[Diagrama de clases y Templates](#DiagramadeclasesyTemplates)
 
-# Entidades :shipit:
+-[Diagrama de Entidades](#DiagramadeEntidades)
+
+-[Diagrama de la base de Datos](#DiagramadelabasedeDatos)
+
+-[Instrucciones de ejecución](#Instruccionesdeejecución)
+
+-
+
+# Entidades   :shipit:
 
 Username-> Es la entidad del usuario
 
@@ -18,6 +30,7 @@ Topic-> Entidad que referencia los Temas
 Post-> Entidad que referencia a las Publicaciones
 
 Comment-> Son los comentarios de una Publicación
+
 
 # Herramientas
 Para la realización de esta práctica hemos utilizado la extensión de Visual Studio de Live Share, la cual nos ha permitido trabajar simultáneamente sin necesidad de estar haciendo diversos commits para tener el codigo actualizado
@@ -35,6 +48,11 @@ El ususario tiene un atributo llamado profilePicture que es la foto de perfil
 # Diagrama de la base de Datos
 
 ![Description](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/READMEDATA/SQLDiagram.jpg)
+
+
+# Diagrama de pantallas 
+![Description](READMEDATA\EsquemaPantallas.png)
+
 # 🧭 NAVIGATION
 
 ## **LOGIN**
@@ -113,11 +131,11 @@ Este es el apartado de perfil, en el podremos ver tanto nuestro user como el mai
 
 2.Descargar MySQL Configurator y MySQL Worckbench.
 
-3.En MySQL Configurator poner Usuario: root, Password: grupo15SQL y el puerto predeterminado (3306).
+3.En MySQL Configurator poner Usuario: root, Password: password y el puerto predeterminado (3306).
 
 4.En MySQL Worckbench añadir una conexión con el usuario y password previamente introducidos.
 
-5.Crear un esquema llamado bookshop en la conexión anterior.
+5.Crear un esquema llamado CodeHub en la conexión anterior.
 
 6.Ejecutar la aplicación.
 
