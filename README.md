@@ -123,7 +123,15 @@ Para crear un comment necesitarmeos estar dentro de un post y se nos solicitará
 
 ![profile](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/a7083cc08cae2846530de436f0a0792c0db97e4b/READMEDATA/Screen/Profile.png)
 
-Este es el apartado de perfil, en el podremos ver tanto nuestro user como el mail, así como la foto que hemos puesto de perfil y podremos mostrar nuestra constaseña si así lo queremos
+Este es el apartado de perfil, en el podremos ver tanto nuestro user como el mail, así como la foto que hemos puesto de perfil y podremos mostrar nuestra constaseña si así lo queremos.
+
+## **INIT**
+
+
+![profile](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/188bff36f0b8fac5ca7a1faf5b347d70348befbf/Captura%20de%20pantalla%202025-03-05%20002902.png)
+
+Esta es la pantalla que aparece cuando entras al menú principal, desde donde se accede a todo.
+
 
 # Instrucciones de ejecución
 
