@@ -6,12 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import codehub.grupo2.DB.CommentRepository;
+import codehub.grupo2.DB.PostRepository;
 import codehub.grupo2.DB.Entity.Comment;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
 
 @Service
 public class CommentService {
+
+    @Autowired
+    private PostRepository PostBD;
     @Autowired
     private CommentRepository CommentBD;
 
@@ -38,10 +42,12 @@ public class CommentService {
     public List<Comment> getAllComments(){ 
         return CommentBD.findAll();
     }
+
      public int deleteComment(Long id){ 
         Optional<Comment> c = CommentBD.findById(id);
         if(c.isPresent()){
             CommentBD.delete(c.get());
+            PostBD.save(c.get().getPost());
             return 0;
         }
         else{

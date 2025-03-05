@@ -9,7 +9,6 @@ import java.util.Optional;
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 
 import codehub.grupo2.Component.*;
 import codehub.grupo2.DB.Entity.*;
@@ -33,10 +32,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 @Component
-public class Control implements CommandLineRunner{
+public class Control {
 
-    @Autowired
-    InitializerService initializerService;
 
     @Autowired
     private UserService UserService;
@@ -177,6 +174,7 @@ public class Control implements CommandLineRunner{
             return "redirect:/home";
         }
         PostService.deletePost(PostService.getPostById(id).getTitle());
+        userComponent.setUser(UserService.getUser(user.getUsername()));
         model.addAttribute("error", "");
         return "redirect:/post";
     }
@@ -352,6 +350,7 @@ public class Control implements CommandLineRunner{
         public String deleteUserDefinitive( Model model,HttpSession session) {
             UserName user = userComponent.getUser();
             UserService.deleteUser(user.getUsername());
+            userComponent.setUser(UserService.getUser(user.getUsername()));
             userComponent.logout();
             session.invalidate();
             model.addAttribute("check", "User deleted correctly");
@@ -400,9 +399,5 @@ public class Control implements CommandLineRunner{
             return "redirect:/acc";
         }
 
-        @Override
-        public void run(String... args) throws Exception {
-            initializerService.initialize();
-        }
 }
      

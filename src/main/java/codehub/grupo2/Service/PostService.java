@@ -1,7 +1,6 @@
 package codehub.grupo2.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codehub.grupo2.DB.PostRepository;
 import codehub.grupo2.DB.TopicRepository;
+import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.Comment;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.Topic;
@@ -21,6 +21,9 @@ public class PostService {
 
     @Autowired
     private PostRepository PostBD;
+
+    @Autowired
+    private UserRepository UserBD;
 
     public Post getPost(String title){
         return PostBD.findByTitle(title);
@@ -55,9 +58,16 @@ public class PostService {
     public void deletePost(String title){
         Post post = PostBD.findByTitle(title);
         if (post != null) {
-            post.getUsername().getPosts().remove(post);
-            post.getTopic().getPosts().remove(post);
+            UserName user = post.getUsername();
+            Topic topic = post.getTopic();
+
+            user.getPosts().remove(post);
+            topic.getPosts().remove(post);
+
             PostBD.delete(post);
+
+            UserBD.save(user);
+            TopicBD.save(topic);
         }
     }
 
@@ -65,15 +75,6 @@ public class PostService {
         return PostBD.findById(id).orElse(null);
     }
 
-    public Post editPost(Long id, Optional<String> title, Optional<String> text){
-        Post p = getPostById(id);
-        if (p != null) {
-            title.ifPresent(p::setTitle);
-            text.ifPresent(p::setText);
-            PostBD.save(p);
-        }
-        return p;
-    }
 
     public List<Post> getPostByTopic(Topic topic){
         return PostBD.findByTopic(topic);

@@ -10,9 +10,12 @@ import java.util.Optional;
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import codehub.grupo2.DB.UserRepository;
+import codehub.grupo2.DB.Entity.Comment;
+import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
 
 
@@ -20,6 +23,13 @@ import codehub.grupo2.DB.Entity.UserName;
 public class UserService {
     @Autowired
     private UserRepository UserBD;
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    @Lazy
+    private CommentService commentService;
 
     public UserName getUser(String username){
         return UserBD.findByUsername(username);
@@ -60,6 +70,19 @@ public class UserService {
 
     public void deleteUser(String username){
         UserName user = UserBD.findByUsername(username);
+        List<Post> lp = user.getPosts();
+        for(Post p :lp){
+            postService.deletePost(p.getTitle());
+        }
+        UserBD.save(user);
+        List<Comment> lc = commentService.getAllComments();
+
+        for(Comment c : lc){
+            if(c.getUsername().getId() == user.getId()){
+                commentService.deleteComment(c.getId());
+            }
+        }
+        UserBD.save(user);
         UserBD.delete(user);
     }   
 
