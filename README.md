@@ -152,13 +152,18 @@ Esta es la pantalla que aparece cuando entras al menú principal, desde donde se
 COMMITS MÁS SIGNIFICATIVOS
 
 Marc Burgos Ucendo:
-- Creación de un nuevo topic:https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/d80568626762a5f0aafa47c2f4418aae2d0e071d
-- Eliminar Topic:https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/0e94cf509439b6e6940201774367081dd43a89a8
-- Pantalla de error y redirecciones:https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/700bdab79e0c32da5ef5b553aa51d07798937cb8
-- Creacion de entidades y respositorios:https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/40972388021984471d55d343570c06a0396e0225 
-- Creación de postBy topic:https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/59ff25352c1ead0d6007078af8d8aea30fcb9278
+- Creación de un nuevo topic: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/d80568626762a5f0aafa47c2f4418aae2d0e071d
+- Eliminar Topic: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/0e94cf509439b6e6940201774367081dd43a89a8
+- Pantalla de error y redirecciones: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/700bdab79e0c32da5ef5b553aa51d07798937cb8
+- Creacion de entidades y respositorios: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/40972388021984471d55d343570c06a0396e0225 
+- Creación de postBy topic: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/59ff25352c1ead0d6007078af8d8aea30fcb9278
 
-Alberto Sastre Zorrilla
+Alberto Sastre Zorrilla:
+- Inicio de Sesión, Crear Usuario: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/c339cf3740f30d5eb10c002b136e7bb96c70c045
+- Css & HTML: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/8086f71fc1eb0891b5d712de2b87b14c323dc7bd
+- Intento de arreglo & Comment: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/a065093cce0f6b72331be9ab6a2a65c11ed381ed
+- Topic & Comment: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/05cccb4aa7865b613c651d60dd2ae83deea56587
+- Post & Reestructuración: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/d7f66d3ea811e9c98d64703239ea8cb00cb634b0
 
 
 
