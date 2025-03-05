@@ -74,32 +74,33 @@ public class UserService {
         }
     }
 
-    public int editUser(String username, String password, String email, Long id){
+    public int editUser(String username, String password, String email, Long id) {
         Optional<UserName> currentUser = UserBD.findById(id);
-        if(password.length()<12){
-            return 1;
+        if (currentUser.isEmpty()) {
+            return 1; 
         }
+        UserName user = currentUser.get();
         UserName userN = UserBD.findByUsername(username);
-        if(userN != null && userN.getId() != id){
+        if (userN != null && !userN.getId().equals(id)) {
             return 1;
         }
         UserName userE = UserBD.findByEmail(email);
-        if(userE != null && userE.getId() != id){
+        if (userE != null && !userE.getId().equals(id)) {
             return 1;
         }
-        if(email.contains("@") == false){
+        if (!email.contains("@")) {
             return 1;
         }
-        if(currentUser.isPresent()){
-            currentUser.get().setPassword(password);
-            currentUser.get().setEmail(email);
-            currentUser.get().setUsername(username);
-            UserBD.save(currentUser.get());
-            return 0;
+        if (!password.isEmpty()) {
+            if (password.length() < 12) {
+                return 1;
+            }
+            user.setPassword(password);
         }
-        else{
-            return 1;
-        }
+        user.setEmail(email);
+        user.setUsername(username);
+        UserBD.save(user);
+        return 0;
     }
     
 

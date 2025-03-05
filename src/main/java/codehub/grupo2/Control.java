@@ -324,7 +324,7 @@ public class Control implements CommandLineRunner{
             model.addAttribute("profilePicture", profilePictureBase64);
             model.addAttribute("user", user); 
             model.addAttribute("posts", user.getPosts());
-
+            model.addAttribute("error", "");
             Boolean showPassword = (Boolean) session.getAttribute("showPassword");
             model.addAttribute("showPassword", showPassword != null ? showPassword : false);
 
@@ -374,9 +374,12 @@ public class Control implements CommandLineRunner{
             if (user == null) {
                 return "redirect:/home";
             }
-            UserService.editUser(username, password, email, user.getId());
+            if(UserService.editUser(username, password, email, user.getId()) == 1){
+                model.addAttribute("error","Error updating the profile, make sure you followed our rules");
+                return "/acc";
+            }
             userComponent.setUser(UserService.getUser(username));
-            return "redirect:/acc";
+            return "/acc";
         }
 
         @GetMapping("/uploadProfilePicture")

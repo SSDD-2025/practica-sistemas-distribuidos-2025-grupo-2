@@ -176,6 +176,19 @@
       background-color: #ff0000;
       box-shadow: 0 0 12px #ff0000;
     }
+
+    .error-message {
+      background-color: rgba(255, 0, 0, 0.8);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    }
+
   </style>
 </head>
 <body>
@@ -184,6 +197,11 @@
     <header class="header">
       <h1 class="title">My Profile</h1>
     </header>
+    
+    {{#error}}
+      <p class="error-message">{{error}}</p> 
+    {{/error}}
+    
 
     <div class="profile-info">
       <div class="profile-picture">
