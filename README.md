@@ -179,5 +179,21 @@ Esta es la pantalla que aparece cuando entras al menú principal, desde donde se
  -Inti.css: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/resources/static/init.css
  -Init.html: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/resources/templates/init.html
 
+ ## Diego Ismael Cantador Trapero
+
+-Edición de perfil y mejora borrado comentarios:
+https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/6c573be51b087c08327ae15c8a538546ee3d24a1
+-Creacion de componentes:
+https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/a22431e65eaedfd9028fb0a1e721e3f5bc19ca7e
+
+-Inicio creación Servicios:
+https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/f30e731699631170499de6360d777edd4c121f75
+
+-Implementación de H2:
+https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/c339cf3740f30d5eb10c002b136e7bb96c70c045
+
+-Añadida foto de usuario:
+https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/fef0e6daacd29f2b7be31ade22221ffc31b8079f
+
 
 
