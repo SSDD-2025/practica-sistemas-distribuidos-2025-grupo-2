@@ -165,14 +165,19 @@ Esta es la pantalla que aparece cuando entras al menú principal, desde donde se
  - Topic: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/DB/Entity/Topic.java
 
  
-Alberto Sastre Zorrilla:
+## Alberto Sastre Zorrilla:
 - Inicio de Sesión, Crear Usuario: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/c339cf3740f30d5eb10c002b136e7bb96c70c045
 - Css & HTML: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/8086f71fc1eb0891b5d712de2b87b14c323dc7bd
 - Intento de arreglo & Comment: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/a065093cce0f6b72331be9ab6a2a65c11ed381ed
 - Topic & Comment: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/05cccb4aa7865b613c651d60dd2ae83deea56587
 - Post & Reestructuración: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/d7f66d3ea811e9c98d64703239ea8cb00cb634b0
 
-
+ ### Archivos Importantes
+ -Control: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control.java
+ -Comment: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/DB/Entity/Comment.java
+ -Post: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/DB/Entity/Post.java
+ -Inti.css: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/resources/static/init.css
+ -Init.html: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/resources/templates/init.html
 
 
 
