@@ -19,7 +19,6 @@
 
 -[Instrucciones de ejecución](#Instruccionesdeejecución)
 
--
 
 # Entidades   :shipit:
 
