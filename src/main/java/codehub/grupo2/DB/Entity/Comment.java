@@ -10,48 +10,47 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    
     private LocalDate date;
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false) 
     private UserName user;
     
     @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false) 
     private Post post;
 
-
     protected Comment() {}
-    
+
     public Comment(UserName user, String text, Post post){
         this.user = user;
         this.text = text;
         this.date = LocalDate.now();
-        this.post=post;
+        this.post = post;
     }
 
-    public UserName getUsername(){
+    public UserName getUsername() {
         return this.user;
     }
 
-    public LocalDate getDate(){
+    public LocalDate getDate() {
         return this.date;
     }
 
-    public String getText(){
+    public String getText() {
         return this.text;
     }
 
-    public String setText(String text){
-        return this.text = text;
+    public void setText(String text) { 
+        this.text = text;
     }
-    
-    public Post getPost(){
+
+    public Post getPost() {
         return this.post;
     }
 
-    public Long getId(){
+    public Long getId() {
         return this.id;
     }
 }

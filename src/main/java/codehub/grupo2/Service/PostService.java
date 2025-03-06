@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import codehub.grupo2.DB.PostRepository;
 import codehub.grupo2.DB.TopicRepository;
 import codehub.grupo2.DB.UserRepository;
-import codehub.grupo2.DB.Entity.Comment;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.Topic;
 import codehub.grupo2.DB.Entity.UserName;
@@ -43,8 +42,10 @@ public class PostService {
         Post post = new Post(user, title, text, topic);
         PostBD.save(post);
         user.getPosts().add(post);
+        UserBD.save(user);
         topic.getPosts().add(post);
-    
+        TopicBD.save(topic);
+
         return title;
     }
     
@@ -55,21 +56,22 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(String title){
+    public void deletePost(String title) {
         Post post = PostBD.findByTitle(title);
         if (post != null) {
             UserName user = post.getUsername();
             Topic topic = post.getTopic();
-
+    
             user.getPosts().remove(post);
-            topic.getPosts().remove(post);
+            topic.getPosts().remove(post); 
+    
+            PostBD.delete(post); 
 
-            PostBD.delete(post);
-
-            UserBD.save(user);
+            UserBD.save(user); 
             TopicBD.save(topic);
         }
     }
+    
 
     public Post getPostById(Long id){
         return PostBD.findById(id).orElse(null);
@@ -78,17 +80,5 @@ public class PostService {
 
     public List<Post> getPostByTopic(Topic topic){
         return PostBD.findByTopic(topic);
-    }
-
-    public int deleteComment(Long idPost,Long idComment){
-        Post post = PostBD.findById(idPost).orElse(null);
-        List<Comment> l = post.getComments();
-        for (Comment c : l) {
-            if (c.getId() == idComment) {
-                l.remove(c);
-                return 0;
-            }
-        }
-        return 1;
     }
 }

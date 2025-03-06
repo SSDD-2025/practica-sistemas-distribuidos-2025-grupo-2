@@ -12,10 +12,9 @@ import javax.sql.rowset.serial.SerialException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codehub.grupo2.DB.UserRepository;
-import codehub.grupo2.DB.Entity.Comment;
-import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
 
 
@@ -23,9 +22,6 @@ import codehub.grupo2.DB.Entity.UserName;
 public class UserService {
     @Autowired
     private UserRepository UserBD;
-
-    @Autowired
-    private PostService postService;
 
     @Autowired
     @Lazy
@@ -68,27 +64,15 @@ public class UserService {
         return UserBD.findAll();
     }
 
-    public void deleteUser(String username){
+    @Transactional
+    public void deleteUser(String username) {
         UserName user = UserBD.findByUsername(username);
-        List<Post> lp = user.getPosts();
-        for(Post p :lp){
-            postService.deletePost(p.getTitle());
+        if (user != null) {
+            UserBD.delete(user);
         }
-        UserBD.save(user);
-        List<Comment> lc = commentService.getAllComments();
-
-        for(Comment c : lc){
-            if(c.getUsername().getId() == user.getId()){
-                commentService.deleteComment(c.getId());
-            }
-        }
-        UserBD.save(user);
-        UserBD.delete(user);
-    }   
-
-    public void addComment(UserName user){
-        UserBD.save(user);
     }
+    
+
     public void saveProfilePicture(UserName user, byte[] profilePicture) throws IOException, SerialException, SQLException {
         if (profilePicture != null && profilePicture.length > 0) {
             Blob blob = new javax.sql.rowset.serial.SerialBlob(profilePicture);

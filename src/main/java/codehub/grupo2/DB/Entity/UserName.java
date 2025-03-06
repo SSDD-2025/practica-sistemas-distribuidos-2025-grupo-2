@@ -24,7 +24,7 @@ public class UserName {
     private Blob profilePicture;
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Post> posts;
 
     protected UserName() {}

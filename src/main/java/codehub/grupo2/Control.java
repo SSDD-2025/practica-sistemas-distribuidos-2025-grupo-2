@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -270,18 +271,15 @@ public class Control {
         if (user == null) {
             return "redirect:/home";
         }
-        Post p = CommentService.getCommentById(id).getPost();
-        PostService.deleteComment(p.getId(), id);
         int comp = CommentService.deleteComment(id);
-        postComponent.getPost().getComments().remove(CommentService.getCommentById(id));
-        if(comp == 0){
+        if (comp == 0) {
             return "redirect:/showMoreP/" + postComponent.getPost().getId();
-        }
-        else{
+        } else {
             model.addAttribute("error", "Comment not found or deleted");
             return "redirect:/init";
         }
     }
+    
     
     
     //MAIN MENU
@@ -322,7 +320,6 @@ public class Control {
             model.addAttribute("profilePicture", profilePictureBase64);
             model.addAttribute("user", user); 
             model.addAttribute("posts", user.getPosts());
-            model.addAttribute("error", "");
             Boolean showPassword = (Boolean) session.getAttribute("showPassword");
             model.addAttribute("showPassword", showPassword != null ? showPassword : false);
 
@@ -347,8 +344,10 @@ public class Control {
         }
 
         @PostMapping("/deleteUserDefinitive")
-        public String deleteUserDefinitive( Model model,HttpSession session) {
+        @Transactional
+        public String deleteUserDefinitive(Model model, HttpSession session) {
             UserName user = userComponent.getUser();
+            CommentService.deleteCommentsByUser(user.getId());
             UserService.deleteUser(user.getUsername());
             userComponent.setUser(UserService.getUser(user.getUsername()));
             userComponent.logout();
@@ -356,6 +355,7 @@ public class Control {
             model.addAttribute("check", "User deleted correctly");
             return "home";
         }
+        
 
         @GetMapping("/editProfile")
         public String showEditProfile(Model model) {
@@ -373,12 +373,16 @@ public class Control {
             if (user == null) {
                 return "redirect:/home";
             }
+            model.addAttribute("profilePictureBase64", user.getProfilePictureBase64());
+            model.addAttribute("user", user); 
+            model.addAttribute("posts", user.getPosts());
             if(UserService.editUser(username, password, email, user.getId()) == 1){
                 model.addAttribute("error","Error updating the profile, make sure you followed our rules");
-                return "/acc";
+                return "myProfile";
             }
             userComponent.setUser(UserService.getUser(username));
-            return "/acc";
+            model.addAttribute("check", "User Uploaded Correctly");
+            return "myProfile";
         }
 
         @GetMapping("/uploadProfilePicture")
