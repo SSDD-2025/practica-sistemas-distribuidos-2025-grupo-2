@@ -1,4 +1,4 @@
-package codehub.grupo2.Component;
+package codehub.grupo2;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,13 +20,14 @@ public class Security {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    /*@Bean
     public InMemoryUserDetailsManager UserDetailsManager() {
         UserDetails user = org.springframework.security.core.userdetails.User.withUsername("user")
                 .password(passwordEncoder().encode("password")).roles("USER").build();
         return new InMemoryUserDetailsManager(user);
-    }
+    }*/
 
+    /* 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -35,18 +36,16 @@ public class Security {
         provider.setPasswordEncoder(passwordEncoder());
 
         return provider;
-    }
+    }*/
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-       http.authenticationProvider(authenticationProvider());
-         http
-            .authorizeHttpRequests(authorize -> authorize
-                          .requestMatchers("/").permitAll()
-                          .anyRequest().authenticated()
-         );
+        http
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll() // Permitir acceso a todas las rutas sin autenticación
+            )
+            .csrf(csrf -> csrf.disable()); // Deshabilitar CSRF si es necesario para pruebas
 
-         http.csrf(csrg->  csrg.disable());
         return http.build();
     }
 
