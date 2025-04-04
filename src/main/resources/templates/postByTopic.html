@@ -120,6 +120,7 @@
         <div class="topic-header">
             <h1>Posts in {{topicName}}</h1>
             <form action="/deleteTopic" method="post">
+                <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
                 <input type="hidden" name="id" value="{{id}}">
                 <button type="submit" class="btn delete-btn">Delete Topic</button>
             </form>
@@ -130,6 +131,7 @@
             <div class="topic-header">
                 <h1><strong>{{title}}</strong></h1>
                 <form action="/deletePost" method="post">
+                <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">    
                     <input type="hidden" name="id" value="{{id}}">
                     <button type="submit" class="btn delete-btn">Delete Post</button>
                 </form>

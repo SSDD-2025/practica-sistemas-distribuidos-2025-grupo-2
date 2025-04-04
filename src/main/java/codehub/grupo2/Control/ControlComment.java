@@ -1,6 +1,7 @@
 package codehub.grupo2.Control;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Service.CommentService;
 import codehub.grupo2.Service.PostService;
 import codehub.grupo2.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @Component
@@ -43,7 +45,8 @@ public class ControlComment {
 }
 
     @PostMapping("/createComment")
-    public String showCreateComment(@RequestParam String content, Model model) {
+    public String showCreateComment(@RequestParam String content, Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";  
@@ -54,17 +57,20 @@ public class ControlComment {
             return "redirect:/post";    
         }
         CommentService.registerComment(user,content, post);
+        model.addAttribute("csrfToken", token);
         return "redirect:/showMoreP/" + postComponent.getPost().getId();
     }
 
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam long id, Model model) {
+    public String deleteComment(@RequestParam long id, Model model,HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
         }
         int comp = CommentService.deleteComment(id);
         if (comp == 0) {
+            model.addAttribute("csrfToken", token);
             return "redirect:/showMoreP/" + postComponent.getPost().getId();
         } else {
             model.addAttribute("error", "Comment not found or deleted");

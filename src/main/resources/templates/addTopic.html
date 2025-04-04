@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeHub - AddTopic</title>
-    <link rel="stylesheet" href="addTopic.css"> 
+    <link rel="stylesheet" href="css/addTopic.css"> 
 </head>
 <body>
     <div class="container">
         <h2>CodeHub - Add Topic</h2>
         
         <form action="/addTopic" method="post">
+        <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
             <label for="topicName">Topic:</label><br>
             <input type="text" id="topicName" name="topicName" required><br>
             <button type="submit"> ADD TOPIC </button>

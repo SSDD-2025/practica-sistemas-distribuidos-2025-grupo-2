@@ -67,6 +67,7 @@
     <div class="container">
         <h2>Edit Profile</h2>
         <form action="/updateProfile" method="post">
+        <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" value="{{user.username}}" required>
         

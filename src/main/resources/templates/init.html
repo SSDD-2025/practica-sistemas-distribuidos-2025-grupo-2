@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CodeHub</title>
-  <link rel="stylesheet" href="init.css" />
+  <link rel="stylesheet" href="css/init.css" />
 </head>
 <body>
   <div class="wrapper">
@@ -30,6 +30,7 @@
         {{/error}}
         {{#user}}
         <form class="profile" action="/acc" method="post">
+        <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
           <button type="submit" class="btn profile-button">{{username}}</button>
         </form>
         {{/user}}
@@ -51,7 +52,7 @@
     </div>
   </div>
 
-  <script src="toggleMenu2.js"></script>
+  <script src="js/toggleMenu2.js"></script>
   <div class="rain"></div>
   <script>
     document.addEventListener("DOMContentLoaded", function () {

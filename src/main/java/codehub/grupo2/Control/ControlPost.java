@@ -3,6 +3,7 @@ package codehub.grupo2.Control;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,8 @@ import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Service.PostService;
 import codehub.grupo2.Service.TopicService;
 import codehub.grupo2.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @Component
@@ -90,7 +93,8 @@ public class ControlPost {
     }
 
     @PostMapping("/addPost")
-    public String showwaddPost(@RequestParam String title,  @RequestParam String content,@RequestParam long tid,Model model) {
+    public String showwaddPost(@RequestParam String title,  @RequestParam String content,@RequestParam long tid,Model model,HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home"; 
@@ -98,12 +102,14 @@ public class ControlPost {
         Topic topic = TopicService.getTopicById(tid).get();
         PostService.registerPost(user, title, content, topic);
         model.addAttribute("error", "");
+        model.addAttribute("csrfToken", token);
         return "redirect:/post"; 
     }
     
     
     @PostMapping("/deletePost")
-    public String deletePost(@RequestParam long id,Model model) {
+    public String deletePost(@RequestParam long id,Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
@@ -111,6 +117,7 @@ public class ControlPost {
         PostService.deletePost(PostService.getPostById(id).getTitle());
         userComponent.setUser(UserService.getUser(user.getUsername()));
         model.addAttribute("error", "");
+        model.addAttribute("csrfToken", token);
         return "redirect:/post";
     }
 

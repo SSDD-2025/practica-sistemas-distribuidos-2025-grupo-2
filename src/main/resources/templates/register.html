@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio Sesion - CodeHub</title>
-    <link rel="stylesheet" href="/home.css">
+    <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
     <div class="rain"></div>
     <div class="container">
         <form action="/register" method="post">
+        <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
             <h2>CodeHub - Sign Up</h2>
             <label for="email">email:</label><br>
             <input type="text" id="email" name="email" required><br>
@@ -20,7 +21,7 @@
             <button type="submit">Sign Up</button>
         </form>
     </div>
-    <script src="/rain.js"></script>
+    <script src="js/rain.js"></script>
 </body>
 </html>
 

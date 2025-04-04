@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,15 @@ import java.util.Optional;
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +28,11 @@ import codehub.grupo2.DB.Entity.UserName;
 
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService{
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserRepository UserBD;
 
@@ -44,20 +57,22 @@ public class UserService {
         if(email.contains("@") == false){
             return "Invalid email";
         }   
-        UserName user = new UserName(name,password,email);
+        UserName user = new UserName(name,passwordEncoder.encode(password),email);
         UserBD.save(user);
         return name;
     }
 
-    public Boolean login(String username, String password){
+    public UserName getLoggedUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return UserBD.findByUsername(username).get();
+    }
+
+    public Boolean login(String username, String password) {
         UserName user = UserBD.findByUsername(username);
-        if(user == null){
+        if (user == null) {
             return false;
         }
-        if(user.getPassword().equals(password)){
-            return true;
-        }
-        return false;
+        return passwordEncoder.matches(password, user.getPassword());
     }
 
     public List<UserName> getAllUsers(){
@@ -121,5 +136,15 @@ public class UserService {
         }
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserName user = UserBD.findByUsername(username);
+        List<GrantedAuthority> roles = new ArrayList<>();
+        for (String role : user.getRol()) {
+            roles.add(new SimpleGrantedAuthority("ROLE_" + role));
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+        user.getPassword(), roles);
+    }
 
 }

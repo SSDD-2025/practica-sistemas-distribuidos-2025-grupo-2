@@ -2,10 +2,15 @@ package codehub.grupo2.Control;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,89 +24,77 @@ import codehub.grupo2.Component.UserComponent;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Service.CommentService;
 import codehub.grupo2.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 @Component
 public class ControlUser {
     @Autowired
-    private UserService UserService;
+    private UserService userService;
 
     @Autowired
     private UserComponent userComponent;
 
     @Autowired
-    private CommentService CommentService;
+    private CommentService commentService;
 
     
-    @GetMapping("/home")
-    public String ShowHome(Model model) {
-        model.addAttribute("error", "");
-        model.addAttribute("check", "");
-        return "home";
-    }
-
-    @GetMapping("/")
-    public String ShowHome2(Model model) {
-        model.addAttribute("error", "");
-        model.addAttribute("check", "");
-        return "home";
-    }
 
     @GetMapping("/register")
     public String ShowRegister(Model model) {
         model.addAttribute("check", "");
         return "register";
-    }  
+    } 
 
-    @PostMapping("/login")
-    public String Login(@RequestParam String username, @RequestParam String password, Model model) {
-        if(UserService.login(username, password)){
-            userComponent.setUser(UserService.getUser(username));
-            model.addAttribute("error", "");
-            return "redirect:/init";
-        }
-        else{
-            model.addAttribute("error", "Invalid username or password");
-            return "home";
-        }
-    }
-
-    @GetMapping("/logOut")
-    public String Logout(HttpSession session) {
-        userComponent.logout();
-        session.invalidate();
-        return "redirect:/home";
-    }
+@GetMapping("/logOut")
+public String Logout(HttpSession session) {
+    SecurityContextHolder.clearContext(); 
+    userComponent.logout(); 
+    session.invalidate();
+    return "redirect:/home";
+}
 
     @PostMapping("/register")
-    public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model) {
-        model.addAttribute("check", UserService.registerUsername(username, password, email));
+    public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model,HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("check", userService.registerUsername(username, password, email));
+        model.addAttribute("csrfToken", token);
         return "home";
     }
-
     @GetMapping("/init")
-    public String init( Model model) {
-        UserName user = userComponent.getUser();
-        if (user == null) {
-            return "redirect:/home"; 
+    public String init(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/home";
         }
-        model.addAttribute("user", user); 
+    
+        UserName user = userService.getLoggedUser();
+        if (user == null) {
+            return "redirect:/home";
+        }
+    
+        userComponent.setUser(user);
+        model.addAttribute("user", user);
         model.addAttribute("error", "");
-        return "init";
+        return "init"; 
     }
+    
+    
 
 
         @PostMapping("/acc")
-        public String GoAccPost(Model model) throws SQLException, IOException {
+        public String GoAccPost(Model model,HttpServletRequest request) throws SQLException, IOException {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             UserName user = userComponent.getUser();
             if (user == null) {
                 return "redirect:/home";
             }
-            String profilePictureBase64 = UserService.convertBlobToBase64(user.getProfilePicture());
+            String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
             model.addAttribute("profilePictureBase64", profilePictureBase64);
             model.addAttribute("user", user); 
             model.addAttribute("posts", user.getPosts());
+            model.addAttribute("csrfToken", token);
             return "myProfile";
         }
 
@@ -111,43 +104,52 @@ public class ControlUser {
             if (user == null) {
                 return "redirect:/home";
             }
-            String profilePictureBase64 = UserService.convertBlobToBase64(user.getProfilePicture());
+            String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
             model.addAttribute("profilePicture", profilePictureBase64);
             model.addAttribute("user", user); 
             model.addAttribute("posts", user.getPosts());
             Boolean showPassword = (Boolean) session.getAttribute("showPassword");
             model.addAttribute("showPassword", showPassword != null ? showPassword : false);
+            
 
             return "myProfile";
         }
 
         @PostMapping("/showPassword")
-        public String showPassword(Model model, HttpSession session) {
+        public String showPassword(Model model, HttpSession session,HttpServletRequest request) {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             session.setAttribute("showPassword", true);
+            model.addAttribute("csrfToken", token);
             return "redirect:/acc"; 
         }
     
         @PostMapping("/hidePassword")
-        public String hidePassword(HttpSession session) {
+        public String hidePassword(HttpSession session,HttpServletRequest request,Model model) {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             session.setAttribute("showPassword", false);
+            model.addAttribute("csrfToken", token);
             return "redirect:/acc";
         }
 
         @PostMapping("/deleteUserConfirmation")
-        public String deleteUserConfirmation() {
+        public String deleteUserConfirmation(HttpServletRequest request,Model model) {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+            model.addAttribute("csrfToken", token);
             return "deleteUser";
         }
 
         @PostMapping("/deleteUserDefinitive")
         @Transactional
-        public String deleteUserDefinitive(Model model, HttpSession session) {
+        public String deleteUserDefinitive(Model model, HttpSession session,HttpServletRequest request ) {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             UserName user = userComponent.getUser();
-            CommentService.deleteCommentsByUser(user.getId());
-            UserService.deleteUser(user.getUsername());
-            userComponent.setUser(UserService.getUser(user.getUsername()));
+            commentService.deleteCommentsByUser(user.getId());
+            userService.deleteUser(user.getUsername());
+            userComponent.setUser(userService.getUser(user.getUsername()));
             userComponent.logout();
             session.invalidate();
             model.addAttribute("check", "User deleted correctly");
+            model.addAttribute("csrfToken", token);
             return "home";
         }
         
@@ -163,7 +165,8 @@ public class ControlUser {
         }
 
         @PostMapping("/updateProfile")
-        public String updateProfile(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model) {
+        public String updateProfile(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model,HttpServletRequest request) {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             UserName user = userComponent.getUser();
             if (user == null) {
                 return "redirect:/home";
@@ -171,12 +174,13 @@ public class ControlUser {
             model.addAttribute("profilePictureBase64", user.getProfilePictureBase64());
             model.addAttribute("user", user); 
             model.addAttribute("posts", user.getPosts());
-            if(UserService.editUser(username, password, email, user.getId()) == 1){
+            if(userService.editUser(username, password, email, user.getId()) == 1){
                 model.addAttribute("error","Error updating the profile, make sure you followed our rules");
                 return "myProfile";
             }
-            userComponent.setUser(UserService.getUser(username));
+            userComponent.setUser(userService.getUser(username));
             model.addAttribute("check", "User Uploaded Correctly");
+            model.addAttribute("csrfToken", token);
             return "myProfile";
         }
 
@@ -186,15 +190,17 @@ public class ControlUser {
         }
 
         @PostMapping("/uploadProfilePicture")
-        public String uploadProfilePicture(@RequestParam MultipartFile file) throws IOException, SerialException, SQLException {
+        public String uploadProfilePicture(@RequestParam MultipartFile file,Model model,HttpServletRequest request) throws IOException, SerialException, SQLException {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             UserName user = userComponent.getUser();
             try {
                 byte[] bytes = file.getBytes();
-                UserService.saveProfilePicture(user, bytes);
-                userComponent.setUser(UserService.getUser(user.getUsername()));
+                userService.saveProfilePicture(user, bytes);
+                userComponent.setUser(userService.getUser(user.getUsername()));
             } catch (IOException e) {
                 return "uploadProfilePicture";
             }
+            model.addAttribute("csrfToken", token);
             return "redirect:/acc";
         }
 

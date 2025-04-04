@@ -27,6 +27,10 @@ public class UserName {
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Post> posts;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> rol;
+
+
     protected UserName() {}
 
     public UserName(String username, String password, String email){
@@ -35,6 +39,8 @@ public class UserName {
         this.email = email;
         this.profilePicture = null;
         this.posts = new ArrayList<>();
+        this.rol = new ArrayList<>();
+        this.rol.add("USER");
     }
 
     public String getUsername(){
@@ -47,6 +53,10 @@ public class UserName {
 
     public String getEmail(){
         return this.email;
+    }
+
+    public List<String> getRol(){
+        return this.rol;
     }
 
     public List<Post> getPosts(){
@@ -97,5 +107,9 @@ public class UserName {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public UserName get(){
+        return this;
     }
 }

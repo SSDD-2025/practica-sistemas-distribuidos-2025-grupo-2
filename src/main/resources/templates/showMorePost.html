@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Completo</title>
-    <link rel="stylesheet" href="/showMorePost.css">
+    <link rel="stylesheet" href="css/showMorePost.css">
 </head>
 <body>
    
@@ -28,6 +28,7 @@
                     <div class="comment">
                         <p><strong>{{username.username}}:</strong> {{text}}</p>
                         <form action="/deleteComment" method="post" style="display:inline;">
+                            <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
                             <input type="hidden" name="id" value="{{id}}">
                             <button type="submit" class="delete-btn">Delete Comment</button>
                         <form>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Service.PostService;
 import codehub.grupo2.Service.TopicService;
+import jakarta.servlet.http.HttpServletRequest;
 import codehub.grupo2.DB.Entity.Topic;
 
 @Controller
@@ -50,9 +52,11 @@ public class ControlTopic {
         }
         
         @PostMapping("/addTopic")
-        public String addTopic(@RequestParam String topicName, Model model) {
+        public String addTopic(@RequestParam String topicName, Model model,HttpServletRequest request) {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             TopicService.newTopic(topicName);
             model.addAttribute("check", "Tema Agregado Correctamente");
+            model.addAttribute("csrfToken", token);
             return "redirect:/topic";
         }
 
@@ -71,7 +75,8 @@ public class ControlTopic {
     
 
     @PostMapping("/deleteTopic")
-    public String deleteTopic(@RequestParam long id) {
+    public String deleteTopic(@RequestParam long id,HttpServletRequest request, Model model) {
+         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
          UserName user = userComponent.getUser();
             if (user == null) {
                   return "redirect:/home";
@@ -87,6 +92,7 @@ public class ControlTopic {
              PostService.deletePost(p.getTitle()); 
              }
             TopicService.deleteTopic(id);
+            model.addAttribute("csrfToken", token);
         
         return "redirect:/topic";
         }

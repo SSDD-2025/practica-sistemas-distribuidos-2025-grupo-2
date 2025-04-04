@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload profile Image</title>
-    <link rel="stylesheet" href="addComment.css">
+    <link rel="stylesheet" href="css/addComment.css">
 </head>
 <body>
 
     <div class="container">
         <h1>Upload profile Image</h1>
         <form action="/uploadProfilePicture" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
             <div class="form-group">
                 <label for="file">Choose a Image:</label>
                 <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png" required>
