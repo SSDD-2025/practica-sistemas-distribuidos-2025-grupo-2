@@ -39,10 +39,16 @@ public class ControlUser {
     @Autowired
     private CommentService commentService;
 
+    @GetMapping("/")
+    public String Empty(Model model, HttpServletRequest request) {
+        return this.showHome(model, request);
+    }
     
 
     @GetMapping("/register")
-    public String ShowRegister(Model model) {
+    public String ShowRegister(Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName()); 
+        model.addAttribute("csrfToken", token);
         model.addAttribute("check", "");
         return "register";
     } 
@@ -62,8 +68,9 @@ public String Logout(HttpSession session) {
         model.addAttribute("csrfToken", token);
         return "home";
     }
+    
     @GetMapping("/init")
-    public String init(Model model) {
+    public String init(Model model, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/home";
@@ -74,46 +81,48 @@ public String Logout(HttpSession session) {
             return "redirect:/home";
         }
     
-        userComponent.setUser(user);
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (token != null) {
+            model.addAttribute("csrfToken", token);
+        }
+    
         model.addAttribute("user", user);
         model.addAttribute("error", "");
-        return "init"; 
+        return "init";
     }
     
     
 
 
-        @PostMapping("/acc")
-        public String GoAccPost(Model model,HttpServletRequest request) throws SQLException, IOException {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            UserName user = userComponent.getUser();
-            if (user == null) {
-                return "redirect:/home";
-            }
-            String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
-            model.addAttribute("profilePictureBase64", profilePictureBase64);
-            model.addAttribute("user", user); 
-            model.addAttribute("posts", user.getPosts());
-            model.addAttribute("csrfToken", token);
-            return "myProfile";
+    @PostMapping("/acc")
+    public String GoAccPost(Model model, HttpServletRequest request) throws SQLException, IOException {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        UserName user = userComponent.getUser();
+        if (user == null) {
+            return "redirect:/home";
         }
-
-        @GetMapping("/acc")
-        public String GoAccGet(Model model, HttpSession session) throws SQLException, IOException {
-            UserName user = userComponent.getUser();
-            if (user == null) {
-                return "redirect:/home";
-            }
-            String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
-            model.addAttribute("profilePicture", profilePictureBase64);
-            model.addAttribute("user", user); 
-            model.addAttribute("posts", user.getPosts());
-            Boolean showPassword = (Boolean) session.getAttribute("showPassword");
-            model.addAttribute("showPassword", showPassword != null ? showPassword : false);
-            
-
-            return "myProfile";
+        String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
+        model.addAttribute("profilePictureBase64", profilePictureBase64);
+        model.addAttribute("user", user); 
+        model.addAttribute("posts", user.getPosts());
+        model.addAttribute("csrfToken", token);
+        return "myProfile";
+    }
+    
+    @GetMapping("/acc")
+    public String GoAccGet(Model model, HttpSession session) throws SQLException, IOException {
+        UserName user = userComponent.getUser();
+        if (user == null) {
+            return "redirect:/home";
         }
+        String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
+        model.addAttribute("profilePicture", profilePictureBase64);
+        model.addAttribute("user", user); 
+        model.addAttribute("posts", user.getPosts());
+        Boolean showPassword = (Boolean) session.getAttribute("showPassword");
+        model.addAttribute("showPassword", showPassword != null ? showPassword : false);
+        return "myProfile";
+    }
 
         @PostMapping("/showPassword")
         public String showPassword(Model model, HttpSession session,HttpServletRequest request) {
@@ -202,6 +211,17 @@ public String Logout(HttpSession session) {
             }
             model.addAttribute("csrfToken", token);
             return "redirect:/acc";
+        }
+
+        @GetMapping("/home")
+        public String showHome(Model model, HttpServletRequest request) {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+            if (token != null) {
+                model.addAttribute("csrfToken", token);
+            }
+            model.addAttribute("error", "");
+            model.addAttribute("check", "");
+            return "home";
         }
 
 }

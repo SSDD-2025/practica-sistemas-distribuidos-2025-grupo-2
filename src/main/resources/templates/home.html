@@ -10,14 +10,7 @@
     <div class="rain"></div>
     <div class="container">
         <form action="/loginPage" method="post">
-        <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
-            <h2>CodeHub - Login</h2>
-            {{#error}}
-            <p style="color: red;">{{error}}</p> 
-            {{/error}}
-            {{#check}}
-            <p style="color: rgb(115, 243, 9);">{{check}}</p> 
-            {{/check}}
+            <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
             <label for="username">User:</label><br>
             <input type="text" id="username" name="username" required><br>
             <label for="password">Password:</label><br>

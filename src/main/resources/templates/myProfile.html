@@ -241,14 +241,14 @@
             <p><strong>Password:</strong> {{password}}</p>
           {{/user}}
           <form action="/hidePassword" method="post">
-            <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
+            <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
             <button type="submit" class="toggle-password">Hide</button>
-          </form>
+        </form>
         {{/showPassword}}
         {{^showPassword}}
           <p><strong>Password:</strong> *******</p>
           <form action="/showPassword" method="post">
-            <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
+            <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
             <button type="submit" class="toggle-password">Show</button>
           </form>
         {{/showPassword}}
@@ -272,7 +272,7 @@
     </div>
 
     <form action="/deleteUserConfirmation" method="post">
-      <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
+      <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
       <button type="submit" class="delete-button">DELETE ACCOUNT</button>
     </form>
 

@@ -30,7 +30,7 @@
         {{/error}}
         {{#user}}
         <form class="profile" action="/acc" method="post">
-        <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
+        <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
           <button type="submit" class="btn profile-button">{{username}}</button>
         </form>
         {{/user}}
