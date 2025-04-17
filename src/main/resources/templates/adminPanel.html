@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Profile - CodeHub</title>
+        <style>
+          body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff99;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+          }
+      
+          .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+            border-radius: 10px;
+            margin-top: 50px;
+            text-align: center;
+          }
+      
+          .header {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+          }
+      
+          .title {
+            font-size: 2em;
+            margin: 0;
+          }
+      
+          .profile-info {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+      
+          .profile-info p {
+            margin: 8px 0;
+          }
+      
+          .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff99;
+            font-weight: bold;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+          }
+      
+          .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+      
+          .change-picture {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #00ff99;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.8em;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+          }
+      
+          .change-picture:hover {
+            background-color: #00ff99;
+            color: #000;
+          }
+      
+          .password-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+          }
+      
+          .password-wrapper p {
+            margin: 0;
+          }
+      
+          .toggle-password {
+            padding: 6px 10px;
+            border: 2px solid #00ff99;
+            background: #00ff99;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease, color 0.3s ease;
+          }
+      
+          .toggle-password:hover {
+            background: #fff;
+            color: #000;
+          }
+      
+          .posts {
+            text-align: left;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+          }
+      
+          .posts ul {
+            padding: 0;
+            list-style: none;
+          }
+      
+          .posts li {
+            background: rgba(0, 255, 153, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #00ff99;
+          }
+      
+          .logout-form button {
+            width: 100%;
+            background-color: #00ff99;
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+          }
+      
+          .logout-form button:hover {
+            background-color: #fff;
+            box-shadow: 0 0 12px #fff;
+          }
+      
+          .delete-button {
+            width: 100%;
+            background-color: #00ff99;
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+          }
+      
+          .delete-button:hover {
+            background-color: #ff0000;
+            box-shadow: 0 0 12px #ff0000;
+          }
+      
+          .error-message {
+            background-color: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+          }
+      
+          .check-message {
+            background-color: rgba(0, 255, 13, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(13, 160, 21, 0.8);
+          }
+        </style>
+      </head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="title">Admin Panel</h1>
+    </div>
+
+    <div class="section">
+      <h2>Manage Comments</h2>
+      <div class="posts">
+        <ul>
+          {{#comments}}
+          <li>
+            <p><strong>User:</strong> {{user.username}}</p>
+            <p><strong>Post:</strong> {{post.title}}</p>
+            <p><strong>Date:</strong> {{date}}</p>
+            <p><strong>Text:</strong> {{text}}</p>
+            <form action="/admin/deleteComment" method="post" >
+                <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
+                <input type="hidden" name="comment" value="{{id}}" />
+                <button class="delete-button" type="submit">Delete</button>
+            </form>
+          </li>
+          {{/comments}}
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Manage Users</h2>
+      <div class="posts">
+        <ul>
+          {{#users}}
+          <li>
+            <p><strong>Username:</strong> {{username}}</p>
+            <p><strong>Email:</strong> {{email}}</p>
+            <p><strong>Roles:</strong> {{#rol}}<span>{{.}}</span> {{/rol}}</p>
+            <form action="/admin/deleteUser" method="post">
+                <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
+                <input type="hidden" name="user" value="{{username}}" />
+                <button class="delete-button" type="submit">Delete</button>
+            </form>
+          </li>
+          {{/users}}
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Manage Posts</h2>
+      <div class="posts">
+        <ul>
+          {{#posts}}
+          <li>
+            <p><strong>Title:</strong> {{title}}</p>
+            <p><strong>Text:</strong> {{text}}</p>
+            <p><strong>User:</strong> {{user.username}}</p>
+            <p><strong>Date:</strong> {{date}}</p>
+            <p><strong>Topic:</strong> {{topic.topicName}}</p>
+            <form action="/admin/deletePost" method="post">
+                <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
+                <input type="hidden" name="post" value="{{title}}" />
+                <button class="delete-button" type="submit">Delete</button>
+            </form>
+          </li>
+          {{/posts}}
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Manage Topics</h2>
+      <div class="posts">
+        <ul>
+          {{#topics}}
+          <li>
+            <p><strong>Topic Name:</strong> {{topicName}}</p>
+            <p><strong>ID:</strong> {{id}}</p>
+            <form action="/admin/deleteTopic" method="post">
+                <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
+                <input type="hidden" name="topic" value="{{id}}" />
+                <button class="delete-button" type="submit">Delete</button>
+            </form>
+          </li>
+          {{/topics}}
+        </ul>
+      </div>
+    </div>
+
+    <form class="logout-form" action="/logout" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
+        <button type="submit">Logout</button>
+    </form>
+  </div>
+</body>
+</html>
