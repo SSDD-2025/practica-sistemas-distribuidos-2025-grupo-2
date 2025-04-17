@@ -2,12 +2,10 @@ package codehub.grupo2.Control;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -22,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import codehub.grupo2.Component.UserComponent;
 import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Security.CustomUserDetails;
 import codehub.grupo2.Service.CommentService;
 import codehub.grupo2.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,13 +52,13 @@ public class ControlUser {
         return "register";
     } 
 
-@GetMapping("/logOut")
-public String Logout(HttpSession session) {
-    SecurityContextHolder.clearContext(); 
-    userComponent.logout(); 
-    session.invalidate();
-    return "redirect:/home";
-}
+    /*@PostMapping("/logOut")
+    public String logout(HttpSession session) {
+        SecurityContextHolder.clearContext();
+        userComponent.logout();
+        session.invalidate();
+        return "redirect:/home";
+    }*/
 
     @PostMapping("/register")
     public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model,HttpServletRequest request) {
@@ -75,32 +74,38 @@ public String Logout(HttpSession session) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/home";
         }
-    
+
         UserName user = userService.getLoggedUser();
         if (user == null) {
             return "redirect:/home";
         }
-    
+
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         if (token != null) {
             model.addAttribute("csrfToken", token);
         }
-    
+
         model.addAttribute("user", user);
         model.addAttribute("error", "");
         return "init";
     }
     
-    
-
 
     @PostMapping("/acc")
     public String GoAccPost(Model model, HttpServletRequest request) throws SQLException, IOException {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        UserName user = userComponent.getUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "redirect:/home";
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserName user = userDetails.getUser();
+
         if (user == null) {
             return "redirect:/home";
         }
+
         String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
         model.addAttribute("profilePictureBase64", profilePictureBase64);
         model.addAttribute("user", user); 
@@ -108,37 +113,47 @@ public String Logout(HttpSession session) {
         model.addAttribute("csrfToken", token);
         return "myProfile";
     }
-    
+
+        
     @GetMapping("/acc")
     public String GoAccGet(Model model, HttpSession session) throws SQLException, IOException {
-        UserName user = userComponent.getUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "redirect:/home";
+        }
+        
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserName user = userDetails.getUser();
         if (user == null) {
             return "redirect:/home";
         }
+    
         String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
         model.addAttribute("profilePicture", profilePictureBase64);
-        model.addAttribute("user", user); 
+        model.addAttribute("user", user);
         model.addAttribute("posts", user.getPosts());
         Boolean showPassword = (Boolean) session.getAttribute("showPassword");
         model.addAttribute("showPassword", showPassword != null ? showPassword : false);
         return "myProfile";
     }
-
-        @PostMapping("/showPassword")
-        public String showPassword(Model model, HttpSession session,HttpServletRequest request) {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            session.setAttribute("showPassword", true);
-            model.addAttribute("csrfToken", token);
-            return "redirect:/acc"; 
-        }
     
-        @PostMapping("/hidePassword")
-        public String hidePassword(HttpSession session,HttpServletRequest request,Model model) {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            session.setAttribute("showPassword", false);
-            model.addAttribute("csrfToken", token);
-            return "redirect:/acc";
-        }
+
+    @PostMapping("/showPassword")
+    public String showPassword(Model model, HttpSession session, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        session.setAttribute("showPassword", true);
+        model.addAttribute("csrfToken", token);
+        return "redirect:/acc";
+    }
+    
+    @PostMapping("/hidePassword")
+    public String hidePassword(HttpSession session, HttpServletRequest request, Model model) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        session.setAttribute("showPassword", false);
+        model.addAttribute("csrfToken", token);
+        return "redirect:/acc";
+    }
+    
 
         @PostMapping("/deleteUserConfirmation")
         public String deleteUserConfirmation(HttpServletRequest request,Model model) {

@@ -5,12 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-
 import jakarta.persistence.*;
 
 @Entity
-public class UserName {
+public class UserName{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +28,8 @@ public class UserName {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> rol;
 
-
-    protected UserName() {}
+        public UserName() {
+    }
 
     public UserName(String username, String password, String email){
         this.username = username;
@@ -42,6 +40,7 @@ public class UserName {
         this.rol = new ArrayList<>();
         this.rol.add("USER");
     }
+    
 
     public String getUsername(){
         return this.username;
@@ -55,8 +54,12 @@ public class UserName {
         return this.email;
     }
 
-    public List<String> getRol(){
-        return this.rol;
+    public List<String> getRoles() {
+        return rol;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.rol = roles;
     }
 
     public List<Post> getPosts(){
@@ -109,7 +112,5 @@ public class UserName {
         }
     }
 
-    public UserName get(){
-        return this;
-    }
+
 }

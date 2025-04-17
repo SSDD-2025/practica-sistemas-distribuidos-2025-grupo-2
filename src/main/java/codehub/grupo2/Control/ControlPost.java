@@ -85,26 +85,28 @@ public class ControlPost {
     
 
     @GetMapping("/addPost")
-    public String showAddPost(Model model) {
+    public String showAddPost(Model model, HttpServletRequest request) {
         List<Topic> topics = TopicService.getAllTopics();
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
         model.addAttribute("topics", topics);
         model.addAttribute("check", "");
         return "addPost"; 
     }
 
     @PostMapping("/addPost")
-    public String showwaddPost(@RequestParam String title,  @RequestParam String content,@RequestParam long tid,Model model,HttpServletRequest request) {
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        UserName user = userComponent.getUser();
-        if (user == null) {
-            return "redirect:/home"; 
-        }
-        Topic topic = TopicService.getTopicById(tid).get();
-        PostService.registerPost(user, title, content, topic);
-        model.addAttribute("error", "");
-        model.addAttribute("csrfToken", token);
-        return "redirect:/post"; 
+public String showwaddPost(@RequestParam String title, @RequestParam String content, @RequestParam long tid, Model model, HttpServletRequest request) {
+    CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+    UserName user = userComponent.getUser();
+    if (user == null) {
+        return "redirect:/home"; 
     }
+    Topic topic = TopicService.getTopicById(tid).get();
+    PostService.registerPost(user, title, content, topic);
+    model.addAttribute("error", "");
+    model.addAttribute("csrfToken", token);
+    return "redirect:/post"; 
+}
     
     
     @PostMapping("/deletePost")

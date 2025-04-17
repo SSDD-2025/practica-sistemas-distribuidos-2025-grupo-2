@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +10,7 @@ import java.util.Optional;
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +25,7 @@ import codehub.grupo2.DB.Entity.UserName;
 
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -64,7 +61,7 @@ public class UserService implements UserDetailsService{
 
     public UserName getLoggedUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return UserBD.findByUsername(username).get();
+        return UserBD.findByUsername(username);
     }
 
     public Boolean login(String username, String password) {
@@ -136,21 +133,4 @@ public class UserService implements UserDetailsService{
         }
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserName user = UserBD.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
-        }
-    
-        List<SimpleGrantedAuthority> authorities = user.getRol().stream()
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-            .toList();
-    
-        return new org.springframework.security.core.userdetails.User(
-            user.getUsername(),
-            user.getPassword(), 
-            authorities
-        );
-    }
 }

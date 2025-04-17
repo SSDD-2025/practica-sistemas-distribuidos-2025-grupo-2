@@ -1,28 +1,23 @@
 package codehub.grupo2.Security;
 
-import java.io.IOException;
-
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import codehub.grupo2.Service.UserService;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 public class Security {
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -30,25 +25,32 @@ public class Security {
     }
     
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(UserService userService) {
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userService);
+        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, UserService userService) throws Exception {
-        http.authenticationProvider(authenticationProvider(userService));
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authenticationProvider(authenticationProvider());
+
         http
+            .csrf(csrf -> csrf
+                .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
+            )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/topic", "/topic/{id}", "/post", "/showMoreP/{id}", "/login", "/register", "/init", "/").permitAll()
-                .requestMatchers("/home", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                .requestMatchers(HttpMethod.GET, "/logout").denyAll()
+                .requestMatchers("/", "/init", "/login", "/register", "/topic", "/topic/{id}", 
+                    "/post", "/showMoreP/{id}", "/home", "/css/**", "/js/**", "/images/**", 
+                    "/favicon.ico", "/error").permitAll()
                 .requestMatchers("/deleteTopic", "/deletePost", "/deleteComment").hasRole("ADMIN")
-                .requestMatchers("/acc", "/showPassword", "/hidePassword", 
-                                 "/deleteUserConfirmation", "/deleteUserDefinitive",
-                                 "/editProfile", "/updateProfile", "/uploadProfilePicture").hasRole("USER")
-                .requestMatchers("/addTopic", "/addPost", "/createComment").authenticated()
+                .requestMatchers("/acc", "/showPassword", "/hidePassword", "/deleteUserConfirmation", 
+                    "/deleteUserDefinitive", "/editProfile", "/updateProfile", "/uploadProfilePicture", 
+                    "/addTopic", "/addPost").hasRole("USER")
+                .requestMatchers("/createComment").authenticated()
+                .requestMatchers("/**").denyAll()
             )
             .formLogin(formLogin -> formLogin
                 .loginPage("/home")
@@ -59,10 +61,11 @@ public class Security {
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/home")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .permitAll()
             );
+    
         return http.build();
     }
-
-
 }

@@ -10,7 +10,7 @@
     <div class="rain"></div>
     <div class="container">
         <form action="/register" method="post">
-        <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
+        <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
             <h2>CodeHub - Sign Up</h2>
             <label for="email">email:</label><br>
             <input type="text" id="email" name="email" required><br>

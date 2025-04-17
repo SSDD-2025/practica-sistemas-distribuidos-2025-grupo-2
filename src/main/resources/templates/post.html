@@ -14,7 +14,7 @@
         {{#posts}}
         <div class="post">
             <form action="/deletePost" method="post">
-            <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
+            <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
                 <input type="hidden" name="id" value="{{id}}">
                 <button type="submit" class="btn delete-btn">Delete</button>
             </form>

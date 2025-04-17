@@ -38,44 +38,46 @@ public class ControlComment {
     private PostComponent postComponent;
 
     @GetMapping("/createComment")
-    public String showCreateComment(@RequestParam long id, Model model) {
-    model.addAttribute("postId", id);  
-    postComponent.setPost(PostService.getPostById(id));
-    return "addComment";  
-}
+    public String showCreateComment(@RequestParam long id, Model model, HttpServletRequest request) {
+        Post post = PostService.getPostById(id);
+        if (post == null) {
+            model.addAttribute("error", "Post not found");
+            return "redirect:/post";
+        }
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
+        model.addAttribute("postId", id);
+        postComponent.setPost(post);
+        return "addComment";  
+    }
 
     @PostMapping("/createComment")
-    public String showCreateComment(@RequestParam String content, Model model, HttpServletRequest request) {
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+    public String createComment(@RequestParam String content, Model model, HttpServletRequest request) {
         UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";  
         }
         Post post = postComponent.getPost();
-        if(post==null || PostService.getPostById(post.getId()) == null){
+        if (post == null || PostService.getPostById(post.getId()) == null) {
             model.addAttribute("error", "Post not found or deleted");
             return "redirect:/post";    
         }
-        CommentService.registerComment(user,content, post);
-        model.addAttribute("csrfToken", token);
-        return "redirect:/showMoreP/" + postComponent.getPost().getId();
+        CommentService.registerComment(user, content, post);
+        return "redirect:/showMoreP/" + post.getId();
     }
 
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam long id, Model model,HttpServletRequest request) {
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+    public String deleteComment(@RequestParam long id, Model model, HttpServletRequest request) {
         UserName user = userComponent.getUser();
         if (user == null) {
             return "redirect:/home";
         }
         int comp = CommentService.deleteComment(id);
         if (comp == 0) {
-            model.addAttribute("csrfToken", token);
             return "redirect:/showMoreP/" + postComponent.getPost().getId();
         } else {
             model.addAttribute("error", "Comment not found or deleted");
             return "redirect:/init";
         }
     }
-
 }

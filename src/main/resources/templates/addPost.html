@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Añadir Post</title>
-    <link rel="stylesheet" href="css/addComment.css">
+    <link rel="stylesheet" href="/css/addComment.css">
 </head>
 <body>
-
     <div class="container">
         <h1>Crear un nuevo Post</h1>
         <form action="/addPost" method="post">
-        <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
+            <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
             <div class="form-group">
                 <label for="title">Title:</label>
                 <textarea id="title" name="title" placeholder="Post Title" required></textarea>
@@ -27,9 +26,7 @@
             </div>
             <button type="submit">ADD POST</button>
         </form>
-
         <a href="/init">Return to main page</a>
     </div>
-
 </body>
 </html>

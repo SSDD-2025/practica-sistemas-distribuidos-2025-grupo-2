@@ -58,7 +58,7 @@
     }
 
     .profile-picture {
-      width: 120px;  /* Ajustamos el tamaño de la imagen para que encaje mejor */
+      width: 120px; 
       height: 120px;
       border-radius: 50%;
       background-color: #333;
@@ -224,7 +224,7 @@
     <div class="profile-info">
       <div class="profile-picture">
         {{#user.profilePictureBase64}}
-          <img src="data:image/jpeg;base64,{{user.profilePictureBase64}}">
+        <img src="data:image/jpeg;base64,{{user.profilePictureBase64}}">
         {{/user.profilePictureBase64}}
         {{^user.profilePictureBase64}}
           No Image
@@ -243,7 +243,7 @@
           <form action="/hidePassword" method="post">
             <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
             <button type="submit" class="toggle-password">Hide</button>
-        </form>
+          </form>
         {{/showPassword}}
         {{^showPassword}}
           <p><strong>Password:</strong> *******</p>

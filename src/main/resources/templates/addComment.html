@@ -4,25 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Añadir Comentario</title>
-    <link rel="stylesheet" href="css/addComment.css">
+    <link rel="stylesheet" href="/css/addComment.css">
 </head>
 <body>
-
     <div class="container">
         <h1>Create a comment</h1>
         <form action="/createComment" method="post">
-        <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
-            <input type="hidden" name="id">
+            <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
             <div class="form-group">
                 <label for="content">Comment:</label>
                 <textarea id="content" name="content" placeholder="Write your comment" required></textarea>
             </div>
-        
             <button type="submit">ADD COMMENT</button>
         </form>
-
         <a href="/init">Return Home</a>
     </div>
-
 </body>
 </html>

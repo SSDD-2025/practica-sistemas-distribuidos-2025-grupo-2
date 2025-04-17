@@ -98,11 +98,11 @@
       <p>Are you sure you want to delete your account?</p>
       <div class="button-wrapper">
         <form action="/acc" method="post">
-          <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
+          <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
             <button type="submit" class="button cancel">Cancel</button>
           </form>
         <form action="/deleteUserDefinitive" method="post">
-          <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}">
+          <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
           <button type="submit" class="button confirm">Confirm</button>
         </form>
 
