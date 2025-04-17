@@ -16,6 +16,10 @@ public class UserName{
 
     private String username;
     private String password;
+
+    @Transient
+    private String rawPassword;
+
     private String email;
     
     @Lob
@@ -64,6 +68,13 @@ public class UserName{
 
     public List<Post> getPosts(){
         return this.posts;
+    }
+
+    public String getRawPassword() { 
+        return rawPassword; 
+    }
+    public void setRawPassword(String rawPassword) { 
+        this.rawPassword = rawPassword; 
     }
 
     public void setUsername(String username) {

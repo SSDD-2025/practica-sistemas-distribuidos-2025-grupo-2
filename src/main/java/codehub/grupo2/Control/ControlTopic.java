@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import codehub.grupo2.Component.UserComponent;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Security.CustomUserDetails;
 import codehub.grupo2.Service.PostService;
 import codehub.grupo2.Service.TopicService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,12 +38,14 @@ public class ControlTopic {
     private UserComponent userComponent;
 
     @GetMapping("/topic")
-    public String Topic(Model model) {
+    public String Topic(Model model, HttpServletRequest request) {
         List<Topic> topiclist = TopicService.getAllTopics();
         if (topiclist.isEmpty()) {
             model.addAttribute("error", "No topics available");
             return "topic";
         }
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
         model.addAttribute("topics", topiclist);
         return "topic";
     }
@@ -63,13 +68,15 @@ public class ControlTopic {
     }
 
     @GetMapping("/topic/{id}")
-    public String showTopicPost(@PathVariable Long id, Model model) {
+    public String showTopicPost(@PathVariable Long id, Model model, HttpServletRequest request) {
         Optional<Topic> topic = TopicService.getTopicById(id);
         if (!topic.isPresent()) {
             model.addAttribute("error", "Topic not found");
             return "redirect:/topic"; 
         }
         List<Post> posts = PostService.getPostByTopic(topic.get());
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
         model.addAttribute("posts", posts);
         model.addAttribute("topicName", topic.get().getTopicName());
         return "postByTopic"; 
@@ -78,7 +85,9 @@ public class ControlTopic {
     @PostMapping("/deleteTopic")
     public String deleteTopic(@RequestParam long id, HttpServletRequest request, Model model) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        UserName user = userComponent.getUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserName user = userDetails.getUser();
         if (user == null) {
             return "redirect:/home";
         }

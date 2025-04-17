@@ -49,7 +49,6 @@ public class Security {
                 .requestMatchers("/acc", "/showPassword", "/hidePassword", "/deleteUserConfirmation", 
                     "/deleteUserDefinitive", "/editProfile", "/updateProfile", "/uploadProfilePicture", 
                     "/addTopic", "/addPost").hasRole("USER")
-                .requestMatchers("/createComment").authenticated()
                 .requestMatchers("/**").denyAll()
             )
             .formLogin(formLogin -> formLogin

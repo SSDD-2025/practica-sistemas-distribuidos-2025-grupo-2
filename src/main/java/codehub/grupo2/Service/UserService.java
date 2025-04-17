@@ -1,4 +1,5 @@
 package codehub.grupo2.Service;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
@@ -6,23 +7,15 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
-
 import javax.sql.rowset.serial.SerialException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.UserName;
-
 
 @Service
 public class UserService {
@@ -37,24 +30,26 @@ public class UserService {
     @Lazy
     private CommentService commentService;
 
-    public UserName getUser(String username){
+    public UserName getUser(String username) {
         return UserBD.findByUsername(username);
     }
 
-    public String registerUsername(String name,String password ,String email){
-        if(password.length()<12){
+    public String registerUsername(String name, String password, String email) {
+        if (password.length() < 12) {
             return "Password must have at least 12 characters";
         }
-        if(UserBD.findByUsername(name) != null){
+        if (UserBD.findByUsername(name) != null) {
             return "Username already exists";
         }
-        if(UserBD.findByEmail(email) != null){
+        if (UserBD.findByEmail(email) != null) {
             return "Email already exists";
         }
-        if(email.contains("@") == false){
+        if (!email.contains("@")) {
             return "Invalid email";
-        }   
-        UserName user = new UserName(name,passwordEncoder.encode(password),email);
+        }
+        
+        UserName user = new UserName(name, passwordEncoder.encode(password), email);
+        user.setRawPassword(password);
         UserBD.save(user);
         return name;
     }
@@ -72,7 +67,7 @@ public class UserService {
         return passwordEncoder.matches(password, user.getPassword());
     }
 
-    public List<UserName> getAllUsers(){
+    public List<UserName> getAllUsers() {
         return UserBD.findAll();
     }
 
@@ -83,7 +78,6 @@ public class UserService {
             UserBD.delete(user);
         }
     }
-    
 
     public void saveProfilePicture(UserName user, byte[] profilePicture) throws IOException, SerialException, SQLException {
         if (profilePicture != null && profilePicture.length > 0) {
@@ -96,7 +90,7 @@ public class UserService {
     public int editUser(String username, String password, String email, Long id) {
         Optional<UserName> currentUser = UserBD.findById(id);
         if (currentUser.isEmpty()) {
-            return 1; 
+            return 1;
         }
         UserName user = currentUser.get();
         UserName userN = UserBD.findByUsername(username);
@@ -114,23 +108,22 @@ public class UserService {
             if (password.length() < 12) {
                 return 1;
             }
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password)); 
+            user.setRawPassword(password); 
         }
         user.setEmail(email);
         user.setUsername(username);
         UserBD.save(user);
         return 0;
     }
-    
 
     public String convertBlobToBase64(Blob blob) throws SQLException, IOException {
         if (blob == null) {
-            return null; 
+            return null;
         }
         try (InputStream inputStream = blob.getBinaryStream()) {
             byte[] bytes = inputStream.readAllBytes();
-            return Base64.getEncoder().encodeToString(bytes); 
+            return Base64.getEncoder().encodeToString(bytes);
         }
     }
-
 }

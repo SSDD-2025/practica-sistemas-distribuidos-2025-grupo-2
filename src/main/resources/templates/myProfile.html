@@ -58,7 +58,7 @@
     }
 
     .profile-picture {
-      width: 120px; 
+      width: 120px;
       height: 120px;
       border-radius: 50%;
       background-color: #333;
@@ -203,32 +203,30 @@
       margin-bottom: 15px;
       box-shadow: 0 0 10px rgba(13, 160, 21, 0.8);
     }
-
   </style>
 </head>
 <body>
-
   <div class="container">
     <header class="header">
       <h1 class="title">My Profile</h1>
     </header>
 
     {{#error}}
-      <p class="error-message">{{error}}</p> 
+      <p class="error-message">{{error}}</p>
     {{/error}}
 
     {{#check}}
-      <p class="check-message">{{check}}</p> 
+      <p class="check-message">{{check}}</p>
     {{/check}}
 
     <div class="profile-info">
       <div class="profile-picture">
-        {{#user.profilePictureBase64}}
-        <img src="data:image/jpeg;base64,{{user.profilePictureBase64}}">
-        {{/user.profilePictureBase64}}
-        {{^user.profilePictureBase64}}
+        {{#profilePicture}}
+        <img src="data:image/jpeg;base64,{{profilePicture}}">
+        {{/profilePicture}}
+        {{^profilePicture}}
           No Image
-        {{/user.profilePictureBase64}}
+        {{/profilePicture}}
       </div>
       <a href="/uploadProfilePicture" class="change-picture">Change</a>
       {{#user}}
@@ -238,7 +236,7 @@
       <div class="password-wrapper">
         {{#showPassword}}
           {{#user}}
-            <p><strong>Password:</strong> {{password}}</p>
+            <p><strong>Password:</strong> {{rawPassword}}</p>
           {{/user}}
           <form action="/hidePassword" method="post">
             <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
@@ -280,6 +278,5 @@
       <button type="submit">Home Page</button>
     </form>
   </div>
-
 </body>
 </html>

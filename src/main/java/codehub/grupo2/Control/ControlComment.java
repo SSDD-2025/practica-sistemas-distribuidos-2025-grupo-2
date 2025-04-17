@@ -1,6 +1,8 @@
 package codehub.grupo2.Control;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import codehub.grupo2.Component.PostComponent;
 import codehub.grupo2.Component.UserComponent;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Security.CustomUserDetails;
 import codehub.grupo2.Service.CommentService;
 import codehub.grupo2.Service.PostService;
 import codehub.grupo2.Service.UserService;
@@ -53,7 +56,9 @@ public class ControlComment {
 
     @PostMapping("/createComment")
     public String createComment(@RequestParam String content, Model model, HttpServletRequest request) {
-        UserName user = userComponent.getUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserName user = userDetails.getUser();
         if (user == null) {
             return "redirect:/home";  
         }
@@ -68,7 +73,9 @@ public class ControlComment {
 
     @PostMapping("/deleteComment")
     public String deleteComment(@RequestParam long id, Model model, HttpServletRequest request) {
-        UserName user = userComponent.getUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserName user = userDetails.getUser();
         if (user == null) {
             return "redirect:/home";
         }

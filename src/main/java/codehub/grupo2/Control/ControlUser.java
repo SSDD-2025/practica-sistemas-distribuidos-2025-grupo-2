@@ -33,9 +33,6 @@ public class ControlUser {
     private UserService userService;
 
     @Autowired
-    private UserComponent userComponent;
-
-    @Autowired
     private CommentService commentService;
 
     @GetMapping("/")
@@ -91,52 +88,54 @@ public class ControlUser {
     }
     
 
-    @PostMapping("/acc")
-    public String GoAccPost(Model model, HttpServletRequest request) throws SQLException, IOException {
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-            return "redirect:/home";
-        }
-
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
-
-        if (user == null) {
-            return "redirect:/home";
-        }
-
-        String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
-        model.addAttribute("profilePictureBase64", profilePictureBase64);
-        model.addAttribute("user", user); 
-        model.addAttribute("posts", user.getPosts());
-        model.addAttribute("csrfToken", token);
-        return "myProfile";
-    }
-
-        
     @GetMapping("/acc")
-    public String GoAccGet(Model model, HttpSession session) throws SQLException, IOException {
+    public String GoAccGet(Model model, HttpSession session, HttpServletRequest request) throws SQLException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/home";
         }
-        
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         UserName user = userDetails.getUser();
         if (user == null) {
             return "redirect:/home";
         }
-    
         String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
         model.addAttribute("profilePicture", profilePictureBase64);
         model.addAttribute("user", user);
         model.addAttribute("posts", user.getPosts());
         Boolean showPassword = (Boolean) session.getAttribute("showPassword");
         model.addAttribute("showPassword", showPassword != null ? showPassword : false);
+        if (user.getRawPassword() == null) {
+            user.setRawPassword("Pass not found");
+        }
         return "myProfile";
     }
-    
+
+    @PostMapping("/acc")
+    public String GoAccPost(Model model, HttpServletRequest request) throws SQLException, IOException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/home";
+        }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserName user = userDetails.getUser();
+        if (user == null) {
+            return "redirect:/home";
+        }
+        String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
+        model.addAttribute("profilePictureBase64", profilePictureBase64);
+        model.addAttribute("user", user);
+        model.addAttribute("posts", user.getPosts());
+        if (user.getRawPassword() == null) {
+            user.setRawPassword("Pass not found");
+        }
+        return "myProfile";
+    }
+        
 
     @PostMapping("/showPassword")
     public String showPassword(Model model, HttpSession session, HttpServletRequest request) {
@@ -166,11 +165,11 @@ public class ControlUser {
         @Transactional
         public String deleteUserDefinitive(Model model, HttpSession session,HttpServletRequest request ) {
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            UserName user = userComponent.getUser();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            UserName user = userDetails.getUser();
             commentService.deleteCommentsByUser(user.getId());
             userService.deleteUser(user.getUsername());
-            userComponent.setUser(userService.getUser(user.getUsername()));
-            userComponent.logout();
             session.invalidate();
             model.addAttribute("check", "User deleted correctly");
             model.addAttribute("csrfToken", token);
@@ -179,11 +178,18 @@ public class ControlUser {
         
 
         @GetMapping("/editProfile")
-        public String showEditProfile(Model model) {
-            UserName user = userComponent.getUser();
+        public String showEditProfile(Model model, HttpServletRequest request) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return "redirect:/home";
+            }
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            UserName user = userDetails.getUser();
             if (user == null) {
                 return "redirect:/home";
             }
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+            model.addAttribute("csrfToken", token);
             model.addAttribute("user", user);
             return "editProfile";
         }
@@ -191,7 +197,9 @@ public class ControlUser {
         @PostMapping("/updateProfile")
         public String updateProfile(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model,HttpServletRequest request) {
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            UserName user = userComponent.getUser();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            UserName user = userDetails.getUser();
             if (user == null) {
                 return "redirect:/home";
             }
@@ -202,7 +210,6 @@ public class ControlUser {
                 model.addAttribute("error","Error updating the profile, make sure you followed our rules");
                 return "myProfile";
             }
-            userComponent.setUser(userService.getUser(username));
             model.addAttribute("check", "User Uploaded Correctly");
             model.addAttribute("csrfToken", token);
             return "myProfile";
@@ -216,11 +223,12 @@ public class ControlUser {
         @PostMapping("/uploadProfilePicture")
         public String uploadProfilePicture(@RequestParam MultipartFile file,Model model,HttpServletRequest request) throws IOException, SerialException, SQLException {
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            UserName user = userComponent.getUser();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            UserName user = userDetails.getUser();
             try {
                 byte[] bytes = file.getBytes();
                 userService.saveProfilePicture(user, bytes);
-                userComponent.setUser(userService.getUser(user.getUsername()));
             } catch (IOException e) {
                 return "uploadProfilePicture";
             }
