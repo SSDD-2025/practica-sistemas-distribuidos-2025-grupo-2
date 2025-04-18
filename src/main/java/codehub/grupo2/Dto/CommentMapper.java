@@ -12,7 +12,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
-    @Mapping(target = "username", source = "comment.username")
     CommentDTO toDTO(Comment Comment);
 
     List<CommentDTO> toDTOs(Collection<Comment> Comments);
