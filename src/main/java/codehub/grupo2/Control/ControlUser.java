@@ -48,14 +48,6 @@ public class ControlUser {
         return "register";
     } 
 
-    /*@PostMapping("/logOut")
-    public String logout(HttpSession session) {
-        SecurityContextHolder.clearContext();
-        userComponent.logout();
-        session.invalidate();
-        return "redirect:/home";
-    }*/
-
     @PostMapping("/register")
     public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model,HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
@@ -133,7 +125,7 @@ public class ControlUser {
         String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         model.addAttribute("csrfToken", token);
-        model.addAttribute("profilePictureBase64", profilePictureBase64);
+        model.addAttribute("profilePicture", profilePictureBase64);
         model.addAttribute("user", user);
         model.addAttribute("posts", user.getPosts());
         if (user.getRawPassword() == null) {
@@ -206,26 +198,57 @@ public class ControlUser {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             UserName user = userDetails.getUser();
+            
             if (user == null) {
                 return "redirect:/home";
             }
-            model.addAttribute("profilePictureBase64", user.getProfilePictureBase64());
-            model.addAttribute("user", user); 
-            model.addAttribute("posts", user.getPosts());
+
             if(userService.editUser(username, password, email, user.getId()) == 1){
                 model.addAttribute("error","Error updating the profile, make sure you followed our rules");
                 return "myProfile";
             }
+
+            UserName updatedUser = userService.getUser(username);
+            CustomUserDetails newDetails = new CustomUserDetails(updatedUser);
+            Authentication newAuth = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                newDetails, authentication.getCredentials(), newDetails.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+
             model.addAttribute("check", "User Uploaded Correctly");
             model.addAttribute("csrfToken", token);
+            model.addAttribute("user", updatedUser); 
+            model.addAttribute("posts", updatedUser.getPosts());
+            model.addAttribute("profilePicture", updatedUser.getProfilePictureBase64());
+            
             return "myProfile";
         }
+
 
         @GetMapping("/uploadProfilePicture")
         public String getMethodName(Model model,HttpServletRequest request) {
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             model.addAttribute("csrfToken", token);
             return "uploadProfilePicture";
+        }
+
+        @PostMapping("/deleteProfilePicture")
+        public String deleteProfilePicture(Model model, HttpServletRequest request) {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+            model.addAttribute("csrfToken", token);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return "redirect:/home";
+            }
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            UserName user = userDetails.getUser();
+            try {
+                userService.deleteProfilePicture(user);
+            } catch (SQLException e) {
+                model.addAttribute("error", "Error deleting profile picture: " + e.getMessage());
+                return "uploadProfilePicture";
+            }
+            return "redirect:/acc";
         }
 
         @PostMapping("/uploadProfilePicture")

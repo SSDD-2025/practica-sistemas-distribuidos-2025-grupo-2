@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import codehub.grupo2.Security.jwt.JwtRequestFilter;
 import codehub.grupo2.Security.jwt.UnauthorizedHandlerJwt;
@@ -99,8 +98,8 @@ public class Security {
                     "/favicon.ico", "/error", "/adminLogin", "/guest").permitAll()
                 .requestMatchers("/deleteTopic", "/deletePost", "/deleteComment").hasRole("ADMIN")
                 .requestMatchers("/acc", "/showPassword", "/hidePassword", "/deleteUserConfirmation", 
-                    "/deleteUserDefinitive", "/editProfile", "/updateProfile", "/uploadProfilePicture", 
-                    "/addTopic", "/addPost", "/createComment").hasRole("USER")
+                    "/deleteUserDefinitive", "/editProfile", "/updateProfile","/SonacaWasHere","/uploadProfilePicture", 
+                    "/addTopic", "/addPost", "/createComment","/deleteProfilePicture").hasRole("USER")
                 .requestMatchers("/adminPanel", "/adminPanel/**").hasRole("ADMIN")
                 .requestMatchers("/**").denyAll()
             )

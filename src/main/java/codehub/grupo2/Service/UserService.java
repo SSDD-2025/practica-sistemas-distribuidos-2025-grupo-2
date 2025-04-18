@@ -153,4 +153,9 @@ public class UserService {
         }
         return null;
     }
+
+    public void deleteProfilePicture(UserName user) throws SQLException {
+        user.setProfilePicture(null);
+        UserBD.save(user);
+    }
 }

@@ -10,9 +10,9 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TopicMapper {
-
+    @Mapping(target = "posts", ignore = true)
     TopicDTO toDTO(Topic Topic);
-
+    @Mapping(target = "posts", ignore = true)
     List<TopicDTO> toDTOs(Collection<Topic> Topics);
 
     @Mapping(target = "posts", ignore = true)
