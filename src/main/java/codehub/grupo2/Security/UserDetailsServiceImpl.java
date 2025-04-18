@@ -2,7 +2,6 @@ package codehub.grupo2.Security;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.UserName;

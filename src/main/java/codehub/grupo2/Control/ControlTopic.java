@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import codehub.grupo2.Component.UserComponent;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Security.CustomUserDetails;
@@ -33,9 +32,6 @@ public class ControlTopic {
 
     @Autowired
     private PostService PostService;
-
-    @Autowired
-    private UserComponent userComponent;
 
     @GetMapping("/topic")
     public String Topic(Model model, HttpServletRequest request) {

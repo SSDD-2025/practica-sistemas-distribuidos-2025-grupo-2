@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import codehub.grupo2.Component.PostComponent;
-import codehub.grupo2.Component.UserComponent;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Security.CustomUserDetails;
 import codehub.grupo2.Service.CommentService;
 import codehub.grupo2.Service.PostService;
-import codehub.grupo2.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
@@ -27,12 +25,6 @@ public class ControlComment {
 
     @Autowired
     private CommentService CommentService;
-
-    @Autowired
-    private UserService UserService;
-
-    @Autowired
-    private UserComponent userComponent;
 
     @Autowired
     private PostService PostService;

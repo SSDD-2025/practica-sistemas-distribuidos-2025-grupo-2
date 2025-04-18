@@ -5,15 +5,14 @@ import org.mapstruct.Mapping;
 
 import codehub.grupo2.DB.Entity.Comment;
 import codehub.grupo2.DB.Entity.Post;
-import codehub.grupo2.DB.Entity.Topic;
 
-// Removed unused import
 
 import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
+    @Mapping(target = "username", source = "comment.username")
     CommentDTO toDTO(Comment Comment);
 
     List<CommentDTO> toDTOs(Collection<Comment> Comments);

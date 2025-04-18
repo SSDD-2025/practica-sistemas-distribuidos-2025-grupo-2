@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import codehub.grupo2.Component.UserComponent;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Security.CustomUserDetails;
 import codehub.grupo2.Service.CommentService;

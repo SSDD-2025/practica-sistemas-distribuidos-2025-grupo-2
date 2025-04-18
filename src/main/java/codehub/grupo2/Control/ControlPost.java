@@ -24,7 +24,6 @@ import codehub.grupo2.Service.PostService;
 import codehub.grupo2.Service.TopicService;
 import codehub.grupo2.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @Component
