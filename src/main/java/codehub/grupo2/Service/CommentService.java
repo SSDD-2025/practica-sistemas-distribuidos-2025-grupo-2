@@ -1,4 +1,5 @@
 package codehub.grupo2.Service;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,9 +11,14 @@ import codehub.grupo2.DB.CommentRepository;
 import codehub.grupo2.DB.Entity.Comment;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Dto.CommentDTO;
+import codehub.grupo2.Dto.CommentMapper;
 
 @Service
 public class CommentService {
+
+    @Autowired
+    private CommentMapper commentMapper;
 
     @Autowired
     private CommentRepository CommentBD;
@@ -54,6 +60,20 @@ public class CommentService {
     @Transactional
     public void deleteCommentsByUser(long userId) {
         CommentBD.deleteByUserId(userId);
+    }
+
+    public Collection<CommentDTO> getAllCommentsDTO() {
+        List<Comment> comments = CommentBD.findAll();
+        return commentMapper.toDTOs(comments);
+    }
+
+    public CommentDTO getCommentByIdDTO(long id) {
+        Comment comment = CommentBD.findById(id);
+        if (comment != null) {
+            return commentMapper.toDTO(comment);
+        } else {
+            return null;
+        }
     }
     
 }

@@ -1,0 +1,24 @@
+package codehub.grupo2.Dto;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import codehub.grupo2.DB.Entity.Post;
+import codehub.grupo2.DB.Entity.Topic;
+
+import java.util.Collection;
+import java.util.List;
+
+@Mapper(componentModel = "spring")
+public interface PostMapper {
+
+    PostDTO toDTO(Post Post);
+
+    List<PostDTO> toDTOs(Collection<Post> Posts);
+
+    @Mapping(target = "topic", ignore = true)
+    Post toDomain(PostDTO PostDTO);
+
+    @Mapping(target = "posts", ignore = true)
+    Topic toDomain(TopicDTO TopicDTO);
+}

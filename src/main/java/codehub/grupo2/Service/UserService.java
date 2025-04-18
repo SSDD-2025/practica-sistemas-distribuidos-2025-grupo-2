@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.rowset.serial.SerialException;
@@ -16,9 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Dto.UserNameDTO;
+import codehub.grupo2.Dto.UserNameMapper;
 
 @Service
 public class UserService {
+
+    @Autowired
+    private UserNameMapper userNameMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -125,5 +131,26 @@ public class UserService {
             byte[] bytes = inputStream.readAllBytes();
             return Base64.getEncoder().encodeToString(bytes);
         }
+    }
+
+    public UserNameDTO getLoggedUserDTO() {
+        UserName user = getLoggedUser();
+        if (user != null) {
+            return userNameMapper.toDTO(user);
+        }
+        return null;
+    }
+
+    public Collection<UserNameDTO> getAllUsersDTO() {
+        List<UserName> users = UserBD.findAll();
+        return userNameMapper.toDTOs(users);
+    }
+
+    public UserNameDTO getUserByIdDTO(long id) {
+        Optional<UserName> user = UserBD.findById(id);
+        if (user.isPresent()) {
+            return userNameMapper.toDTO(user.get());
+        }
+        return null;
     }
 }

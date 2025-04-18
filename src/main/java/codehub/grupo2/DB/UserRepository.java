@@ -10,5 +10,6 @@ import codehub.grupo2.DB.Entity.*;
 public interface UserRepository extends JpaRepository<UserName, Long> {
     UserName findByUsername(String username);
     UserName findByEmail(String email);
+    
 }
 
