@@ -3,22 +3,35 @@ package codehub.grupo2.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
+import codehub.grupo2.Security.jwt.JwtRequestFilter;
+import codehub.grupo2.Security.jwt.UnauthorizedHandlerJwt;
 
 @Configuration
 @EnableWebSecurity
 public class Security {
 
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private JwtRequestFilter jwtRequestFilter;
+
+    @Autowired
+    private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,22 +47,60 @@ public class Security {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    @Order(1)
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        http.authenticationProvider(authenticationProvider());
+    
+        http
+                .securityMatcher("/api/**")
+                .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
+    
+        http
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/api/UserNames/acc").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/UserNames/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/UserNames/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/UserNames/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/Comments/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/Comments/").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/Comments/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/Posts/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/Posts/").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/Posts/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/Topics/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/Topics/").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/Topics/**").hasRole("USER")
+                        .anyRequest().permitAll()
+                );
+    
+        http.formLogin(formLogin -> formLogin.disable());
+        http.csrf(csrf -> csrf.disable());
+        http.httpBasic(httpBasic -> httpBasic.disable());
+        http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authenticationProvider());
 
         http
-            .csrf(csrf -> csrf
-                .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
-            )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/logout").denyAll()
                 .requestMatchers("/", "/init", "/login", "/register", "/topic", "/topic/{id}", 
                     "/post", "/showMoreP/{id}", "/home", "/css/**", "/js/**", "/images/**", 
-                    "/favicon.ico", "/error","/adminLogin","/guest").permitAll()
+                    "/favicon.ico", "/error", "/adminLogin", "/guest").permitAll()
                 .requestMatchers("/deleteTopic", "/deletePost", "/deleteComment").hasRole("ADMIN")
                 .requestMatchers("/acc", "/showPassword", "/hidePassword", "/deleteUserConfirmation", 
                     "/deleteUserDefinitive", "/editProfile", "/updateProfile", "/uploadProfilePicture", 
-                    "/addTopic", "/addPost","/createComment").hasRole("USER")
+                    "/addTopic", "/addPost", "/createComment").hasRole("USER")
                 .requestMatchers("/adminPanel", "/adminPanel/**").hasRole("ADMIN")
                 .requestMatchers("/**").denyAll()
             )
@@ -71,11 +122,9 @@ public class Security {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/home")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
                 .permitAll()
             );
     
         return http.build();
     }
-
 }

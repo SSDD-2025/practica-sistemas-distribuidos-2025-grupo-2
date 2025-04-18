@@ -222,7 +222,9 @@ public class ControlUser {
         }
 
         @GetMapping("/uploadProfilePicture")
-        public String getMethodName() {
+        public String getMethodName(Model model,HttpServletRequest request) {
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+            model.addAttribute("csrfToken", token);
             return "uploadProfilePicture";
         }
 
@@ -231,6 +233,7 @@ public class ControlUser {
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            model.addAttribute("csrfToken", token);
             UserName user = userDetails.getUser();
             try {
                 byte[] bytes = file.getBytes();
@@ -238,7 +241,6 @@ public class ControlUser {
             } catch (IOException e) {
                 return "uploadProfilePicture";
             }
-            model.addAttribute("csrfToken", token);
             return "redirect:/acc";
         }
 
