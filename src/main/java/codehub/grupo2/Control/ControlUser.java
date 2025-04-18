@@ -85,7 +85,14 @@ public class ControlUser {
         model.addAttribute("error", "");
         return "init";
     }
-    
+    @PostMapping("/guest")
+    public String guest(Model model, HttpServletRequest request) {
+        return "init";
+    }
+    @GetMapping("/guest")
+    public String guestGet(Model model, HttpServletRequest request) {
+        return "init";
+    }
 
     @GetMapping("/acc")
     public String GoAccGet(Model model, HttpSession session, HttpServletRequest request) throws SQLException, IOException {

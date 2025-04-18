@@ -45,7 +45,7 @@ public class Security {
                 .requestMatchers(HttpMethod.GET, "/logout").denyAll()
                 .requestMatchers("/", "/init", "/login", "/register", "/topic", "/topic/{id}", 
                     "/post", "/showMoreP/{id}", "/home", "/css/**", "/js/**", "/images/**", 
-                    "/favicon.ico", "/error","/adminLogin").permitAll()
+                    "/favicon.ico", "/error","/adminLogin","/guest").permitAll()
                 .requestMatchers("/deleteTopic", "/deletePost", "/deleteComment").hasRole("ADMIN")
                 .requestMatchers("/acc", "/showPassword", "/hidePassword", "/deleteUserConfirmation", 
                     "/deleteUserDefinitive", "/editProfile", "/updateProfile", "/uploadProfilePicture", 
