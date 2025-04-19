@@ -90,16 +90,18 @@ public class Security {
     @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authenticationProvider());
-
+    
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/init", "/login", "/register", "/topic", "/topic/{id}", 
                     "/post", "/showMoreP/{id}", "/home", "/css/**", "/js/**", "/images/**", 
-                    "/favicon.ico", "/error", "/adminLogin", "/guest").permitAll()
-                .requestMatchers("/deleteTopic", "/deletePost", "/deleteComment").hasRole("ADMIN")
+                    "/favicon.ico", "/error", "/adminLogin", "/guest","/logout").permitAll()
+                .requestMatchers("/deleteTopic", "/admin/deleteTopic", "/admin/deletePost", "/admin/deleteComment", "/admin/deleteUser").hasRole("ADMIN")
                 .requestMatchers("/acc", "/showPassword", "/hidePassword", "/deleteUserConfirmation", 
-                    "/deleteUserDefinitive", "/editProfile", "/updateProfile","/SonacaWasHere","/uploadProfilePicture", 
-                    "/addTopic", "/addPost", "/createComment","/deleteProfilePicture").hasRole("USER")
+                    "/deleteUserDefinitive", "/editProfile", "/updateProfile", "/SonacaWasHere", 
+                    "/uploadProfilePicture", "/addTopic", "/addPost", "/createComment", 
+                    "/deleteProfilePicture","/deletePost", 
+                    "/deleteComment").hasRole("USER")
                 .requestMatchers("/adminPanel", "/adminPanel/**").hasRole("ADMIN")
                 .requestMatchers("/**").denyAll()
             )

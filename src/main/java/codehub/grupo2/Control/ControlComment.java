@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import codehub.grupo2.Component.PostComponent;
+import codehub.grupo2.DB.Entity.Comment;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Security.CustomUserDetails;
@@ -68,9 +69,17 @@ public class ControlComment {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         UserName user = userDetails.getUser();
+
         if (user == null) {
             return "redirect:/home";
         }
+
+        Comment comment = CommentService.getCommentById(id);
+        if (!comment.getUsername().getId().equals(user.getId())) {
+            model.addAttribute("error", "You cant delete this comment");
+            return "redirect:/showMoreP/" + comment.getPost().getId();
+        }
+
         int comp = CommentService.deleteComment(id);
         if (comp == 0) {
             return "redirect:/showMoreP/" + postComponent.getPost().getId();

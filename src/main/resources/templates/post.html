@@ -13,19 +13,21 @@
         {{/error}}
         {{#posts}}
         <div class="post">
+            {{#isOwner}}
             <form action="/deletePost" method="post">
             <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
-                <input type="hidden" name="id" value="{{id}}">
+            <input type="hidden" name="id" value="{{post.id}}">
                 <button type="submit" class="btn delete-btn">Delete</button>
             </form>
-            <h1><strong>{{title}}</strong></h1>
+            {{/isOwner}}
+            <h1><strong>{{post.title}}</strong></h1>
             <div class="user">
-                <p>Posted by: {{user}}</p>
+                <p>Posted by: {{post.user.username}}</p>
             </div>
             <div class="content">
-                <p>{{text}}</p>
+                <p>{{post.text}}</p>
             </div>
-            <a href="/showMoreP/{{id}}" class="btn">Show more</a>
+            <a href="/showMoreP/{{post.id}}" class="btn">Show more</a>
         </div>
         {{/posts}}
     </div>

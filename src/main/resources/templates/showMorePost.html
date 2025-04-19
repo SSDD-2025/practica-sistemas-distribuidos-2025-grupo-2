@@ -3,45 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Completo</title>
+
     <link rel="stylesheet" href="/css/showMorePost.css">
 </head>
 <body>
-   
     <div class="container">
         <div class="header">
-            <div class="title">{{posts.topic}}</div> 
+            <div class="title">{{posts.post.topic.topicName}}</div> 
         </div>
 
         <div class="content-wrapper">
-            <h1>{{posts.title}}</h1>
+            <h1>{{posts.post.title}}</h1>
             <div class="user">
-                <p><strong>Publicado por:</strong> {{posts.user.username}}</p> 
+                <p><strong>Publish by:</strong> {{posts.post.user.username}}</p> 
             </div>
             <div class="content">
-                <p>{{posts.text}}</p>
+                <p>{{posts.post.text}}</p>
             </div>
 
             <div class="comments">
                 <h2>Comments</h2>
-                {{#posts.comments}}
+                {{#comments}}
                     <div class="comment">
-                        <p><strong>{{username.username}}:</strong> {{text}}</p>
+                        <p><strong>{{comment.username.username}}:</strong> {{comment.text}}</p>
+                        {{#isOwner}}
                         <form action="/deleteComment" method="post" style="display:inline;">
-                            <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
-                            <input type="hidden" name="id" value="{{id}}">
+                            <input type="hidden" name="_csrf" value="{{csrfToken.token}}"><input type="hidden" name="_csrf" value="{{csrfToken.token}}">
+                            <input type="hidden" name="id" value="{{comment.id}}">
                             <button type="submit" class="delete-btn">Delete Comment</button>
-                        <form>
+                        </form>
+                        {{/isOwner}}
                     </div>
-                {{/posts.comments}}
+                {{/comments}}
             </div>            
         </div>
 
-       
         <a href="/post" class="btn">Go Back</a>
     </div>
-    <a href="/createComment?id={{posts.id}}" class="right-bottom-btn">ADD COMMENT</a>
-
+    <a href="/createComment?id={{posts.post.id}}" class="right-bottom-btn">ADD COMMENT</a>
 </body>
-</html>             
-
+</html>
