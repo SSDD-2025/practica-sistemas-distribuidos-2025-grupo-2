@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import codehub.grupo2.Dto.PostDTO;
-import codehub.grupo2.Service.PostService;
+import codehub.grupo2.Service.APIService.APIPostService;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
@@ -16,7 +16,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 public class ControlRestPost {
 
     @Autowired
-    private PostService PostService;
+    private APIPostService PostService;
 
     @GetMapping("/")
     public Collection<PostDTO> getPosts() {

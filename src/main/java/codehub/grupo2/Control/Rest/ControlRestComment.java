@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import codehub.grupo2.Dto.CommentDTO;
-import codehub.grupo2.Service.CommentService;
+import codehub.grupo2.Service.APIService.APICommentService;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
@@ -16,7 +16,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 public class ControlRestComment {
 
     @Autowired
-    private CommentService CommentService;
+    private APICommentService CommentService;
 
     @GetMapping("/")
     public Collection<CommentDTO> getComments() {
