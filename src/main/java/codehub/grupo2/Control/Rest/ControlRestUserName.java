@@ -6,10 +6,18 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import codehub.grupo2.Dto.UserNameDTO;
+import codehub.grupo2.Security.jwt.AuthResponse;
+import codehub.grupo2.Security.jwt.JwtTokenProvider;
+import codehub.grupo2.Security.jwt.LoginRequest;
+import codehub.grupo2.Security.jwt.TokenType;
 import codehub.grupo2.Service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 
@@ -19,6 +27,48 @@ public class ControlRestUserName {
 	
 	@Autowired
 	private UserService userService;
+@Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        Boolean isAuthenticated = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+
+        if (!isAuthenticated) {
+            return ResponseEntity.badRequest().body(
+                    new AuthResponse(AuthResponse.Status.FAILURE, "Invalid username or password", "Authentication failed")
+            );
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+
+        String accessToken = jwtTokenProvider.generateAccessToken(userDetails);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
+
+        response.addCookie(buildTokenCookie(TokenType.ACCESS, accessToken));
+        response.addCookie(buildTokenCookie(TokenType.REFRESH, refreshToken));
+
+        AuthResponse authResponse = new AuthResponse(
+                AuthResponse.Status.SUCCESS,
+                "Authentication successful",
+                accessToken,
+                refreshToken
+        );
+        return ResponseEntity.ok().body(authResponse);
+    }
+
+    private Cookie buildTokenCookie(TokenType type, String token) {
+        Cookie cookie = new Cookie(type.cookieName, token);
+        cookie.setMaxAge((int) type.duration.getSeconds());
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        return cookie;
+    }
+
 
 	@GetMapping("/acc")
 	public UserNameDTO me() {

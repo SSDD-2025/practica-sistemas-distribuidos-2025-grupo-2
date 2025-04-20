@@ -19,6 +19,8 @@ import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Dto.UserNameMapper;
+import codehub.grupo2.Security.jwt.LoginRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class UserService {
@@ -65,12 +67,12 @@ public class UserService {
         return UserBD.findByUsername(username);
     }
 
-    public Boolean login(String username, String password) {
-        UserName user = UserBD.findByUsername(username);
+    public Boolean login(String response, String loginRequest) {
+        UserName user = UserBD.findByUsername(response);
         if (user == null) {
             return false;
         }
-        return passwordEncoder.matches(password, user.getPassword());
+        return passwordEncoder.matches(loginRequest, user.getPassword());
     }
 
     public List<UserName> getAllUsers() {

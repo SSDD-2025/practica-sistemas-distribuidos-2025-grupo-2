@@ -4,6 +4,8 @@ public class AuthResponse {
     private Status status;
     private String message;
     private String error;
+    private String accessToken;
+    private String refreshToken;
 
     public enum Status {
         SUCCESS, FAILURE
@@ -21,6 +23,13 @@ public class AuthResponse {
         this.status = status;
         this.message = message;
         this.error = error;
+    }
+
+    public AuthResponse(Status status, String message, String accessToken, String refreshToken) {
+        this.status = status;
+        this.message = message;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
     public Status getStatus() {
@@ -47,9 +56,25 @@ public class AuthResponse {
         this.error = error;
     }
 
-    @Override
-    public String toString() {
-        return "LoginResponse [status=" + status + ", message=" + message + ", error=" + error + "]";
+    public String getAccessToken() {
+        return accessToken;
     }
 
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    @Override
+    public String toString() {
+        return "AuthResponse [status=" + status + ", message=" + message + ", error=" + error +
+               ", accessToken=" + accessToken + ", refreshToken=" + refreshToken + "]";
+    }
 }

@@ -1,6 +1,7 @@
 package codehub.grupo2.Security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -11,8 +12,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -32,10 +37,26 @@ public class Security {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Value("${admin.username}")
+    private String adminUsername;
+    @Value("${admin.password}")
+    private String adminPassword;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public UserDetailsService inMemoryUserDetailsService() {
+        UserDetails admin = User.builder()
+                .username(adminUsername)
+                .password(adminPassword)
+                .roles("ADMIN","USER")
+                .build();
+        return new InMemoryUserDetailsManager(admin);
+    }
+    
     
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -61,19 +82,19 @@ public class Security {
     
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/api/UserNames/acc").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/UserNames/acc").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/UserNames/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/UserNames/").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/UserNames/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/Comments/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/api/Comments/").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/Comments/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/api/Posts/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/api/Posts/").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/Posts/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/api/Topics/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/api/Topics/").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/Topics/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/Comments/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/Comments/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/Comments/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/Posts/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/Posts/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/Posts/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/Topics/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/Topics/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/Topics/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().permitAll()
                 );
     
@@ -85,6 +106,7 @@ public class Security {
     
         return http.build();
     }
+
 
     @Bean
     @Order(2)
