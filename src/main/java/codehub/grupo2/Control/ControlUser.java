@@ -273,8 +273,6 @@ public class ControlUser {
             if (token != null) {
                 model.addAttribute("csrfToken", token);
             }
-            model.addAttribute("error", "");
-            model.addAttribute("check", "");
             return "home";
         }
 

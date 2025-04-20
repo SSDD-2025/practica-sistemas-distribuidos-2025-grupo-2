@@ -11,4 +11,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Post findByTitle(String title);
     List<Post> findByTopic(Topic topic);
     void deleteAllByTopic(Topic topic);
+    List<Post> findAll();
+
 }

@@ -8,6 +8,13 @@
 <body>
     <div class="rain"></div>
     <div class="container">
+        {{#error}}
+        <p class="error-message">{{error}}</p>
+      {{/error}}
+  
+      {{#check}}
+        <p class="check-message">{{check}}</p>
+      {{/check}}
         <form action="/loginPage" method="post">
             <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
             <label for="username">User:</label><br>

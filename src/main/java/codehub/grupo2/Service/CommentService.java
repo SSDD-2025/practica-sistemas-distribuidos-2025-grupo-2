@@ -1,6 +1,9 @@
 package codehub.grupo2.Service;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +58,22 @@ public class CommentService {
     @Transactional
     public void deleteCommentsByUser(long userId) {
         CommentBD.deleteByUserId(userId);
+    }
+
+    public List<Map<String, Object>> getCommentsWithOwnership(List<Comment> comments, UserName user) {
+        return comments.stream().map(comment -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("comment", comment);
+            data.put("isOwner", user != null && comment.getUsername().getId().equals(user.getId()));
+            return data;
+        }).collect(Collectors.toList());
+    }
+
+    public Map<String, Object> getCommentWithOwnership(Comment comment, UserName user) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("comment", comment);
+        data.put("isOwner", user != null && comment.getUsername().getId().equals(user.getId()));
+        return data;
     }
     
 }

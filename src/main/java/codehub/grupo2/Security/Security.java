@@ -1,7 +1,6 @@
 package codehub.grupo2.Security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -12,12 +11,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -37,26 +32,10 @@ public class Security {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @Value("${admin.username}")
-    private String adminUsername;
-    @Value("${admin.password}")
-    private String adminPassword;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public UserDetailsService inMemoryUserDetailsService() {
-        UserDetails admin = User.builder()
-                .username(adminUsername)
-                .password(adminPassword)
-                .roles("ADMIN","USER")
-                .build();
-        return new InMemoryUserDetailsManager(admin);
-    }
-    
     
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -122,8 +101,8 @@ public class Security {
                 .requestMatchers("/acc", "/showPassword", "/hidePassword", "/deleteUserConfirmation", 
                     "/deleteUserDefinitive", "/editProfile", "/updateProfile", "/SonacaWasHere", 
                     "/uploadProfilePicture", "/addTopic", "/addPost", "/createComment", 
-                    "/deleteProfilePicture","/deletePost", 
-                    "/deleteComment").hasRole("USER")
+                    "/deleteProfilePicture","/deletePost","/init/logout", 
+                    "/deleteComment","/search/**").hasRole("USER")
                 .requestMatchers("/adminPanel", "/adminPanel/**").hasRole("ADMIN")
                 .requestMatchers("/**").denyAll()
             )

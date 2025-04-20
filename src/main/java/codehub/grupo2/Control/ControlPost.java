@@ -1,9 +1,7 @@
 package codehub.grupo2.Control;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -23,6 +21,7 @@ import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.Topic;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Security.CustomUserDetails;
+import codehub.grupo2.Service.CommentService;
 import codehub.grupo2.Service.PostService;
 import codehub.grupo2.Service.TopicService;
 import codehub.grupo2.Service.UserService;
@@ -31,6 +30,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 @Component
 public class ControlPost {
+
+    @Autowired
+    private CommentService CommentService;
 
     @Autowired
     private PostService PostService;
@@ -55,90 +57,63 @@ public class ControlPost {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         UserName user = userDetails.getUser();
 
-        List<Map<String, Object>> postData = postlist.stream().map(post -> {
-        Map<String, Object> data = new HashMap<>();
-        data.put("post", post);
-        data.put("isOwner", user != null && post.getUsername().getId().equals(user.getId()));
-        return data;
-        }).collect(Collectors.toList());
-        
+        List<Map<String, Object>> postData = PostService.getPostsWithOwnership(postlist, user);
+
         model.addAttribute("csrfToken", token);
         model.addAttribute("posts", postData);
         if (postlist.isEmpty()) {
-            model.addAttribute("error", "No posts avaiable");
+            model.addAttribute("error", "No posts available");
         }
         return "post";
     }
 
-
     @PostMapping("/showMoreP/{id}")
-public String showMorePostPost(@PathVariable("id") long id, Model model, HttpServletRequest request) {
-    Post post = PostService.getPostById(id);
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-    UserName user = userDetails.getUser();
+    public String showMorePostPost(@PathVariable("id") long id, Model model, HttpServletRequest request) {
+        Post post = PostService.getPostById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserName user = userDetails.getUser();
 
-    if (post != null) {
-        postComponent.setPost(post);
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (post != null) {
+            postComponent.setPost(post);
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 
-        Map<String, Object> postData = new HashMap<>();
-        postData.put("post", post);
-        postData.put("isOwner", user != null && post.getUsername().getId().equals(user.getId()));
+            Map<String, Object> postData = PostService.getPostWithOwnership(post, user);
+            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.getComments(), user);
 
-
-        List<Map<String, Object>> commentData = post.getComments().stream().map(comment -> {
-            Map<String, Object> data = new HashMap<>();
-            data.put("comment", comment);
-            data.put("isOwner", user != null && comment.getUsername().getId().equals(user.getId()));
-            return data;
-        }).collect(Collectors.toList());
-
-        model.addAttribute("csrfToken", token);
-        model.addAttribute("posts", postData);
-        model.addAttribute("comments", commentData);
-        return "showMorePost";
-    } else {
-        model.addAttribute("error", "No post found");   
-        return "redirect:/post";
+            model.addAttribute("csrfToken", token);
+            model.addAttribute("posts", postData);
+            model.addAttribute("comments", commentData);
+            return "showMorePost";
+        } else {
+            model.addAttribute("error", "No post found");
+            return "redirect:/post";
+        }
     }
-}
 
-@GetMapping("/showMoreP/{id}")
-public String showMorePostGet(@PathVariable("id") long id, Model model, HttpServletRequest request) {
-    Post post = PostService.getPostById(id);
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-    UserName user = userDetails.getUser();
+    @GetMapping("/showMoreP/{id}")
+    public String showMorePostGet(@PathVariable("id") long id, Model model, HttpServletRequest request) {
+        Post post = PostService.getPostById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserName user = userDetails.getUser();
 
-    if (post != null) {
-        postComponent.setPost(post);
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (post != null) {
+            postComponent.setPost(post);
+            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 
-    
-        Map<String, Object> postData = new HashMap<>();
-        postData.put("post", post);
-        postData.put("isOwner", user != null && post.getUsername().getId().equals(user.getId()));
+            Map<String, Object> postData = PostService.getPostWithOwnership(post, user);
+            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.getComments(), user);
 
-      
-        List<Map<String, Object>> commentData = post.getComments().stream().map(comment -> {
-            Map<String, Object> data = new HashMap<>();
-            data.put("comment", comment);
-            data.put("isOwner", user != null && comment.getUsername().getId().equals(user.getId()));
-            return data;
-        }).collect(Collectors.toList());
-
-        model.addAttribute("csrfToken", token);
-        model.addAttribute("posts", postData);
-        model.addAttribute("comments", commentData);
-        return "showMorePost"; 
-    } else {
-        model.addAttribute("error", "Post Not Found");
-        return "redirect:/post";
+            model.addAttribute("csrfToken", token);
+            model.addAttribute("posts", postData);
+            model.addAttribute("comments", commentData);
+            return "showMorePost";
+        } else {
+            model.addAttribute("error", "Post Not Found");
+            return "redirect:/post";
+        }
     }
-}
-    
-    
 
     @GetMapping("/addPost")
     public String showAddPost(Model model, HttpServletRequest request) {
@@ -147,7 +122,7 @@ public String showMorePostGet(@PathVariable("id") long id, Model model, HttpServ
         model.addAttribute("csrfToken", token);
         model.addAttribute("topics", topics);
         model.addAttribute("check", "");
-        return "addPost"; 
+        return "addPost";
     }
 
     @PostMapping("/addPost")
@@ -157,18 +132,21 @@ public String showMorePostGet(@PathVariable("id") long id, Model model, HttpServ
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         UserName user = userDetails.getUser();
         if (user == null) {
-            return "redirect:/home"; 
+            return "redirect:/home";
         }
-        Topic topic = TopicService.getTopicById(tid).get();
+        Topic topic = TopicService.getTopicById(tid).orElse(null);
+        if (topic == null) {
+            model.addAttribute("error", "Topic not found");
+            return "redirect:/addPost";
+        }
         PostService.registerPost(user, title, content, topic);
         model.addAttribute("error", "");
         model.addAttribute("csrfToken", token);
-        return "redirect:/post"; 
+        return "redirect:/post";
     }
-    
-    
+
     @PostMapping("/deletePost")
-    public String deletePost(@RequestParam long id,Model model, HttpServletRequest request) {
+    public String deletePost(@RequestParam long id, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -185,15 +163,34 @@ public String showMorePostGet(@PathVariable("id") long id, Model model, HttpServ
         }
 
         if (!post.getUsername().getId().equals(user.getId())) {
-            model.addAttribute("error", "You cant delete this post");
+            model.addAttribute("error", "You can't delete this post");
             return "redirect:/post";
         }
 
-        PostService.deletePost(PostService.getPostById(id).getTitle());
+        PostService.deletePost(post.getTitle());
         userComponent.setUser(UserService.getUser(user.getUsername()));
         model.addAttribute("error", "");
         model.addAttribute("csrfToken", token);
         return "redirect:/post";
     }
 
+    @GetMapping("/search")
+    public String getMethodName(@RequestParam String searchText, Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserName user = userDetails.getUser();
+
+        List<Post> postlist = PostService.findPostsByRegex(searchText);
+        List<Map<String, Object>> postData = PostService.getPostsWithOwnership(postlist, user);
+
+        if (postlist.isEmpty()) {
+            model.addAttribute("error", "No posts found with that title");
+            return "redirect:/init";
+        }
+
+        model.addAttribute("csrfToken", token);
+        model.addAttribute("posts", postData);
+        return "searchPost";
+    }
 }

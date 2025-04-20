@@ -15,9 +15,9 @@
         <li><a href="/topic">Topics</a></li>
         <li>
           <form class="logout-form" action="/logout" method="post">
-            <input type="hidden" name="_csrf" value="${csrfToken.token}">
-            <button type="submit" class="btn">Log Out</button>
-          </form>
+            <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
+            <button type="submit">Logout</button>
+        </form>
         </li>
       </ul>
     </nav>
@@ -38,12 +38,7 @@
       </header>
       <main class="content-wrapper">
         <form class="search-form" action="/search" method="get">
-          <input 
-            type="text" 
-            name="query" 
-            class="search-bar" 
-            placeholder="Search in CodeHub..."
-          />
+          <input type="text" class="search-bar" id="searchText" name="searchText" required><br>
           <button type="submit" class="btn search-button">
             <span class="search-text">Search</span>
             <span class="search-icon">🔍</span>

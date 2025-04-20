@@ -1,5 +1,9 @@
 package codehub.grupo2.Service;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,5 +86,27 @@ public class PostService {
         return PostBD.findByTopic(topic);
     }
 
+    public List<Post> findPostsByRegex(String regex) {
+            Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+            return PostBD.findAll().stream()
+                .filter(post -> pattern.matcher(post.getText()).find() || pattern.matcher(post.getTitle()).find())
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, Object> getPostWithOwnership(Post post, UserName user) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("post", post);
+        data.put("isOwner", user != null && post.getUsername().getId().equals(user.getId()));
+        return data;
+    }
+
+    public List<Map<String, Object>> getPostsWithOwnership(List<Post> posts, UserName user) {
+        return posts.stream().map(post -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("post", post);
+            data.put("isOwner", user != null && post.getUsername().getId().equals(user.getId()));
+            return data;
+        }).collect(Collectors.toList());
+    }
     
 }
