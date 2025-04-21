@@ -52,33 +52,5 @@ public class TopicService {
         TopicBD.delete(topic);
     }
 
-    public Collection<TopicDTO> getAllTopicsDTO() {
-        List<Topic> topics = TopicBD.findAll();
-        return TopicMapper.toDTOs(topics);
-    }
-
-    public Optional<TopicDTO> getTopicByIdDTO(long id) {
-        Optional<Topic> topic = TopicBD.findById(id);
-        if (topic.isPresent()) {
-            return Optional.of(TopicMapper.toDTO(topic.get()));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public TopicDTO newTopicDTO(String topicName) {
-        Topic topic = new Topic(topicName);
-        TopicBD.save(topic);
-        return TopicMapper.toDTO(topic);
-    }
-
-    public TopicDTO deleteTopicDTO(long id) {
-        Topic topic = TopicBD.findById(id).get();  
-        for(Post t : topic.getPosts()){
-            PostBD.deletePost(t.getTitle());
-        }
-        TopicBD.delete(topic);
-        return TopicMapper.toDTO(topic);
-    }
-    
+  
 }

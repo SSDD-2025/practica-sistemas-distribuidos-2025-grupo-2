@@ -1,5 +1,6 @@
 package codehub.grupo2.Service.APIService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import codehub.grupo2.DB.Entity.Topic;
 import codehub.grupo2.Dto.TopicDTO;
 import codehub.grupo2.Dto.TopicMapper;
 import codehub.grupo2.Service.PostService;
+import jakarta.transaction.Transactional;
 
 @Service
 public class APITopicService {
@@ -45,15 +47,21 @@ public class APITopicService {
         TopicBD.save(topic);
         return TopicMapper.toDTO(topic);
     }
+   @Transactional
+   public TopicDTO deleteTopicDTO(long id) {
+    Topic topic = TopicBD.findById(id).get();
 
-    public TopicDTO deleteTopicDTO(long id) {
-        Topic topic = TopicBD.findById(id).get();  
-        for(Post t : topic.getPosts()){
-            PostBD.deletePost(t.getTitle());
-        }
-        TopicBD.delete(topic);
-        return TopicMapper.toDTO(topic);
+    // Creamos una copia segura de los posts
+    List<Post> postsToDelete = new ArrayList<>(topic.getPosts());
+
+    for (Post post : postsToDelete) {
+        PostBD.deletePost(post.getTitle());
     }
+
+    TopicBD.delete(topic);
+    return TopicMapper.toDTO(topic);
+}
+
     
 }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import codehub.grupo2.Dto.TopicDTO;
 import codehub.grupo2.Service.TopicService;
+import codehub.grupo2.Service.APIService.APITopicService;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
@@ -18,7 +19,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 public class ControlRestTopic {
 
 	@Autowired
-	private TopicService TopicService;
+	private APITopicService TopicService;
 
 	@GetMapping("/")
 	public Collection<TopicDTO> getTopics() {

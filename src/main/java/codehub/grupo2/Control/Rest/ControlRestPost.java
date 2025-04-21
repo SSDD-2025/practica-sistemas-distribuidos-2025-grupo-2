@@ -3,6 +3,7 @@ package codehub.grupo2.Control.Rest;
 import java.net.URI;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,9 +43,15 @@ public class ControlRestPost {
     }
 
     @DeleteMapping("/{id}")
-    public PostDTO deletePost(@PathVariable long id) {
-        PostDTO dto = PostService.getPostByIdDTO(id);
-        return PostService.deletePostDTO(dto.title());
+    public ResponseEntity<PostDTO> deletePost(@PathVariable long id) {
+    PostDTO dto = PostService.getPostByIdDTO(id);
+    
+    if (dto == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(null);
     }
-   
+
+    PostDTO deletedPost = PostService.deletePostDTO(dto.title());
+    return ResponseEntity.ok(deletedPost);
+}
 }

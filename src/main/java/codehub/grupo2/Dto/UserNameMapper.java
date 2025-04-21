@@ -12,6 +12,8 @@ import codehub.grupo2.DB.Entity.UserName;
 public interface UserNameMapper {
 
     @Mapping(target = "profilePicture", ignore = true)
+    @Mapping(target = "posts", ignore = true)
+    
     UserNameDTO toDTO(UserName user);
 
     Collection<UserNameDTO> toDTOs(List<UserName> users);

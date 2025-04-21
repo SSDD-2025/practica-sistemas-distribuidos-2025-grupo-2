@@ -16,8 +16,8 @@
         <li>
           <form class="logout-form" action="/logout" method="post">
             <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
-            <button type="submit">Logout</button>
-        </form>
+            <button type="submit" class="btn">Logout</button>
+          </form>
         </li>
       </ul>
     </nav>
@@ -60,27 +60,27 @@
       function generateRain() {
         for (let i = 0; i < numLines; i++) {
           let line = document.createElement('div');
-            let randomText = '';
-              const length = Math.floor(Math.random() * 20) + 10;
+          let randomText = '';
+          const length = Math.floor(Math.random() * 20) + 10;
 
-              for (let j = 0; j < length; j++) {
-                randomText += chars[Math.floor(Math.random() * chars.length)];
-              }
+          for (let j = 0; j < length; j++) {
+            randomText += chars[Math.floor(Math.random() * chars.length)];
+          }
 
-              line.textContent = randomText;
-              line.style.position = 'absolute';  
-              line.style.top = `${-Math.random() * 100}%`;
-              line.style.left = `${Math.random() * 100}%`;
-              line.style.fontFamily = 'monospace';
-              line.style.fontSize = '15px';
-              line.style.color = 'rgba(31, 231, 138, 0.92)'; 
-              line.style.whiteSpace = 'nowrap'; 
-              line.style.animation = `fall ${Math.random() * 3 + speed}s linear infinite`;
-              rainContainer.appendChild(line);
-                }
+          line.textContent = randomText;
+          line.style.position = 'absolute';
+          line.style.top = `${-Math.random() * 100}%`;
+          line.style.left = `${Math.random() * 100}%`;
+          line.style.fontFamily = 'monospace';
+          line.style.fontSize = '15px';
+          line.style.color = 'rgba(31, 231, 138, 0.92)';
+          line.style.whiteSpace = 'nowrap';
+          line.style.animation = `fall ${Math.random() * 3 + speed}s linear infinite`;
+          rainContainer.appendChild(line);
         }
-            generateRain();
-        });
-    </script>
+      }
+      generateRain();
+    });
+  </script>
 </body>
 </html>
