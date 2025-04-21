@@ -54,8 +54,13 @@ public class ControlPost {
         List<Post> postlist = PostService.getAllPost();
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
+        UserName user = null;
+
+        if (authentication != null && authentication.isAuthenticated() && 
+            !"anonymousUser".equals(authentication.getPrincipal())) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            user = userDetails.getUser();
+        }
 
         List<Map<String, Object>> postData = PostService.getPostsWithOwnership(postlist, user);
 
@@ -71,8 +76,13 @@ public class ControlPost {
     public String showMorePostPost(@PathVariable("id") long id, Model model, HttpServletRequest request) {
         Post post = PostService.getPostById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
+        UserName user = null;
+
+        if (authentication != null && authentication.isAuthenticated() && 
+            !"anonymousUser".equals(authentication.getPrincipal())) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            user = userDetails.getUser();
+        }
 
         if (post != null) {
             postComponent.setPost(post);
@@ -95,8 +105,13 @@ public class ControlPost {
     public String showMorePostGet(@PathVariable("id") long id, Model model, HttpServletRequest request) {
         Post post = PostService.getPostById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
+        UserName user = null;
+
+        if (authentication != null && authentication.isAuthenticated() && 
+            !"anonymousUser".equals(authentication.getPrincipal())) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            user = userDetails.getUser();
+        }
 
         if (post != null) {
             postComponent.setPost(post);
@@ -129,16 +144,25 @@ public class ControlPost {
     public String showwaddPost(@RequestParam String title, @RequestParam String content, @RequestParam long tid, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
+        UserName user = null;
+
+        if (authentication != null && authentication.isAuthenticated() && 
+            !"anonymousUser".equals(authentication.getPrincipal())) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            user = userDetails.getUser();
+        }
+
         if (user == null) {
+            model.addAttribute("error", "You must be logged in to create a post");
             return "redirect:/home";
         }
+
         Topic topic = TopicService.getTopicById(tid).orElse(null);
         if (topic == null) {
             model.addAttribute("error", "Topic not found");
             return "redirect:/addPost";
         }
+
         PostService.registerPost(user, title, content, topic);
         model.addAttribute("error", "");
         model.addAttribute("csrfToken", token);
@@ -149,10 +173,16 @@ public class ControlPost {
     public String deletePost(@RequestParam long id, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
+        UserName user = null;
+
+        if (authentication != null && authentication.isAuthenticated() && 
+            !"anonymousUser".equals(authentication.getPrincipal())) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            user = userDetails.getUser();
+        }
 
         if (user == null) {
+            model.addAttribute("error", "You must be logged in to delete a post");
             return "redirect:/home";
         }
 
@@ -178,8 +208,13 @@ public class ControlPost {
     public String getMethodName(@RequestParam String searchText, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
+        UserName user = null;
+
+        if (authentication != null && authentication.isAuthenticated() && 
+            !"anonymousUser".equals(authentication.getPrincipal())) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            user = userDetails.getUser();
+        }
 
         List<Post> postlist = PostService.findPostsByRegex(searchText);
         List<Map<String, Object>> postData = PostService.getPostsWithOwnership(postlist, user);

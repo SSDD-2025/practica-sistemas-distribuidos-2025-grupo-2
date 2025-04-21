@@ -79,10 +79,14 @@ public class ControlUser {
     }
     @PostMapping("/guest")
     public String guest(Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
         return "init";
     }
     @GetMapping("/guest")
     public String guestGet(Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
         return "init";
     }
 

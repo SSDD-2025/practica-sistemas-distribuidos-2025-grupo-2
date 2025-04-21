@@ -94,6 +94,12 @@ public class PostService {
     }
 
     public Map<String, Object> getPostWithOwnership(Post post, UserName user) {
+        if(user == null) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("post", post);
+            data.put("isOwner", false);
+            return data;
+        }
         Map<String, Object> data = new HashMap<>();
         data.put("post", post);
         data.put("isOwner", user != null && post.getUsername().getId().equals(user.getId()));
@@ -101,6 +107,14 @@ public class PostService {
     }
 
     public List<Map<String, Object>> getPostsWithOwnership(List<Post> posts, UserName user) {
+        if(user == null) {
+            return posts.stream().map(post -> {
+                Map<String, Object> data = new HashMap<>();
+                data.put("post", post);
+                data.put("isOwner", false);
+                return data;
+            }).collect(Collectors.toList());
+        }
         return posts.stream().map(post -> {
             Map<String, Object> data = new HashMap<>();
             data.put("post", post);

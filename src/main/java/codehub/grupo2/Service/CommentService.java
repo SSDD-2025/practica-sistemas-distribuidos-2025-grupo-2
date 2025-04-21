@@ -1,4 +1,5 @@
 package codehub.grupo2.Service;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,14 @@ public class CommentService {
     }
 
     public List<Map<String, Object>> getCommentsWithOwnership(List<Comment> comments, UserName user) {
+        if(user == null) {
+            return comments.stream().map(comment -> {
+                Map<String, Object> data = new HashMap<>();
+                data.put("comment", comment);
+                data.put("isOwner", false);
+                return data;
+            }).collect(Collectors.toList());
+        }
         return comments.stream().map(comment -> {
             Map<String, Object> data = new HashMap<>();
             data.put("comment", comment);
@@ -70,6 +79,15 @@ public class CommentService {
     }
 
     public Map<String, Object> getCommentWithOwnership(Comment comment, UserName user) {
+        if(user == null) {
+            return comment.getPost().getComments().stream()
+                .map(c -> {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("comment", c);
+                    data.put("isOwner", false);
+                    return data;
+                }).collect(Collectors.toList()).get(0);
+        }
         Map<String, Object> data = new HashMap<>();
         data.put("comment", comment);
         data.put("isOwner", user != null && comment.getUsername().getId().equals(user.getId()));
