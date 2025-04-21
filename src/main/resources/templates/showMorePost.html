@@ -39,7 +39,10 @@
         </div>
 
         <a href="/post" class="btn">Go Back</a>
-    </div>
-    <a href="/createComment?id={{posts.post.id}}" class="right-bottom-btn">ADD COMMENT</a>
+        {{#isLogged}}
+            <a href="/createComment?id={{posts.post.id}}" class="right-bottom-btn">ADD COMMENT</a>
+        {{/isLogged}}
+        </body>
+        </html>
 </body>
 </html>

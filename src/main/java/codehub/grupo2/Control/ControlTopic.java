@@ -36,11 +36,23 @@ public class ControlTopic {
     @GetMapping("/topic")
     public String Topic(Model model, HttpServletRequest request) {
         List<Topic> topiclist = TopicService.getAllTopics();
+        Boolean isLogged = false;
+        UserName user = null;
+    
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && 
+            !"anonymousUser".equals(authentication.getPrincipal())) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            user = userDetails.getUser();
+            isLogged = true;
+        }
+    
         if (topiclist.isEmpty()) {
             model.addAttribute("error", "No topics available");
-            return "topic";
         }
+    
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("isLogged", isLogged);
         model.addAttribute("csrfToken", token);
         model.addAttribute("topics", topiclist);
         return "topic";
@@ -63,20 +75,33 @@ public class ControlTopic {
         return "redirect:/topic";
     }
 
-    @GetMapping("/topic/{id}")
-    public String showTopicPost(@PathVariable Long id, Model model, HttpServletRequest request) {
-        Optional<Topic> topic = TopicService.getTopicById(id);
-        if (!topic.isPresent()) {
-            model.addAttribute("error", "Topic not found");
-            return "redirect:/topic"; 
-        }
-        List<Post> posts = PostService.getPostByTopic(topic.get());
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        model.addAttribute("csrfToken", token);
-        model.addAttribute("posts", posts);
-        model.addAttribute("topicName", topic.get().getTopicName());
-        return "postByTopic"; 
+@GetMapping("/topic/{id}")
+public String showTopicPost(@PathVariable Long id, Model model, HttpServletRequest request) {
+    Optional<Topic> topic = TopicService.getTopicById(id);
+    Boolean isLogged = false;
+    UserName user = null;
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && authentication.isAuthenticated() && 
+        !"anonymousUser".equals(authentication.getPrincipal())) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        user = userDetails.getUser();
+        isLogged = true;
     }
+
+    if (!topic.isPresent()) {
+        model.addAttribute("error", "Topic not found");
+        return "redirect:/topic"; 
+    }
+
+    List<Post> posts = PostService.getPostByTopic(topic.get());
+    CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+    model.addAttribute("isLogged", isLogged);
+    model.addAttribute("csrfToken", token);
+    model.addAttribute("posts", posts);
+    model.addAttribute("topicName", topic.get().getTopicName());
+    return "postByTopic"; 
+}
     
     @PostMapping("/deleteTopic")
     public String deleteTopic(@RequestParam long id, HttpServletRequest request, Model model) {

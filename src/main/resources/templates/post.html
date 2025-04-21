@@ -35,6 +35,8 @@
     <a href="/init"> 
         <button class="btn left-bottom-btn">Return</button>
     </a>
-    <a href="/addPost" class="right-bottom-btn">ADD POST</a>
+    {{#isLogged}}
+        <a href="/addPost" class="right-bottom-btn">ADD POST</a>
+    {{/isLogged}}
 </body>
 </html>

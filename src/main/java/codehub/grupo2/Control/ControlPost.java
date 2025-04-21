@@ -62,8 +62,14 @@ public class ControlPost {
             user = userDetails.getUser();
         }
 
+        Boolean isLogged = true;
+        if (user == null) {
+            isLogged = false;
+        }
+
         List<Map<String, Object>> postData = PostService.getPostsWithOwnership(postlist, user);
 
+        model.addAttribute("isLogged", isLogged);
         model.addAttribute("csrfToken", token);
         model.addAttribute("posts", postData);
         if (postlist.isEmpty()) {
@@ -84,12 +90,19 @@ public class ControlPost {
             user = userDetails.getUser();
         }
 
+        Boolean isLogged = true;
+        if (user == null) {
+            isLogged = false;
+        }
+
         if (post != null) {
             postComponent.setPost(post);
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 
             Map<String, Object> postData = PostService.getPostWithOwnership(post, user);
             List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.getComments(), user);
+
+            model.addAttribute("isLogged", isLogged);
 
             model.addAttribute("csrfToken", token);
             model.addAttribute("posts", postData);
@@ -113,6 +126,11 @@ public class ControlPost {
             user = userDetails.getUser();
         }
 
+        Boolean isLogged = true;
+        if (user == null) {
+            isLogged = false;
+        }
+
         if (post != null) {
             postComponent.setPost(post);
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
@@ -120,6 +138,7 @@ public class ControlPost {
             Map<String, Object> postData = PostService.getPostWithOwnership(post, user);
             List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.getComments(), user);
 
+            model.addAttribute("isLogged", isLogged);
             model.addAttribute("csrfToken", token);
             model.addAttribute("posts", postData);
             model.addAttribute("comments", commentData);

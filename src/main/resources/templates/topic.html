@@ -9,7 +9,7 @@
 <body>
     <h1>Topics</h1>
     {{#error}}
-            <p style="color: red;">{{error}}</p> 
+        <p style="color: red;">{{error}}</p> 
     {{/error}}
     <div class="grid">
         {{#topics}}
@@ -18,11 +18,13 @@
         </a>
         {{/topics}}
     </div>
-    <a href="/addTopic">
-        <button class="add-topic-btn">Add Topic</button>
-    </a>
-    <a href="/init">
-        <button class="add-topic-btn left-bottom-btn">Return</button>
-    </a>
+    {{#isLogged}}
+        <a href="/addTopic">
+            <button class="add-topic-btn">Add Topic</button>
+        </a>
+        <a href="/init">
+            <button class="add-topic-btn left-bottom-btn">Return</button>
+        </a>
+    {{/isLogged}}
 </body>
 </html>

@@ -119,21 +119,27 @@
     <div class="post-container">
         <div class="topic-header">
             <h1>Posts in {{topicName}}</h1>
+            {{#isLogged}}
             <form action="/deleteTopic" method="post">
                 <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
                 <input type="hidden" name="id" value="{{id}}">
                 <button type="submit" class="btn delete-btn">Delete Topic</button>
             </form>
+            {{/isLogged}}
         </div>
         
         {{#posts}}
         <div class="post">
             <div class="topic-header">
                 <h1><strong>{{title}}</strong></h1>
+                {{#isLogged}}
                 <form action="/deletePost" method="post">
+                {{/isLogged}}
                 <input type="hidden" name="_csrf" value="{{csrfToken.token}}">    
                     <input type="hidden" name="id" value="{{id}}">
+                    {{#isLogged}}
                     <button type="submit" class="btn delete-btn">Delete Post</button>
+                    {{/isLogged}}
                 </form>
             </div>
             <div class="user">Posted by: {{username}}</div>
@@ -142,7 +148,9 @@
         </div>
         {{/posts}}
     </div>
+    {{#isLogged}}
     <a href="/addPost" class="right-bottom-btn">ADD POST</a>
+    {{/isLogged}}
     <a href="/topic">
         <button class="btn left-bottom-btn">Return</button>
     </a>

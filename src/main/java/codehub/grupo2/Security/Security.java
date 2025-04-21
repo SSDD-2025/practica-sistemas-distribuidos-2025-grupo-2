@@ -74,6 +74,9 @@ public class Security {
                         .requestMatchers(HttpMethod.GET, "/api/Topics/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/Topics/").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/Topics/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/v3/api-docs*/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
                         .anyRequest().permitAll()
                 );
     
@@ -104,6 +107,9 @@ public class Security {
                     "/deleteProfilePicture","/deletePost","/init/logout", 
                     "/deleteComment","/search/**").hasRole("USER")
                 .requestMatchers("/adminPanel", "/adminPanel/**").hasRole("ADMIN")
+                .requestMatchers("/v3/api-docs*/**").permitAll()
+                .requestMatchers("/swagger-ui.html").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/**").denyAll()
             )
             .formLogin(formLogin -> formLogin
