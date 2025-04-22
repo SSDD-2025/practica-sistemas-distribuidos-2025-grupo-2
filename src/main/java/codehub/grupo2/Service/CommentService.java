@@ -1,10 +1,8 @@
 package codehub.grupo2.Service;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,24 +103,24 @@ public class CommentService {
     @Transactional
     public CommentDTO registerCommentDTO(CommentDTO commentDTO) {
         if (commentDTO == null) {
-            throw new IllegalArgumentException("El CommentDTO no puede ser nulo");
+            throw new IllegalArgumentException("the comment cannot be null");
         }
         if (commentDTO.text() == null || commentDTO.text().trim().isEmpty()) {
-            throw new IllegalArgumentException("El texto del comentario no puede ser nulo o vacío");
+            throw new IllegalArgumentException("text cannot be null or empty");
         }
         if (commentDTO.user() == null || commentDTO.user().id() == null) {
-            throw new IllegalArgumentException("El usuario no puede ser nulo y debe tener un ID válido");
+            throw new IllegalArgumentException("user cannot be null and must have a valid ID");
         }
         if (commentDTO.post() == null || commentDTO.post().id() == null) {
-            throw new IllegalArgumentException("La publicación no puede ser nula y debe tener un ID válido");
+            throw new IllegalArgumentException("post cannot be null and must have a valid ID");
         }
         if (commentDTO.text().length() > 140) {
-            throw new IllegalArgumentException("El texto excede el límite de 140 caracteres");
+            throw new IllegalArgumentException("text cannot exceed 140 characters");
         }
         UserName user = userBD.findById(commentDTO.user().id())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario con ID " + commentDTO.user().id() + " no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("user with id " + commentDTO.user().id() + " not found"));
         Post post = PostBD.findById(commentDTO.post().id())
-                .orElseThrow(() -> new EntityNotFoundException("Publicación con ID " + commentDTO.post().id() + " no encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("post with id " + commentDTO.post().id() + " not found"));
         Comment comment = new Comment(user, commentDTO.text(), post);
         Comment savedComment = CommentBD.save(comment);
         post.getComments().add(savedComment);

@@ -61,10 +61,10 @@ public class Security {
     
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/api/UserNames/acc").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/UserNames/acc").hasAnyRole( "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/UserNames/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/UserNames/").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/UserNames/").hasAnyRole("USER","ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/UserNames/").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/UserNames/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/Comments/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/Comments/").hasAnyRole("USER", "ADMIN")

@@ -128,7 +128,7 @@ public class ControlUser {
         String profilePictureBase64 = userService.convertBlobToBase64(userService.getUserImage(user.id()));
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         model.addAttribute("csrfToken", token);
-        model.addAttribute("profilePicture", profilePictureBase64 != null ? profilePictureBase64 : "default-profile-picture.png");
+        model.addAttribute("profilePicture", profilePictureBase64 != null ? profilePictureBase64 : "default-profile-picture.png"); //
         model.addAttribute("user", user);
         model.addAttribute("posts", user.posts());
         model.addAttribute("rawPassword", "Pass not available");

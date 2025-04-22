@@ -3,19 +3,19 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 import java.io.IOException;
 import java.net.URI;
-import org.springframework.http.HttpHeaders;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.mysql.cj.jdbc.Blob;
 
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Security.jwt.AuthResponse;
@@ -26,7 +26,6 @@ import codehub.grupo2.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -128,56 +127,73 @@ public class ControlRestUserName {
             @ApiResponse(responseCode = "200", description = "User deleted successfully"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
+
 	@DeleteMapping("/{id}")
 	public void deleteUserName(@PathVariable long id) {
         userService.deleteUser(userService.getUserByIdDTO(id).username());
 	}
+    @Operation(summary = "Replace a user by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User replaced successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid user data"),
+            @ApiResponse(responseCode = "404", description = "User or profile picture not found")
+    })
     @PutMapping("/{id}")
 	public UserNameDTO replaceUser(@PathVariable long id, @RequestBody UserNameDTO updatedUserDTO) throws SQLException {
 
 		 userService.editUser(updatedUserDTO, id);
          return updatedUserDTO;
 	}
-    @PostMapping("/{id}/image")
-	public ResponseEntity<Object> createBookImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-			throws IOException {
 
-		userService.createUserImage(id, fromCurrentRequest().build().toUri(), imageFile.getInputStream(), imageFile.getSize());
-
-		URI location = fromCurrentRequest().build().toUri();
-
-		return ResponseEntity.created(location).build();
-	}
-
-	
-	@GetMapping("/{id}/image")
-    public ResponseEntity<Object> getBookImage(@PathVariable long id) throws SQLException, IOException {
-        Blob imageBlob = userService.getUserImage(id);
-        if (imageBlob == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity
-                .ok()
+    @Operation(summary = "Get a user's profile picture by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Profile picture retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "User or profile picture not found")
+    })
+    @GetMapping("/{id}/image")
+    public ResponseEntity<Object> getUserProfilePicture(@PathVariable Long id) throws SQLException, IOException {
+        Resource profilePicture = userService.getUserProfilePicture(id);
+         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                .body(image);
-}
+                .body(profilePicture);
+    }
+    @Operation(summary = "Delete a user's profile picture by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Profile picture deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "User or profile picture not found")
+    })
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<Object> deleteUserImage(@PathVariable long id) throws IOException {
+        userService.deleteUserImage(id);
+        return ResponseEntity.noContent().build();
+    }
+    @Operation(summary = "Set a user's profile picture by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Profile picture established successfully"),
+            @ApiResponse(responseCode = "404", description = "User or profile picture not found")
+    })
+    @PostMapping("/{id}/image")
+    public ResponseEntity<Object> createUserImage(
+        @PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+        URI location = fromCurrentRequest().build().toUri();
+        userService.createUserImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+        return ResponseEntity.created(location).build();
+    }
 
-	@PutMapping("/{id}/image")
-	public ResponseEntity<Object> replaceBookImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-			throws IOException {
 
-		userService.replaceUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+    @Operation(summary = "Update a user's profile picture by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Profile picture changed successfully"),
+            @ApiResponse(responseCode = "404", description = "User or profile picture not found")
+    })
+    @PutMapping("/{id}/image")
+    public ResponseEntity<Object> replaceUserImage(
+    @PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+        userService.replaceUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+        return ResponseEntity.noContent().build();
+    }
 
-		return ResponseEntity.noContent().build();
-	}
 
-	@DeleteMapping("/{id}/image")
-	public ResponseEntity<Object> deleteBookImage(@PathVariable long id) throws IOException {
-
-		userService.deleteUserImage(id);
-
-		return ResponseEntity.noContent().build();
-	}
 
 }
 
