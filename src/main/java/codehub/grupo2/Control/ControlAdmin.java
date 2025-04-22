@@ -28,10 +28,10 @@ public class ControlAdmin {
 
     @GetMapping("/adminPanel")
     public String showAdminPanel(Model model, HttpServletRequest request) {
-        model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("topics", topicService.getAllTopics());
-        model.addAttribute("posts", postService.getAllPost());
-        model.addAttribute("comments", commentService.getAllComments());
+        model.addAttribute("users", userService.getAllUsersDTO());
+        model.addAttribute("topics", topicService.getAllTopicsDTO());
+        model.addAttribute("posts", postService.getAllPostDTO());
+        model.addAttribute("comments", commentService.getAllCommentsDTO());
 
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName()); 
         model.addAttribute("csrfToken", token);
@@ -47,19 +47,19 @@ public class ControlAdmin {
 
     @PostMapping("/admin/deleteUser")
     public String deleteUser(@RequestParam("user") String username) {
-        userService.deleteUser(username);
+        userService.deleteUserDTO(username);
         return "redirect:/adminPanel";
     }
 
     @PostMapping("/admin/deletePost")
     public String deletePost(@RequestParam("post") String title) {
-        postService.deletePost(title);
+        postService.deletePostDTO(title);
         return "redirect:/adminPanel";
     }
 
     @PostMapping("/admin/deleteTopic")
     public String deleteTopic(@RequestParam("topic") Long id) {
-        topicService.deleteTopic(id);
+        topicService.deleteTopicDTO(id);
         return "redirect:/adminPanel";
     }
 }

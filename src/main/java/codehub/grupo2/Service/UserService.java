@@ -24,7 +24,6 @@ import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Dto.UserNameMapper;
-import jakarta.annotation.Resource;
 
 @Service
 public class UserService {
@@ -42,8 +41,9 @@ public class UserService {
     @Lazy
     private CommentService commentService;
 
-    public UserName getUser(String username) {
-        return UserBD.findByUsername(username);
+    public UserNameDTO getUser(String username) {
+        UserName user = UserBD.findByUsername(username);
+        return user != null ? userNameMapper.toDTO(user) : null;
     }
 
     public String registerUsername(String name, String password, String email) {
@@ -66,9 +66,10 @@ public class UserService {
         return name;
     }
 
-    public UserName getLoggedUser() {
+    public UserNameDTO getLoggedUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return UserBD.findByUsername(username);
+        UserName user = UserBD.findByUsername(username);
+        return user != null ? userNameMapper.toDTO(user) : null;
     }
 
     public Boolean login(String response, String loginRequest) {
@@ -79,10 +80,6 @@ public class UserService {
         return passwordEncoder.matches(loginRequest, user.getPassword());
     }
 
-    public List<UserName> getAllUsers() {
-        return UserBD.findAll();
-    }
-
     @Transactional
     public void deleteUser(String username) {
         UserName user = UserBD.findByUsername(username);
@@ -91,7 +88,9 @@ public class UserService {
         }
     }
 
-    public void saveProfilePicture(UserName user, byte[] profilePicture) throws IOException, SerialException, SQLException {
+    public void saveProfilePicture(Long userId, byte[] profilePicture) throws IOException, SerialException, SQLException {
+        UserName user = UserBD.findById(userId)
+            .orElseThrow(() -> new NoSuchElementException("User not found"));
         if (profilePicture != null && profilePicture.length > 0) {
             Blob blob = new javax.sql.rowset.serial.SerialBlob(profilePicture);
             user.setProfilePicture(blob);
@@ -99,32 +98,31 @@ public class UserService {
         }
     }
 
-    public int editUser(String username, String password, String email, Long id) {
+    public int editUser(UserNameDTO updatedUserDTO, Long id) {
         Optional<UserName> currentUser = UserBD.findById(id);
         if (currentUser.isEmpty()) {
             return 1;
         }
         UserName user = currentUser.get();
-        UserName userN = UserBD.findByUsername(username);
+        UserName userN = UserBD.findByUsername(updatedUserDTO.username());
         if (userN != null && !userN.getId().equals(id)) {
             return 1;
         }
-        UserName userE = UserBD.findByEmail(email);
+        UserName userE = UserBD.findByEmail(updatedUserDTO.email());
         if (userE != null && !userE.getId().equals(id)) {
             return 1;
         }
-        if (!email.contains("@")) {
+        if (!updatedUserDTO.email().contains("@")) {
             return 1;
         }
-        if (!password.isEmpty()) {
-            if (password.length() < 12) {
+        if (updatedUserDTO.password() != null && !updatedUserDTO.password().isEmpty()) {
+            if (updatedUserDTO.password().length() < 12) {
                 return 1;
             }
-            user.setPassword(passwordEncoder.encode(password)); 
-            user.setRawPassword(password); 
+            user.setPassword(passwordEncoder.encode(updatedUserDTO.password()));
         }
-        user.setEmail(email);
-        user.setUsername(username);
+        user.setEmail(updatedUserDTO.email());
+        user.setUsername(updatedUserDTO.username());
         UserBD.save(user);
         return 0;
     }
@@ -139,18 +137,6 @@ public class UserService {
         }
     }
 
-    public UserNameDTO getLoggedUserDTO() {
-        UserName user = getLoggedUser();
-        if (user != null) {
-            return userNameMapper.toDTO(user);
-        }
-        return null;
-    }
-
-    public Collection<UserNameDTO> getAllUsersDTO() {
-        List<UserName> users = UserBD.findAll();
-        return userNameMapper.toDTOs(users);
-    }
 
     public UserNameDTO getUserByIdDTO(long id) {
         Optional<UserName> user = UserBD.findById(id);
@@ -160,7 +146,9 @@ public class UserService {
         return null;
     }
 
-    public void deleteProfilePicture(UserName user) throws SQLException {
+    public void deleteProfilePicture(Long userId) throws SQLException {
+        UserName user = UserBD.findById(userId)
+            .orElseThrow(() -> new NoSuchElementException("User not found"));
         user.setProfilePicture(null);
         UserBD.save(user);
     }
@@ -180,13 +168,13 @@ public class UserService {
         }
     }
 
-    public Resource getUserImage(long id) throws SQLException {
-        UserName user = UserBD.findById(id).orElseThrow();
-        if (user.getProfilePicture() != null) {
-        return (Resource) new InputStreamResource(user.getProfilePicture().getBinaryStream());
-        } else {
-        throw new NoSuchElementException();
+    public Blob getUserImage(long id) {
+        Optional<UserName> userOptional = UserBD.findById(id);
+        if (userOptional.isEmpty()) {
+            return null;
         }
+        UserName user = userOptional.get();
+        return user.getProfilePicture();
     }
 
     /*public UserNameDTO replaceUserImage(long id, UserNameDTO updatedUserDTO) throws SQLException {
@@ -221,5 +209,11 @@ public class UserService {
         user.setProfilePicture(null);
         UserBD.save(user);
     }
+
+    public Collection<UserNameDTO> getAllUsersDTO() {
+        List<UserName> users = UserBD.findAll();
+        return userNameMapper.toDTOs(users);
+    }
+
 
 }

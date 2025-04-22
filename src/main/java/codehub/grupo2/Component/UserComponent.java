@@ -1,23 +1,24 @@
 package codehub.grupo2.Component;
 
-import java.sql.Blob;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Dto.UserNameDTO;
 
 @Component
 @SessionScope
 public class UserComponent {
     
-private UserName user;
+@Autowired
+private UserNameDTO user;
 
-public UserName getUser() {
+public UserNameDTO getUser() {
     return user;
 }
 
-public void setUser(UserName user) {
+public void setUser(UserNameDTO user) {
     this.user = user;
 }
 
@@ -33,11 +34,4 @@ public boolean isUser(UserName user) {
     return this.user.equals(user);
 }
 
-public void setProfilePicture(Blob profilePicture) {
-    this.user.setProfilePicture(profilePicture);
-}
-
-public Blob getProfilePicture() {
-    return this.user.getProfilePicture();
-}
 }

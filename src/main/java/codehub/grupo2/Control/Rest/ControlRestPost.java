@@ -8,7 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import codehub.grupo2.Dto.PostDTO;
-import codehub.grupo2.Service.APIService.APIPostService;
+import codehub.grupo2.Service.PostService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,7 +21,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 public class ControlRestPost {
 
     @Autowired
-    private APIPostService PostService;
+    private PostService PostService;
 
     @Operation(summary = "Get all posts")
     @ApiResponse(responseCode = "200", description = "Posts retrieved successfully")

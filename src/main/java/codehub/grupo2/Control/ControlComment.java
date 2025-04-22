@@ -1,5 +1,7 @@
 package codehub.grupo2.Control;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,9 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import codehub.grupo2.Component.PostComponent;
-import codehub.grupo2.DB.Entity.Comment;
-import codehub.grupo2.DB.Entity.Post;
-import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Dto.CommentDTO;
+import codehub.grupo2.Dto.PostDTO;
+import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Security.CustomUserDetails;
 import codehub.grupo2.Service.CommentService;
 import codehub.grupo2.Service.PostService;
@@ -35,7 +37,7 @@ public class ControlComment {
 
     @GetMapping("/createComment")
     public String showCreateComment(@RequestParam long id, Model model, HttpServletRequest request) {
-        Post post = PostService.getPostById(id);
+        PostDTO post = PostService.getPostByIdDTO(id);
         if (post == null) {
             model.addAttribute("error", "Post not found");
             return "redirect:/post";
@@ -51,38 +53,38 @@ public class ControlComment {
     public String createComment(@RequestParam String content, Model model, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
+        UserNameDTO user = userDetails.getUserNameDTO(); 
         if (user == null) {
             return "redirect:/home";  
         }
-        Post post = postComponent.getPost();
-        if (post == null || PostService.getPostById(post.getId()) == null) {
+        PostDTO post = postComponent.getPost();
+        if (post == null || PostService.getPostByIdDTO(post.id()) == null) {
             model.addAttribute("error", "Post not found or deleted");
             return "redirect:/post";    
         }
-        CommentService.registerComment(user, content, post);
-        return "redirect:/showMoreP/" + post.getId();
+        CommentDTO commentDTO = new CommentDTO(null, LocalDate.now(), content, user, post);
+        CommentService.registerCommentDTO(commentDTO);
+        return "redirect:/showMoreP/" + post.id();
     }
 
     @PostMapping("/deleteComment")
     public String deleteComment(@RequestParam long id, Model model, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
-
+        UserNameDTO user = userDetails.getUserNameDTO();
         if (user == null) {
             return "redirect:/home";
         }
 
-        Comment comment = CommentService.getCommentById(id);
-        if (!comment.getUsername().getId().equals(user.getId())) {
-            model.addAttribute("error", "You cant delete this comment");
-            return "redirect:/showMoreP/" + comment.getPost().getId();
+        CommentDTO comment = CommentService.getCommentByIdDTO(id);
+        if (comment == null || !comment.user().id().equals(user.id())) {
+            model.addAttribute("error", "You can't delete this comment");
+            return "redirect:/showMoreP/" + (comment != null ? comment.post().id() : "post");
         }
 
         int comp = CommentService.deleteComment(id);
         if (comp == 0) {
-            return "redirect:/showMoreP/" + postComponent.getPost().getId();
+            return "redirect:/showMoreP/" + postComponent.getPost().id();
         } else {
             model.addAttribute("error", "Comment not found or deleted");
             return "redirect:/init";

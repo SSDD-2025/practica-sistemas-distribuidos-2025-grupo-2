@@ -2,6 +2,7 @@ package codehub.grupo2.Control;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import codehub.grupo2.Component.PostComponent;
 import codehub.grupo2.Component.UserComponent;
-import codehub.grupo2.DB.Entity.Post;
-import codehub.grupo2.DB.Entity.Topic;
-import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Dto.PostDTO;
+import codehub.grupo2.Dto.TopicDTO;
+import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Security.CustomUserDetails;
 import codehub.grupo2.Service.CommentService;
 import codehub.grupo2.Service.PostService;
@@ -51,22 +52,18 @@ public class ControlPost {
 
     @GetMapping("/post")
     public String Post(Model model, HttpServletRequest request) {
-        List<Post> postlist = PostService.getAllPost();
+        List<PostDTO> postlist = PostService.getAllPostDTO();
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserName user = null;
+        UserNameDTO user = null;
 
         if (authentication != null && authentication.isAuthenticated() && 
             !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            user = userDetails.getUser();
+            user = userDetails.getUserNameDTO();
         }
 
-        Boolean isLogged = true;
-        if (user == null) {
-            isLogged = false;
-        }
-
+        Boolean isLogged = user != null;
         List<Map<String, Object>> postData = PostService.getPostsWithOwnership(postlist, user);
 
         model.addAttribute("isLogged", isLogged);
@@ -80,30 +77,25 @@ public class ControlPost {
 
     @PostMapping("/showMoreP/{id}")
     public String showMorePostPost(@PathVariable("id") long id, Model model, HttpServletRequest request) {
-        Post post = PostService.getPostById(id);
+        PostDTO post = PostService.getPostByIdDTO(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserName user = null;
+        UserNameDTO user = null;
 
         if (authentication != null && authentication.isAuthenticated() && 
             !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            user = userDetails.getUser();
+            user = userDetails.getUserNameDTO();
         }
 
-        Boolean isLogged = true;
-        if (user == null) {
-            isLogged = false;
-        }
-
+        Boolean isLogged = user != null;
         if (post != null) {
             postComponent.setPost(post);
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 
             Map<String, Object> postData = PostService.getPostWithOwnership(post, user);
-            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.getComments(), user);
+            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.comments(), user);
 
             model.addAttribute("isLogged", isLogged);
-
             model.addAttribute("csrfToken", token);
             model.addAttribute("posts", postData);
             model.addAttribute("comments", commentData);
@@ -116,27 +108,23 @@ public class ControlPost {
 
     @GetMapping("/showMoreP/{id}")
     public String showMorePostGet(@PathVariable("id") long id, Model model, HttpServletRequest request) {
-        Post post = PostService.getPostById(id);
+        PostDTO post = PostService.getPostByIdDTO(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserName user = null;
+        UserNameDTO user = null;
 
         if (authentication != null && authentication.isAuthenticated() && 
             !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            user = userDetails.getUser();
+            user = userDetails.getUserNameDTO();
         }
 
-        Boolean isLogged = true;
-        if (user == null) {
-            isLogged = false;
-        }
-
+        Boolean isLogged = user != null;
         if (post != null) {
             postComponent.setPost(post);
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 
             Map<String, Object> postData = PostService.getPostWithOwnership(post, user);
-            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.getComments(), user);
+            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.comments(), user);
 
             model.addAttribute("isLogged", isLogged);
             model.addAttribute("csrfToken", token);
@@ -151,7 +139,7 @@ public class ControlPost {
 
     @GetMapping("/addPost")
     public String showAddPost(Model model, HttpServletRequest request) {
-        List<Topic> topics = TopicService.getAllTopics();
+        List<TopicDTO> topics = TopicService.getAllTopicsDTO();
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         model.addAttribute("csrfToken", token);
         model.addAttribute("topics", topics);
@@ -163,12 +151,12 @@ public class ControlPost {
     public String showwaddPost(@RequestParam String title, @RequestParam String content, @RequestParam long tid, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserName user = null;
+        UserNameDTO user = null;
 
         if (authentication != null && authentication.isAuthenticated() && 
             !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            user = userDetails.getUser();
+            user = userDetails.getUserNameDTO();
         }
 
         if (user == null) {
@@ -176,13 +164,13 @@ public class ControlPost {
             return "redirect:/home";
         }
 
-        Topic topic = TopicService.getTopicById(tid).orElse(null);
-        if (topic == null) {
+        Optional<TopicDTO> topic = TopicService.getTopicByIdDTO(tid);
+        if (!topic.isPresent()) {
             model.addAttribute("error", "Topic not found");
             return "redirect:/addPost";
         }
 
-        PostService.registerPost(user, title, content, topic);
+        PostService.registerPostDTO(user, title, content, topic.get());
         model.addAttribute("error", "");
         model.addAttribute("csrfToken", token);
         return "redirect:/post";
@@ -192,12 +180,12 @@ public class ControlPost {
     public String deletePost(@RequestParam long id, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserName user = null;
+        UserNameDTO user = null;
 
         if (authentication != null && authentication.isAuthenticated() && 
             !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            user = userDetails.getUser();
+            user = userDetails.getUserNameDTO();
         }
 
         if (user == null) {
@@ -205,19 +193,19 @@ public class ControlPost {
             return "redirect:/home";
         }
 
-        Post post = PostService.getPostById(id);
+        PostDTO post = PostService.getPostByIdDTO(id);
         if (post == null) {
             model.addAttribute("error", "Post not found");
             return "redirect:/post";
         }
 
-        if (!post.getUsername().getId().equals(user.getId())) {
+        if (!post.user().id().equals(user.id())) {
             model.addAttribute("error", "You can't delete this post");
             return "redirect:/post";
         }
 
-        PostService.deletePost(post.getTitle());
-        userComponent.setUser(UserService.getUser(user.getUsername()));
+        PostService.deletePostDTO(post.title());
+        userComponent.setUser(UserService.getUser(user.username()));
         model.addAttribute("error", "");
         model.addAttribute("csrfToken", token);
         return "redirect:/post";
@@ -227,15 +215,15 @@ public class ControlPost {
     public String getMethodName(@RequestParam String searchText, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserName user = null;
+        UserNameDTO user = null;
 
         if (authentication != null && authentication.isAuthenticated() && 
             !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            user = userDetails.getUser();
+            user = userDetails.getUserNameDTO();
         }
 
-        List<Post> postlist = PostService.findPostsByRegex(searchText);
+        List<PostDTO> postlist = PostService.findPostsByRegexDTO(searchText);
         List<Map<String, Object>> postData = PostService.getPostsWithOwnership(postlist, user);
 
         if (postlist.isEmpty()) {

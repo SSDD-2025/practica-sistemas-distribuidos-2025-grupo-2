@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Security.CustomUserDetails;
 import codehub.grupo2.Service.CommentService;
 import codehub.grupo2.Service.UserService;
@@ -38,7 +38,6 @@ public class ControlUser {
     public String Empty(Model model, HttpServletRequest request) {
         return this.showHome(model, request);
     }
-    
 
     @GetMapping("/register")
     public String ShowRegister(Model model, HttpServletRequest request) {
@@ -49,9 +48,11 @@ public class ControlUser {
     } 
 
     @PostMapping("/register")
-    public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model,HttpServletRequest request) {
+    public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        model.addAttribute("check", userService.registerUsername(username, password, email));
+        UserNameDTO userDTO = new UserNameDTO(null, username, password, email, null, null, null);
+        userService.registerUsername(userDTO.username(), userDTO.password(), userDTO.email());
+        model.addAttribute("check", userDTO);
         model.addAttribute("csrfToken", token);
         return "home";
     }
@@ -63,7 +64,7 @@ public class ControlUser {
             return "redirect:/home";
         }
 
-        UserName user = userService.getLoggedUser();
+        UserNameDTO user = userService.getLoggedUser();
         if (user == null) {
             return "redirect:/home";
         }
@@ -97,21 +98,19 @@ public class ControlUser {
             return "redirect:/home";
         }
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
+        UserNameDTO user = userDetails.getUserNameDTO();
         if (user == null) {
             return "redirect:/home";
         }
-        String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
+        String profilePictureBase64 = userService.convertBlobToBase64(userService.getUserImage(user.id()));
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         model.addAttribute("csrfToken", token);
-        model.addAttribute("profilePicture", profilePictureBase64);
+        model.addAttribute("profilePicture", profilePictureBase64 != null ? profilePictureBase64 : "default-profile-picture.png"); 
         model.addAttribute("user", user);
-        model.addAttribute("posts", user.getPosts());
+        model.addAttribute("posts", user.posts());
         Boolean showPassword = (Boolean) session.getAttribute("showPassword");
         model.addAttribute("showPassword", showPassword != null ? showPassword : false);
-        if (user.getRawPassword() == null) {
-            user.setRawPassword("Pass not found");
-        }
+        model.addAttribute("rawPassword", "Pass not available");
         return "myProfile";
     }
 
@@ -122,23 +121,20 @@ public class ControlUser {
             return "redirect:/home";
         }
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserName user = userDetails.getUser();
+        UserNameDTO user = userDetails.getUserNameDTO();
         if (user == null) {
             return "redirect:/home";
         }
-        String profilePictureBase64 = userService.convertBlobToBase64(user.getProfilePicture());
+        String profilePictureBase64 = userService.convertBlobToBase64(userService.getUserImage(user.id()));
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         model.addAttribute("csrfToken", token);
-        model.addAttribute("profilePicture", profilePictureBase64);
+        model.addAttribute("profilePicture", profilePictureBase64 != null ? profilePictureBase64 : "default-profile-picture.png");
         model.addAttribute("user", user);
-        model.addAttribute("posts", user.getPosts());
-        if (user.getRawPassword() == null) {
-            user.setRawPassword("Pass not found");
-        }
+        model.addAttribute("posts", user.posts());
+        model.addAttribute("rawPassword", "Pass not available");
         return "myProfile";
     }
         
-
     @PostMapping("/showPassword")
     public String showPassword(Model model, HttpSession session, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
@@ -155,129 +151,126 @@ public class ControlUser {
         return "redirect:/acc";
     }
     
+    @PostMapping("/deleteUserConfirmation")
+    public String deleteUserConfirmation(HttpServletRequest request, Model model) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
+        return "deleteUser";
+    }
 
-        @PostMapping("/deleteUserConfirmation")
-        public String deleteUserConfirmation(HttpServletRequest request,Model model) {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            model.addAttribute("csrfToken", token);
-            return "deleteUser";
-        }
-
-        @PostMapping("/deleteUserDefinitive")
-        @Transactional
-        public String deleteUserDefinitive(Model model, HttpSession session,HttpServletRequest request ) {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            UserName user = userDetails.getUser();
-            commentService.deleteCommentsByUser(user.getId());
-            userService.deleteUser(user.getUsername());
-            session.invalidate();
-            model.addAttribute("check", "User deleted correctly");
-            model.addAttribute("csrfToken", token);
-            return "home";
-        }
+    @PostMapping("/deleteUserDefinitive")
+    @Transactional
+    public String deleteUserDefinitive(Model model, HttpSession session, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserNameDTO user = userDetails.getUserNameDTO();
+        commentService.deleteCommentsByUser(user.id());
+        userService.deleteUserDTO(user.username());
+        session.invalidate();
+        model.addAttribute("check", "User deleted correctly");
+        model.addAttribute("csrfToken", token);
+        return "home";
+    }
         
+    @GetMapping("/editProfile")
+    public String showEditProfile(Model model, HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/home";
+        }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserNameDTO user = userDetails.getUserNameDTO();
+        if (user == null) {
+            return "redirect:/home";
+        }
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
+        model.addAttribute("user", user);
+        return "editProfile";
+    }
 
-        @GetMapping("/editProfile")
-        public String showEditProfile(Model model, HttpServletRequest request) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) {
-                return "redirect:/home";
-            }
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            UserName user = userDetails.getUser();
-            if (user == null) {
-                return "redirect:/home";
-            }
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            model.addAttribute("csrfToken", token);
-            model.addAttribute("user", user);
-            return "editProfile";
+    @PostMapping("/updateProfile")
+    public String updateProfile(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model, HttpServletRequest request) throws SQLException, IOException {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserNameDTO user = userDetails.getUserNameDTO();
+        
+        if (user == null) {
+            return "redirect:/home";
         }
 
-        @PostMapping("/updateProfile")
-        public String updateProfile(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model,HttpServletRequest request) {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            UserName user = userDetails.getUser();
-            
-            if (user == null) {
-                return "redirect:/home";
-            }
-
-            if(userService.editUser(username, password, email, user.getId()) == 1){
-                model.addAttribute("error","Error updating the profile, make sure you followed our rules");
-                return "myProfile";
-            }
-
-            UserName updatedUser = userService.getUser(username);
-            CustomUserDetails newDetails = new CustomUserDetails(updatedUser);
-            Authentication newAuth = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                newDetails, authentication.getCredentials(), newDetails.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-            model.addAttribute("check", "User Uploaded Correctly");
-            model.addAttribute("csrfToken", token);
-            model.addAttribute("user", updatedUser); 
-            model.addAttribute("posts", updatedUser.getPosts());
-            model.addAttribute("profilePicture", updatedUser.getProfilePictureBase64());
-            
+        UserNameDTO updatedUserDTO = new UserNameDTO(user.id(), username, password, email, null, null, null);
+        if (userService.editUser(updatedUserDTO, user.id()) == 1) {
+            model.addAttribute("error", "Error updating the profile, make sure you followed our rules");
             return "myProfile";
         }
 
+        UserNameDTO updatedUser = userService.getUser(username);
+        CustomUserDetails newDetails = new CustomUserDetails(updatedUser);
+        Authentication newAuth = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+            newDetails, authentication.getCredentials(), newDetails.getAuthorities()
+        );
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-        @GetMapping("/uploadProfilePicture")
-        public String getMethodName(Model model,HttpServletRequest request) {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            model.addAttribute("csrfToken", token);
+        model.addAttribute("check", "User Uploaded Correctly");
+        model.addAttribute("csrfToken", token);
+        model.addAttribute("user", updatedUser); 
+        model.addAttribute("posts", updatedUser.posts());
+        model.addAttribute("profilePicture", userService.convertBlobToBase64(userService.getUserImage(updatedUser.id())));
+        
+        return "myProfile";
+    }
+
+    @GetMapping("/uploadProfilePicture")
+    public String getMethodName(Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
+        return "uploadProfilePicture";
+    }
+
+    @PostMapping("/deleteProfilePicture")
+    public String deleteProfilePicture(Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        model.addAttribute("csrfToken", token);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/home";
+        }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserNameDTO user = userDetails.getUserNameDTO();
+        try {
+            userService.deleteProfilePicture(user.id());
+        } catch (SQLException e) {
+            model.addAttribute("error", "Error deleting profile picture: " + e.getMessage());
             return "uploadProfilePicture";
         }
+        return "redirect:/acc";
+    }
 
-        @PostMapping("/deleteProfilePicture")
-        public String deleteProfilePicture(Model model, HttpServletRequest request) {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+    @PostMapping("/uploadProfilePicture")
+    public String uploadProfilePicture(@RequestParam MultipartFile file, Model model, HttpServletRequest request) throws IOException, SerialException, SQLException {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        model.addAttribute("csrfToken", token);
+        UserNameDTO user = userDetails.getUserNameDTO();
+        try {
+            byte[] bytes = file.getBytes();
+            userService.saveProfilePicture(user.id(), bytes);
+        } catch (IOException e) {
+            return "uploadProfilePicture";
+        }
+        return "redirect:/acc";
+    }
+
+    @GetMapping("/home")
+    public String showHome(Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (token != null) {
             model.addAttribute("csrfToken", token);
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) {
-                return "redirect:/home";
-            }
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            UserName user = userDetails.getUser();
-            try {
-                userService.deleteProfilePicture(user);
-            } catch (SQLException e) {
-                model.addAttribute("error", "Error deleting profile picture: " + e.getMessage());
-                return "uploadProfilePicture";
-            }
-            return "redirect:/acc";
         }
-
-        @PostMapping("/uploadProfilePicture")
-        public String uploadProfilePicture(@RequestParam MultipartFile file,Model model,HttpServletRequest request) throws IOException, SerialException, SQLException {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            model.addAttribute("csrfToken", token);
-            UserName user = userDetails.getUser();
-            try {
-                byte[] bytes = file.getBytes();
-                userService.saveProfilePicture(user, bytes);
-            } catch (IOException e) {
-                return "uploadProfilePicture";
-            }
-            return "redirect:/acc";
-        }
-
-        @GetMapping("/home")
-        public String showHome(Model model, HttpServletRequest request) {
-            CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            if (token != null) {
-                model.addAttribute("csrfToken", token);
-            }
-            return "home";
-        }
-
+        return "home";
+    }
 }

@@ -9,7 +9,7 @@ public record CommentDTO (
         Long id,
         LocalDate date,
         String text,
-        UserName user,
-        Post post
+        UserNameDTO user,
+        PostDTO post
         ){
 }

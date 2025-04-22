@@ -11,8 +11,8 @@ public record PostDTO(
         LocalDate date,
         String title,
         String text,
-        UserName user,
-        List<Comment> comments,
-        Topic topic
+        UserNameDTO user,
+        List<CommentDTO> comments,
+        TopicDTO topic
 ) {
 }

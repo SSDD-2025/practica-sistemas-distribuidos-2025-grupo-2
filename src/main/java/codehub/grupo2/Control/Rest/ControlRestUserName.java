@@ -82,7 +82,7 @@ public class ControlRestUserName {
     @ApiResponse(responseCode = "200", description = "User found")
 	@GetMapping("/acc")
 	public UserNameDTO me() {
-		return userService.getLoggedUserDTO();
+		return userService.getLoggedUser();
 	}
 
     @Operation(summary = "Get all users")

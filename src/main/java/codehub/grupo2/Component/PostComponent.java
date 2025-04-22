@@ -1,28 +1,27 @@
 package codehub.grupo2.Component;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
-import codehub.grupo2.DB.Entity.Post;
-
+import codehub.grupo2.Dto.PostDTO;
 
 @Component
 @SessionScope
 public class PostComponent {
-    private Post post;
+    private PostDTO post;
 
-    public Post getPost(){
+    public PostDTO getPost() {
         return this.post;
     }
 
-    public void setPost(Post post) {
+    public void setPost(PostDTO post) {
         this.post = post;
     }
 
     public boolean isEmpty() {
-        return this.post != null;
+        return this.post == null;
     }
 
-    public boolean isPost(Post post) {
-        return this.post.equals(post);
+    public boolean isPost(PostDTO post) {
+        return this.post != null && this.post.equals(post);
     }
-    
 }

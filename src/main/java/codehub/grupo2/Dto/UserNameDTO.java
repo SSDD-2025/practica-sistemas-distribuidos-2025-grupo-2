@@ -11,6 +11,6 @@ public record UserNameDTO(
     String password,
     String email,
     Blob profilePicture,
-    List<Post> posts,
+    List<PostDTO> posts,
     List<String> roles) {
 }

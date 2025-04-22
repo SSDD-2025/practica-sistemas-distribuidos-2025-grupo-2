@@ -1,21 +1,28 @@
 package codehub.grupo2.Service;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
+import codehub.grupo2.Dto.PostMapper;
+import codehub.grupo2.Dto.UserNameMapper;
+import codehub.grupo2.Dto.TopicDTO;
+import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.DB.PostRepository;
 import codehub.grupo2.DB.TopicRepository;
 import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.Topic;
 import codehub.grupo2.DB.Entity.UserName;
-
+import codehub.grupo2.Dto.PostDTO;
 
 @Service
 public class PostService {
@@ -27,100 +34,92 @@ public class PostService {
 
     @Autowired
     private UserRepository UserBD;
+     
+    @Autowired
+    private PostMapper PostMapper;
 
-    public Post getPost(String title){
-        return PostBD.findByTitle(title);
-    }
+    @Autowired
+    private UserNameMapper UserMapper;
 
-    public String registerPost(UserName user, String title, String text, Topic topic) {
-        if (text.length() > 240) {
-            return "Numero de caracteres excedido";
-        }
-        Post existingPost = PostBD.findByTitle(title);
-        if (existingPost != null && existingPost.getTopic().equals(topic)) {
-            return "El post ya está asociado con este tema.";
-        }
-        if (topic.getId() == null) {
-            TopicBD.save(topic); 
-        }
-        Post post = new Post(user, title, text, topic);
-        PostBD.save(post);
-        user.getPosts().add(post);
-        UserBD.save(user);
-        topic.getPosts().add(post);
-        TopicBD.save(topic);
-
-        return title;
-    }
-    
-    
-
-    public List<Post> getAllPost(){
-        return PostBD.findAll();
-    }
-
-    @Transactional
-    public void deletePost(String title) {
+    public PostDTO getPostDTO(String title) {
         Post post = PostBD.findByTitle(title);
-        if (post != null) {
-            UserName user = post.getUsername();
-            Topic topic = post.getTopic();
-    
-            user.getPosts().remove(post);
-            topic.getPosts().remove(post); 
-    
-            PostBD.delete(post); 
+        return PostMapper.toDTO(post);
+    }
 
-            UserBD.save(user); 
-            TopicBD.save(topic);
+    public List<PostDTO> getPostByTopicDTO(TopicDTO topic) {
+        if (topic == null || topic.id() == null) {
+            throw new IllegalArgumentException("TopicDTO or its ID cannot be null");
         }
-    }
-    
-
-    public Post getPostById(Long id){
-        return PostBD.findById(id).orElse(null);
+        Optional<Topic> topicEntity = TopicBD.findById(topic.id());
+        List<Post> list = PostBD.findByTopic(topicEntity.get());
+        return PostMapper.toDTOs(list);
     }
 
-
-    public List<Post> getPostByTopic(Topic topic){
-        return PostBD.findByTopic(topic);
-    }
-
-    public List<Post> findPostsByRegex(String regex) {
-            Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-            return PostBD.findAll().stream()
+    public List<PostDTO> findPostsByRegexDTO(String regex) {
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        List<Post> lis = PostBD.findAll().stream()
                 .filter(post -> pattern.matcher(post.getText()).find() || pattern.matcher(post.getTitle()).find())
                 .collect(Collectors.toList());
+        return PostMapper.toDTOs(lis);
     }
 
-    public Map<String, Object> getPostWithOwnership(Post post, UserName user) {
-        if(user == null) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("post", post);
-            data.put("isOwner", false);
-            return data;
-        }
+    public Map<String, Object> getPostWithOwnership(PostDTO post, UserNameDTO user) {
         Map<String, Object> data = new HashMap<>();
         data.put("post", post);
-        data.put("isOwner", user != null && post.getUsername().getId().equals(user.getId()));
+        boolean isOwner = user != null && post.user() != null && post.user().id().equals(user.id());
+        data.put("isOwner", isOwner);
         return data;
     }
 
-    public List<Map<String, Object>> getPostsWithOwnership(List<Post> posts, UserName user) {
-        if(user == null) {
-            return posts.stream().map(post -> {
-                Map<String, Object> data = new HashMap<>();
-                data.put("post", post);
-                data.put("isOwner", false);
-                return data;
-            }).collect(Collectors.toList());
-        }
+    public List<Map<String, Object>> getPostsWithOwnership(List<PostDTO> posts, UserNameDTO user) {
         return posts.stream().map(post -> {
             Map<String, Object> data = new HashMap<>();
             data.put("post", post);
-            data.put("isOwner", user != null && post.getUsername().getId().equals(user.getId()));
+            boolean isOwner = user != null && post.user() != null && post.user().id().equals(user.id());
+            data.put("isOwner", isOwner);
             return data;
         }).collect(Collectors.toList());
     }
-    
+
+    public List<PostDTO> getAllPostDTO() {
+        List<Post> posts = PostBD.findAll();
+        return PostMapper.toDTOs(posts);
+    }
+
+    public PostDTO getPostByIdDTO(long id) {
+        Post post = PostBD.findById(id).orElse(null);
+        return PostMapper.toDTO(post);
+    }
+
+    @Transactional
+    public PostDTO registerPostDTO(UserNameDTO user, String title, String text, TopicDTO topic) {
+        if (text.length() > 240) {
+            throw new IllegalArgumentException("Too many characters in the text.");
+        }
+        Post existingPost = PostBD.findByTitle(title);
+        if (existingPost != null && existingPost.getTopic().getId().equals(topic.id())) {
+            throw new IllegalArgumentException("The post is already associated with this topic.");
+        }
+
+        Topic topicEntity = TopicBD.findById(topic.id())
+                .orElseThrow(() -> new IllegalArgumentException("Topic not found with ID: " + topic.id()));
+
+        UserName userEntity = UserBD.findById(user.id())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + user.id()));
+
+        Post post = new Post(userEntity, title, text, topicEntity);
+        Post savedPost = PostBD.save(post);
+
+        return PostMapper.toDTO(savedPost);
+    }
+
+    @Transactional
+    public PostDTO deletePostDTO(String title) {
+        Post post = PostBD.findByTitle(title);
+        if (post != null) {
+            PostBD.delete(post);
+            return PostMapper.toDTO(post);
+        }
+        return null;
+    }
 }

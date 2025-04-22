@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import codehub.grupo2.Dto.CommentDTO;
-import codehub.grupo2.Service.APIService.APICommentService;
+import codehub.grupo2.Service.CommentService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,7 +20,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 public class ControlRestComment {
 
     @Autowired
-    private APICommentService CommentService;
+    private CommentService CommentService;
 
     @Operation(summary = "Get all comments")
     @ApiResponse(responseCode = "200", description = "Comments retrieved successfully")
@@ -44,7 +45,7 @@ public class ControlRestComment {
     @PostMapping("/")
     public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO CommentDTO) {
 
-         CommentService.registerComment(CommentDTO.user(),CommentDTO.text(),CommentDTO.post());
+        CommentService.registerCommentDTO(CommentDTO);
 
         
         CommentDTO = CommentService.getCommentByIdDTO(CommentDTO.id());

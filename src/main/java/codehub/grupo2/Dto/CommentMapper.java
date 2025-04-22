@@ -13,7 +13,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
     @Mapping(target = "post", ignore = true)
-    CommentDTO toDTO(Comment Comment);
+    @Mapping(target = "user", expression = "java(userNameMapper.toDTO(comment.getUser()))")
+    CommentDTO toDTO(Comment comment);
     @Mapping(target = "post", ignore = true)
     List<CommentDTO> toDTOs(Collection<Comment> Comments);
 

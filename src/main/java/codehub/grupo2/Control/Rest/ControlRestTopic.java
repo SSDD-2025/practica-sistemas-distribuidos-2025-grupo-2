@@ -9,7 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import codehub.grupo2.Dto.TopicDTO;
-import codehub.grupo2.Service.APIService.APITopicService;
+import codehub.grupo2.Service.TopicService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,7 +22,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 public class ControlRestTopic {
 
 	@Autowired
-	private APITopicService TopicService;
+	private TopicService TopicService;
 
 	@Operation(summary = "Get all topics")
 	@ApiResponse(responseCode = "200", description = "Topics retrieved successfully")

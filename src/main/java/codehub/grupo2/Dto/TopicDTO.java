@@ -7,5 +7,5 @@ import codehub.grupo2.DB.Entity.Post;
 public record TopicDTO(
     Long id,
     String topicName,
-    List<Post> posts
+    List<PostDTO> posts
     ) {}

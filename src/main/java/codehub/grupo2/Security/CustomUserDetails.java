@@ -1,28 +1,30 @@
 package codehub.grupo2.Security;
 
-import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Dto.UserNameDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final UserName user;
+    private final UserNameDTO user;
 
-    public CustomUserDetails(UserName user) {
+    public CustomUserDetails(UserNameDTO user) {
         this.user = user;
     }
 
-    public UserName getUser() {
+    public UserNameDTO getUserNameDTO() {
         return user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String role : user.getRoles()) {
+        for (String role : user.roles()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         }
         return authorities;
@@ -30,12 +32,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return user.password();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.username();
     }
 
     @Override

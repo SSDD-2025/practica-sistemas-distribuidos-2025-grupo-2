@@ -1,7 +1,7 @@
 package codehub.grupo2.Service;
 
 import java.util.Optional;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,23 +34,55 @@ public class TopicService {
         return null;
     }
 
-    public Topic newTopic(String name){
+    public TopicDTO newTopic(String name){
         Topic to = new Topic(name);
         TopicBD.save(to);
-        return to;
+        return TopicMapper.toDTO(to);
     }
-    public List<Topic> getAllTopics(){
-        return TopicBD.findAll();
-    }
+   
 
     @Transactional
     public void deleteTopic(long id) {
         Topic topic = TopicBD.findById(id).get();  
         for(Post t : topic.getPosts()){
-            PostBD.deletePost(t.getTitle());
+            PostBD.deletePostDTO(t.getTitle());
         }
         TopicBD.delete(topic);
     }
 
-  
+   public List<TopicDTO> getAllTopicsDTO() {
+        List<Topic> topics = TopicBD.findAll();
+        return TopicMapper.toDTOs(topics);
+    }
+
+    public Optional<TopicDTO> getTopicByIdDTO(long id) {
+        Optional<Topic> topic = TopicBD.findById(id);
+        if (topic.isPresent()) {
+            return Optional.of(TopicMapper.toDTO(topic.get()));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public TopicDTO newTopicDTO(String topicName) {
+        Topic topic = new Topic(topicName);
+        TopicBD.save(topic);
+        return TopicMapper.toDTO(topic);
+    }
+   @Transactional
+   public TopicDTO deleteTopicDTO(long id) {
+    Topic topic = TopicBD.findById(id).get();
+
+    
+    List<Post> postsToDelete = new ArrayList<>(topic.getPosts());
+
+    for (Post post : postsToDelete) {
+        PostBD.deletePostDTO(post.getTitle());
+    }
+
+    TopicBD.delete(topic);
+    return TopicMapper.toDTO(topic);
+}
+
+
 }
