@@ -13,6 +13,7 @@ import codehub.grupo2.Service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
@@ -45,15 +46,19 @@ public class ControlRestPost {
     @Operation(summary = "Create a new post")
     @ApiResponse(responseCode = "201", description = "Post created successfully")
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO PostDTO) {
+    public ResponseEntity<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
+        if (postDTO == null || postDTO.user() == null || postDTO.title() == null || postDTO.text() == null || postDTO.topic() == null) {
+            throw new IllegalArgumentException("El PostDTO y sus campos requeridos no pueden ser nulos");
+        }
 
-        PostService.registerPostDTO(PostDTO.user(), PostDTO.title(), PostDTO.text(), PostDTO.topic());
-        PostDTO = PostService.getPostByIdDTO(PostDTO.id());
+        PostDTO createdPost = PostService.registerPostDTO(postDTO.user(), postDTO.title(), postDTO.text(), postDTO.topic());
+        if (createdPost == null) {
+            throw new IllegalStateException("No se pudo crear la publicación");
+        }
 
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(PostDTO.id()).toUri();
-
-        return ResponseEntity.created(location).body(PostDTO);
-    }
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(createdPost.id()).toUri();
+        return ResponseEntity.created(location).body(createdPost);
+}
 
     @Operation(summary = "Delete a post by ID")
     @ApiResponses({

@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 import codehub.grupo2.Dto.PostMapper;
@@ -91,25 +93,34 @@ public class PostService {
         return PostMapper.toDTO(post);
     }
 
-    @Transactional
+   @Transactional
     public PostDTO registerPostDTO(UserNameDTO user, String title, String text, TopicDTO topic) {
+        if (user == null || user.id() == null) {
+            throw new IllegalArgumentException("El usuario no puede ser nulo y debe tener un ID válido");
+        }
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("El título no puede ser nulo o vacío");
+        }
+        if (text == null || text.trim().isEmpty()) {
+            throw new IllegalArgumentException("El texto no puede ser nulo o vacío");
+        }
+        if (topic == null || topic.id() == null) {
+            throw new IllegalArgumentException("El tema no puede ser nulo y debe tener un ID válido");
+        }
         if (text.length() > 240) {
-            throw new IllegalArgumentException("Too many characters in the text.");
+            throw new IllegalArgumentException("El texto excede el límite de 240 caracteres");
         }
         Post existingPost = PostBD.findByTitle(title);
         if (existingPost != null && existingPost.getTopic().getId().equals(topic.id())) {
-            throw new IllegalArgumentException("The post is already associated with this topic.");
+            throw new IllegalArgumentException("Ya existe una publicación con este título en el tema especificado");
         }
-
         Topic topicEntity = TopicBD.findById(topic.id())
-                .orElseThrow(() -> new IllegalArgumentException("Topic not found with ID: " + topic.id()));
+                .orElseThrow(() -> new EntityNotFoundException("Tema con ID " + topic.id() + " no encontrado"));
 
         UserName userEntity = UserBD.findById(user.id())
-                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + user.id()));
-
+                .orElseThrow(() -> new EntityNotFoundException("Usuario con ID " + user.id() + " no encontrado"));
         Post post = new Post(userEntity, title, text, topicEntity);
-        Post savedPost = PostBD.save(post);
-
+        Post savedPost = PostBD.save(post); 
         return PostMapper.toDTO(savedPost);
     }
 

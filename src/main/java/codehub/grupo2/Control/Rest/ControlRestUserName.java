@@ -2,6 +2,7 @@ package codehub.grupo2.Control.Rest;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 
 @RestController
-@RequestMapping("/api/UserName")
+@RequestMapping("/api/UserNames")
 public class ControlRestUserName {
 	
 	@Autowired
@@ -123,6 +124,12 @@ public class ControlRestUserName {
 	@DeleteMapping("/{id}")
 	public void deleteUserName(@PathVariable long id) {
         userService.deleteUser(userService.getUserByIdDTO(id).username());
+	}
+    @PutMapping("/{id}")
+	public UserNameDTO replaceUser(@PathVariable long id, @RequestBody UserNameDTO updatedUserDTO) throws SQLException {
+
+		 userService.editUser(updatedUserDTO, id);
+         return updatedUserDTO;
 	}
 
 }

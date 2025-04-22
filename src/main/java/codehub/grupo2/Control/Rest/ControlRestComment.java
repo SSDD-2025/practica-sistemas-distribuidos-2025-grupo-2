@@ -12,6 +12,7 @@ import codehub.grupo2.Service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
@@ -42,17 +43,19 @@ public class ControlRestComment {
 
     @Operation(summary = "Create a new comment")
     @ApiResponse(responseCode = "201", description = "Comment created successfully")
-    @PostMapping("/")
-    public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO CommentDTO) {
+   @PostMapping("/")
+    public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody CommentDTO commentDTO) {
+        if (commentDTO == null) {
+            throw new IllegalArgumentException("El CommentDTO no puede ser nulo");
+        }
 
-        CommentService.registerCommentDTO(CommentDTO);
+        CommentDTO createdComment = CommentService.registerCommentDTO(commentDTO);
+        if (createdComment == null) {
+            throw new IllegalStateException("No se pudo crear el comentario");
+        }
 
-        
-        CommentDTO = CommentService.getCommentByIdDTO(CommentDTO.id());
-
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(CommentDTO.id()).toUri();
-
-        return ResponseEntity.created(location).body(CommentDTO);
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(createdComment.id()).toUri();
+        return ResponseEntity.created(location).body(createdComment);
     }
 
     @Operation(summary = "Delete a comment by ID")

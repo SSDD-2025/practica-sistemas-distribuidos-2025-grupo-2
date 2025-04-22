@@ -21,6 +21,7 @@ import codehub.grupo2.Dto.CommentDTO;
 import codehub.grupo2.Dto.CommentMapper;
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Dto.UserNameMapper;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CommentService {
@@ -42,9 +43,8 @@ public class CommentService {
 
     @Transactional
     public int deleteComment(Long id) {
-        Optional<Comment> c = CommentBD.findById(id);
-        if (c.isPresent()) {
-            CommentBD.delete(c.get());
+        if (CommentBD.existsById(id)) {
+            CommentBD.deleteById(id);
             return 0;
         } else {
             return 1;
@@ -104,32 +104,30 @@ public class CommentService {
     }
     @Transactional
     public CommentDTO registerCommentDTO(CommentDTO commentDTO) {
-        if (commentDTO.text() == null) {
-            throw new IllegalArgumentException("The text of the comment cant be null");
+        if (commentDTO == null) {
+            throw new IllegalArgumentException("El CommentDTO no puede ser nulo");
+        }
+        if (commentDTO.text() == null || commentDTO.text().trim().isEmpty()) {
+            throw new IllegalArgumentException("El texto del comentario no puede ser nulo o vacío");
         }
         if (commentDTO.user() == null || commentDTO.user().id() == null) {
-            throw new IllegalArgumentException("The user can't be null");
+            throw new IllegalArgumentException("El usuario no puede ser nulo y debe tener un ID válido");
         }
         if (commentDTO.post() == null || commentDTO.post().id() == null) {
-            throw new IllegalArgumentException("The post can't be null");
+            throw new IllegalArgumentException("La publicación no puede ser nula y debe tener un ID válido");
         }
         if (commentDTO.text().length() > 140) {
-            throw new IllegalArgumentException("Number of caracter ist exceded");
+            throw new IllegalArgumentException("El texto excede el límite de 140 caracteres");
         }
         UserName user = userBD.findById(commentDTO.user().id())
-        .orElseThrow(() -> new RuntimeException("User can't be found"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuario con ID " + commentDTO.user().id() + " no encontrado"));
         Post post = PostBD.findById(commentDTO.post().id())
-        .orElseThrow(() -> new RuntimeException("Post can't be found"));
-       
+                .orElseThrow(() -> new EntityNotFoundException("Publicación con ID " + commentDTO.post().id() + " no encontrada"));
         Comment comment = new Comment(user, commentDTO.text(), post);
-        comment.setText(commentDTO.text());
-        comment.setUsername(user);
-        comment.setPost(post);
-        CommentBD.save(comment);
-
-        post.getComments().add(comment);
+        Comment savedComment = CommentBD.save(comment);
+        post.getComments().add(savedComment);
         PostBD.save(post);
-        return commentMapper.toDTO(comment);
-    }
+        return commentMapper.toDTO(savedComment);
+}
     
 }
