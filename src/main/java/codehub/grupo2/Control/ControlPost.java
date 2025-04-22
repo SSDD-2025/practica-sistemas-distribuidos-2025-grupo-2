@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -73,6 +75,19 @@ public class ControlPost {
             model.addAttribute("error", "No posts available");
         }
         return "post";
+    }
+
+
+    @GetMapping("/user")
+    public ResponseEntity<Page<PostDTO>> getUserPostsPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+       
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserNameDTO user = UserService.getUser(username);
+        
+        Page<PostDTO> postPage = PostService.getPostsByUserPaginated(user, page, size);
+        return ResponseEntity.ok(postPage);
     }
 
     @PostMapping("/showMoreP/{id}")

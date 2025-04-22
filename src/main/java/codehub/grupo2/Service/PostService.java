@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -132,5 +134,22 @@ public class PostService {
             return PostMapper.toDTO(post);
         }
         return null;
+    }
+     public Page<PostDTO> getPostsByUserPaginated(UserNameDTO user, int page, int size) {
+        if (user == null || user.id() == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        UserName userEntity = UserBD.findById(user.id())
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + user.id() + " not found"));
+        PageRequest pageable = PageRequest.of(page, size);
+        Page<Post> postPage = PostBD.findByUser(userEntity, pageable);
+        return postPage.map(PostMapper::toDTO);
+    }
+
+    // Método para obtener todos los posts con paginación (si es necesario)
+    public Page<PostDTO> getAllPostDTOPaginated(int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+        Page<Post> postPage = PostBD.findAll(pageable);
+        return postPage.map(PostMapper::toDTO);
     }
 }
