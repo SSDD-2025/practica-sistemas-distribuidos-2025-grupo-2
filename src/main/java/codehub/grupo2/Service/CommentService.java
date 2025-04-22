@@ -17,12 +17,21 @@ import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Dto.CommentDTO;
 import codehub.grupo2.Dto.CommentMapper;
+import codehub.grupo2.Dto.PostDTO;
+import codehub.grupo2.Dto.PostMapper;
+import codehub.grupo2.Dto.TopicMapper;
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Dto.UserNameMapper;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CommentService {
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private PostMapper postMapper;
 
     @Autowired
     private UserRepository userBD;
@@ -32,6 +41,9 @@ public class CommentService {
 
     @Autowired
     private CommentMapper commentMapper;
+
+    @Autowired
+    private TopicMapper topicMapper;
      
     @Autowired
     private CommentRepository CommentBD;
@@ -126,6 +138,27 @@ public class CommentService {
         post.getComments().add(savedComment);
         PostBD.save(post);
         return commentMapper.toDTO(savedComment);
-}
+    }
+
+    public List<CommentDTO> getCommentsByPostId(Long postId) {
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        return comments.stream()
+            .map(comment -> new CommentDTO(
+                comment.getId(),
+                comment.getDate(),
+                comment.getText(),
+                userNameMapper.toDTO(comment.getUser()),
+                new PostDTO(
+                    comment.getPost().getId(),
+                    comment.getPost().getDate(),
+                    comment.getPost().getTitle(),
+                    comment.getPost().getText(),
+                    userNameMapper.toDTO(comment.getPost().getUsername()),
+                    null,
+                    topicMapper.toDTO(comment.getPost().getTopic())
+                )
+            ))
+            .collect(Collectors.toList());
+    }
     
 }

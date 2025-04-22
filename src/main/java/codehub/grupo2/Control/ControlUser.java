@@ -92,48 +92,48 @@ public class ControlUser {
     }
 
     @GetMapping("/acc")
-    public String GoAccGet(Model model, HttpSession session, HttpServletRequest request) throws SQLException, IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/home";
-        }
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserNameDTO user = userDetails.getUserNameDTO();
-        if (user == null) {
-            return "redirect:/home";
-        }
-        String profilePictureBase64 = userService.convertBlobToBase64(userService.getUserImage(user.id()));
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        model.addAttribute("csrfToken", token);
-        model.addAttribute("profilePicture", profilePictureBase64 != null ? profilePictureBase64 : "default-profile-picture.png"); 
-        model.addAttribute("user", user);
-        model.addAttribute("posts", user.posts());
-        Boolean showPassword = (Boolean) session.getAttribute("showPassword");
-        model.addAttribute("showPassword", showPassword != null ? showPassword : false);
-        model.addAttribute("rawPassword", "Pass not available");
-        return "myProfile";
+public String GoAccGet(Model model, HttpSession session, HttpServletRequest request) throws SQLException, IOException {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()) {
+        return "redirect:/home";
     }
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    UserNameDTO user = userDetails.getUserNameDTO();
+    if (user == null) {
+        return "redirect:/home";
+    }
+    String profilePictureBase64 = userService.convertBlobToBase64(userService.getUserImage(user.id()));
+    CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+    model.addAttribute("csrfToken", token);
+    model.addAttribute("profilePicture", profilePictureBase64 != null ? profilePictureBase64 : "default-profile-picture.png");
+    model.addAttribute("user", user);
+    model.addAttribute("posts", userService.getUserPosts(user.id())); 
+    Boolean showPassword = (Boolean) session.getAttribute("showPassword");
+    model.addAttribute("showPassword", showPassword != null ? showPassword : false);
+    model.addAttribute("rawPassword", "Pass not available");
+    return "myProfile";
+}
 
-    @PostMapping("/acc")
-    public String GoAccPost(Model model, HttpServletRequest request) throws SQLException, IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/home";
-        }
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserNameDTO user = userDetails.getUserNameDTO();
-        if (user == null) {
-            return "redirect:/home";
-        }
-        String profilePictureBase64 = userService.convertBlobToBase64(userService.getUserImage(user.id()));
-        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        model.addAttribute("csrfToken", token);
-        model.addAttribute("profilePicture", profilePictureBase64 != null ? profilePictureBase64 : "default-profile-picture.png"); //
-        model.addAttribute("user", user);
-        model.addAttribute("posts", user.posts());
-        model.addAttribute("rawPassword", "Pass not available");
-        return "myProfile";
+@PostMapping("/acc")
+public String GoAccPost(Model model, HttpServletRequest request) throws SQLException, IOException {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()) {
+        return "redirect:/home";
     }
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    UserNameDTO user = userDetails.getUserNameDTO();
+    if (user == null) {
+        return "redirect:/home";
+    }
+    String profilePictureBase64 = userService.convertBlobToBase64(userService.getUserImage(user.id()));
+    CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+    model.addAttribute("csrfToken", token);
+    model.addAttribute("profilePicture", profilePictureBase64 != null ? profilePictureBase64 : "default-profile-picture.png");
+    model.addAttribute("user", user);
+    model.addAttribute("posts", userService.getUserPosts(user.id())); 
+    model.addAttribute("rawPassword", "Pass not available");
+    return "myProfile";
+}
         
     @PostMapping("/showPassword")
     public String showPassword(Model model, HttpSession session, HttpServletRequest request) {

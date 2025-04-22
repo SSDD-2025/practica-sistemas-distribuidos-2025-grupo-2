@@ -10,20 +10,26 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import javax.sql.rowset.serial.SerialException;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource; // Importación correcta
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codehub.grupo2.DB.PostRepository;
 import codehub.grupo2.DB.UserRepository;
+import codehub.grupo2.DB.Entity.Post;
 import codehub.grupo2.DB.Entity.UserName;
+import codehub.grupo2.Dto.PostDTO;
+import codehub.grupo2.Dto.TopicMapper;
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Dto.UserNameMapper;
 
@@ -42,6 +48,12 @@ public class UserService {
     @Autowired
     @Lazy
     private CommentService commentService;
+
+    @Autowired
+    private TopicMapper topicMapper;
+
+    @Autowired
+    private PostRepository postRepository;
 
     public UserNameDTO getUser(String username) {
         UserName user = UserBD.findByUsername(username);
@@ -218,6 +230,22 @@ public class UserService {
         List<UserName> users = UserBD.findAll();
         return userNameMapper.toDTOs(users);
     }
+
+    public Collection<PostDTO> getUserPosts(Long userId) {
+        List<Post> posts = postRepository.findByUserId(userId);
+        return posts.stream()
+            .map(post -> new PostDTO(
+                post.getId(),
+                post.getDate(),
+                post.getTitle(),
+                post.getText(),
+                userNameMapper.toDTO(post.getUsername()),
+                commentService.getCommentsByPostId(post.getId()),
+                topicMapper.toDTO(post.getTopic())
+            ))
+            .collect(Collectors.toList());
+    }
+    
 
 
 }
