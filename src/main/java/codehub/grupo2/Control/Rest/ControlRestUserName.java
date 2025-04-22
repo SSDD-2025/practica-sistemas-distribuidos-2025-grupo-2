@@ -2,9 +2,11 @@ package codehub.grupo2.Control.Rest;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +20,7 @@ import codehub.grupo2.Security.jwt.TokenType;
 import codehub.grupo2.Service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 
 
@@ -79,7 +82,35 @@ public class ControlRestUserName {
 
 		return userService.getAllUsersDTO();
 	}
+    @PutMapping("/{id}")
+    public ResponseEntity<?> replaceUserName(@PathVariable Long id, @Valid @RequestBody UserNameDTO updatedUserDTO) {
+        if (updatedUserDTO == null) {
+            return ResponseEntity.badRequest().body("El cuerpo de la solicitud no puede estar vacío");
+        }
+        if (updatedUserDTO.id() != null && !id.equals(updatedUserDTO.id())) {
+            return ResponseEntity.badRequest().body("El ID en la URL no coincide con el ID en el cuerpo");
+        }
 
+        try {
+            int result = userService.editUser(
+                updatedUserDTO.username(),
+                updatedUserDTO.password(),
+                updatedUserDTO.email(),
+                id
+            );
+
+            if (result == 0) {
+
+                UserNameDTO updatedUser = userService.getUserByIdDTO(id);
+                return ResponseEntity.ok(updatedUser);
+            } else {
+                return ResponseEntity.badRequest().body("No se pudo actualizar el usuario: username o email ya en uso, o validación fallida");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error al procesar la solicitud: " + e.getMessage());
+        }
+    }
 	@GetMapping("/{id}")
 	public UserNameDTO getUser(@PathVariable long id) {
 		return userService.getUserByIdDTO(id); 

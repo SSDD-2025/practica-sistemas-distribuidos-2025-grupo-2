@@ -64,35 +64,46 @@ public class APIUserService {
             UserBD.delete(user);
         }
     }
+    @Transactional
     public int editUser(String username, String password, String email, Long id) {
         Optional<UserName> currentUser = UserBD.findById(id);
         if (currentUser.isEmpty()) {
             return 1;
         }
         UserName user = currentUser.get();
+
+        // Validar que el username no esté en uso por otro usuario
         UserName userN = UserBD.findByUsername(username);
         if (userN != null && !userN.getId().equals(id)) {
             return 1;
         }
+
+        // Validar que el email no esté en uso por otro usuario
         UserName userE = UserBD.findByEmail(email);
         if (userE != null && !userE.getId().equals(id)) {
             return 1;
         }
+
+        // Validar el formato del email
         if (!email.contains("@")) {
             return 1;
         }
-        if (!password.isEmpty()) {
+
+        // Actualizar la contraseña solo si se proporciona
+        if (password != null && !password.isEmpty()) {
             if (password.length() < 12) {
                 return 1;
             }
-            user.setPassword(passwordEncoder.encode(password)); 
-            user.setRawPassword(password); 
+            user.setPassword(passwordEncoder.encode(password));
+            // Eliminado: user.setRawPassword(password); // No almacenar contraseñas en texto plano
         }
+
         user.setEmail(email);
         user.setUsername(username);
         UserBD.save(user);
         return 0;
     }
+
     public String registerUsername(String name, String password, String email) {
         if (password.length() < 12) {
             return "Password must have at least 12 characters";
