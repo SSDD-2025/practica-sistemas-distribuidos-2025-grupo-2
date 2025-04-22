@@ -33,13 +33,11 @@ public class ControlRestPost {
 
     @PostMapping("/")
     public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO PostDTO) {
-
-        PostService.registerPostDTO(PostDTO.user(), PostDTO.title(), PostDTO.text(), PostDTO.topic());
-        PostDTO = PostService.getPostByIdDTO(PostDTO.id());
-
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(PostDTO.id()).toUri();
-
-        return ResponseEntity.created(location).body(PostDTO);
+        PostDTO createdPost = PostService.registerPostDTO(PostDTO.user(), PostDTO.title(), PostDTO.text(), PostDTO.topic());
+        
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(createdPost.id()).toUri();
+        
+        return ResponseEntity.created(location).body(createdPost);
     }
 
     @DeleteMapping("/{id}")

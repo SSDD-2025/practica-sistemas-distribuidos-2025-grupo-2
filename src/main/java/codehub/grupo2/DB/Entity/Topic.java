@@ -40,4 +40,13 @@ public class Topic {
     public String toString(){
         return this.topicName;
     }
+
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
 }

@@ -27,7 +27,7 @@ public class UserName{
 
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "user")
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> rol;
@@ -40,7 +40,6 @@ public class UserName{
         this.password = password;
         this.email = email;
         this.profilePicture = null;
-        this.posts = new ArrayList<>();
         this.rol = new ArrayList<>();
         this.rol.add("USER");
     }

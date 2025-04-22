@@ -29,10 +29,9 @@ public class UserInitializer implements CommandLineRunner {
         if (userRepository.findByUsername("admin") == null) {
             UserName admin = new UserName();
             admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("123451234512345")); //encode this password on application.properties
+            admin.setPassword(adminPassword);
             admin.setEmail("admin@localhost.com");
             admin.setProfilePicture(null);
-            admin.setPosts(Collections.emptyList());
             admin.setRoles(Collections.singletonList("ADMIN"));
             admin.setRawPassword(null);
             userRepository.save(admin);
@@ -44,7 +43,6 @@ public class UserInitializer implements CommandLineRunner {
             sonaca.setPassword(passwordEncoder.encode("123451234512345"));
             sonaca.setEmail("sonaca@localhost.com");
             sonaca.setProfilePicture(null);
-            sonaca.setPosts(Collections.emptyList());
             sonaca.setRoles(Collections.singletonList("USER"));
             sonaca.setRawPassword("123451234512345");
             userRepository.save(sonaca);
@@ -56,7 +54,6 @@ public class UserInitializer implements CommandLineRunner {
             prueba.setPassword(passwordEncoder.encode("123451234512345"));
             prueba.setEmail("prueba@localhost.com");
             prueba.setProfilePicture(null);
-            prueba.setPosts(Collections.emptyList());
             prueba.setRoles(Collections.singletonList("USER"));
             prueba.setRawPassword("123451234512345");
             userRepository.save(prueba);

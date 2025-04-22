@@ -1,5 +1,6 @@
 package codehub.grupo2.Service.APIService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,24 +42,34 @@ public class APIPostService {
         }
     }
 
-    public void registerPostDTO(UserName user, String title, String text, Topic topic) {
-        if (text.length() > 240) {
-            throw new IllegalArgumentException("Too many characters in the text.");
-        }
-        Post existingPost = PostBD.findByTitle(title);
-        if (existingPost != null && existingPost.getTopic().equals(topic)) {
-            throw new IllegalArgumentException("The post is already associated with this topic.");
-        }
-        if (topic.getId() == null) {
-            TopicBD.save(topic); 
-        }
-        Post post = new Post(user, title, text, topic);
-        PostBD.save(post);
-        user.getPosts().add(post);
-        UserBD.save(user);
-        topic.getPosts().add(post);
+public PostDTO registerPostDTO(UserName user, String title, String text, Topic topic) {
+    if (text.length() > 240) {
+        throw new IllegalArgumentException("Too many characters in the text.");
+    }
+    Post existingPost = PostBD.findByTitle(title);
+    if (existingPost != null && existingPost.getTopic().equals(topic)) {
+        throw new IllegalArgumentException("The post is already associated with this topic.");
+    }
+    if (topic.getId() == null) {
         TopicBD.save(topic);
     }
+    Post post = new Post(user, title, text, topic);
+    Post savedPost = PostBD.save(post);
+
+    if (user.getPosts() == null) {
+        user.setPosts(new ArrayList<>());
+    }
+    user.getPosts().add(savedPost);
+    UserBD.save(user);
+
+    if (topic.getPosts() == null) {
+        topic.setPosts(new ArrayList<>());
+    }
+    topic.getPosts().add(savedPost);
+    TopicBD.save(topic);
+
+    return postMapper.toDTO(savedPost);
+}
 
     public PostDTO deletePostDTO(String title) {
         Post post = PostBD.findByTitle(title);
