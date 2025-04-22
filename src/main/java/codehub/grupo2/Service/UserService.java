@@ -193,19 +193,6 @@ public class UserService {
         return userOptional.get().getProfilePicture();
     }
 
-    /*public UserNameDTO replaceUserImage(long id, UserNameDTO updatedUserDTO) throws SQLException {
-        UserName oldUser = UserBD.findById(id).orElseThrow();
-        UserName updatedUser = userNameMapper.toDomain(updatedUserDTO);
-        updatedUser.setId(id);
-        if (oldUser.getProfilePicture() != null) {
-        updatedUser.setProfilePicture(BlobProxy.generateProxy(
-        oldUser.getProfilePicture().getBinaryStream(),
-        oldUser.getProfilePicture().length()));
-        updatedUser.setProfilePicture(oldUser.getProfilePicture());
-        }
-        UserBD.save(updatedUser);
-        return userNameMapper.toDTO(updatedUser);
-    }*/
 
     public void replaceUserImage(long id, InputStream inputStream, long size) {
         UserName user = UserBD.findById(id).orElseThrow();

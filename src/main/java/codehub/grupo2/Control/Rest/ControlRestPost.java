@@ -3,6 +3,7 @@ package codehub.grupo2.Control.Rest;
 import java.net.URI;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,8 @@ public class ControlRestPost {
 
     @Autowired
     private PostService PostService;
+
+   
 
     @Operation(summary = "Get all posts")
     @ApiResponse(responseCode = "200", description = "Posts retrieved successfully")
@@ -48,12 +51,12 @@ public class ControlRestPost {
     @PostMapping("/")
     public ResponseEntity<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
         if (postDTO == null || postDTO.user() == null || postDTO.title() == null || postDTO.text() == null || postDTO.topic() == null) {
-            throw new IllegalArgumentException("El PostDTO y sus campos requeridos no pueden ser nulos");
+            throw new IllegalArgumentException("The PostDTO and its required fields must not be null");
         }
 
         PostDTO createdPost = PostService.registerPostDTO(postDTO.user(), postDTO.title(), postDTO.text(), postDTO.topic());
         if (createdPost == null) {
-            throw new IllegalStateException("No se pudo crear la publicación");
+            throw new IllegalStateException("Failed to create the post");
         }
 
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(createdPost.id()).toUri();

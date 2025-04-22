@@ -38,6 +38,7 @@ public class UserInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        // Crear usuarios (sin cambios)
         if (userRepository.findByUsername("admin") == null) {
             UserName admin = new UserName();
             admin.setUsername("admin");
@@ -61,14 +62,14 @@ public class UserInitializer implements CommandLineRunner {
         }
 
         if (userRepository.findByUsername("Prueba") == null) {
-            UserName prueba = new UserName();
-            prueba.setUsername("Prueba");
-            prueba.setPassword(passwordEncoder.encode("123451234512345"));
-            prueba.setEmail("prueba@localhost.com");
-            prueba.setProfilePicture(null);
-            prueba.setRoles(Collections.singletonList("USER"));
-            prueba.setRawPassword("123451234512345");
-            userRepository.save(prueba);
+            UserName test = new UserName();
+            test.setUsername("UserTest");
+            test.setPassword(passwordEncoder.encode("123451234512345"));
+            test.setEmail("usertest@localhost.com");
+            test.setProfilePicture(null);
+            test.setRoles(Collections.singletonList("USER"));
+            test.setRawPassword("123451234512345");
+            userRepository.save(test);
         }
 
         if (userRepository.findByUsername("Tester") == null) {
@@ -82,7 +83,7 @@ public class UserInitializer implements CommandLineRunner {
             userRepository.save(tester);
         }
 
-        // Crear 10 topics
+        // Crear 10 topics en inglés
         String[] topicNames = {
             "Java", "Python", "Web Development", "Database", "Cloud Computing",
             "Machine Learning", "Cybersecurity", "Mobile Apps", "DevOps", "AI"
@@ -94,22 +95,23 @@ public class UserInitializer implements CommandLineRunner {
             }
         }
 
+        // Crear 15 posts en inglés
         String[][] posts = {
-            {"Introducción a Java", "Explorando las bases de Java.", "Java", "Sonaca"},
-            {"Python para principiantes", "Cómo empezar con Python.", "Python", "Prueba"},
-            {"Creando una web con HTML", "Guía básica de HTML y CSS.", "Web Development", "Tester"},
-            {"Optimizando bases de datos", "Consejos para mejorar el rendimiento.", "Database", "Sonaca"},
-            {"AWS vs Azure", "Comparativa de servicios en la nube.", "Cloud Computing", "Prueba"},
-            {"Machine Learning en Python", "Usando scikit-learn para ML.", "Machine Learning", "Tester"},
-            {"Seguridad en aplicaciones", "Cómo proteger tus apps.", "Cybersecurity", "Sonaca"},
-            {"Desarrollo de apps Android", "Primeros pasos con Android Studio.", "Mobile Apps", "Prueba"},
-            {"CI/CD con Jenkins", "Automatizando despliegues.", "DevOps", "Tester"},
-            {"Introducción a la IA", "Conceptos básicos de inteligencia artificial.", "AI", "Sonaca"},
-            {"Java avanzado", "Programación funcional en Java.", "Java", "Prueba"},
-            {"APIs con Flask", "Creando APIs REST con Python.", "Python", "Tester"},
-            {"Diseño responsivo", "Técnicas para web adaptable.", "Web Development", "Sonaca"},
-            {"SQL vs NoSQL", "Diferencias y casos de uso.", "Database", "Prueba"},
-            {"Deep Learning con TensorFlow", "Redes neuronales profundas.", "Machine Learning", "Tester"}
+            {"Introduction to Java", "Exploring the basics of Java programming.", "Java", "Sonaca"},
+            {"Python for Beginners", "How to get started with Python.", "Python", "UserTest"},
+            {"Building a Website with HTML", "A beginner's guide to HTML and CSS.", "Web Development", "Tester"},
+            {"Optimizing Databases", "Tips for improving database performance.", "Database", "Sonaca"},
+            {"AWS vs Azure", "Comparing cloud services.", "Cloud Computing", "UserTest"},
+            {"Machine Learning with Python", "Using scikit-learn for machine learning.", "Machine Learning", "Tester"},
+            {"Application Security", "How to secure your applications.", "Cybersecurity", "Sonaca"},
+            {"Developing Android Apps", "Getting started with Android Studio.", "Mobile Apps", "UserTest"},
+            {"CI/CD with Jenkins", "Automating deployments with Jenkins.", "DevOps", "Tester"},
+            {"Introduction to AI", "Basic concepts of artificial intelligence.", "AI", "Sonaca"},
+            {"Advanced Java", "Functional programming in Java.", "Java", "UserTest"},
+            {"APIs with Flask", "Building REST APIs with Python Flask.", "Python", "Tester"},
+            {"Responsive Web Design", "Techniques for adaptive web design.", "Web Development", "Sonaca"},
+            {"SQL vs NoSQL", "Differences and use cases.", "Database", "UserTest"},
+            {"Deep Learning with TensorFlow", "Building deep neural networks.", "Machine Learning", "Tester"}
         };
 
         for (String[] postData : posts) {

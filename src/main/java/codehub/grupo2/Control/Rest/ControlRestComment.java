@@ -46,12 +46,12 @@ public class ControlRestComment {
    @PostMapping("/")
     public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody CommentDTO commentDTO) {
         if (commentDTO == null) {
-            throw new IllegalArgumentException("El CommentDTO no puede ser nulo");
+            throw new IllegalArgumentException("The CommentDTO cannot be null");
         }
 
         CommentDTO createdComment = CommentService.registerCommentDTO(commentDTO);
         if (createdComment == null) {
-            throw new IllegalStateException("No se pudo crear el comentario");
+            throw new IllegalStateException("The comment could not be created");
         }
 
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(createdComment.id()).toUri();
