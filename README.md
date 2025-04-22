@@ -207,4 +207,4 @@ Esta es la pantalla que aparece cuando entras al menú principal, desde donde se
  -PostService: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Service/PostService.java
 
 Entrega 2 (presentación provisional)
-![Descripción](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/READMEDATA/DDC.svg)
+![Descripción](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/READMEDATA/Diagrama de clases entrega 2.drawio (1).png)
