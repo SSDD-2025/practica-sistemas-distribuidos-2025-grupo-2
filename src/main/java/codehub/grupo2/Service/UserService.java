@@ -2,15 +2,20 @@ package codehub.grupo2.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.sql.rowset.serial.SerialException;
+
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,8 +24,7 @@ import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Dto.UserNameMapper;
-import codehub.grupo2.Security.jwt.LoginRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
 
 @Service
 public class UserService {
@@ -160,4 +164,62 @@ public class UserService {
         user.setProfilePicture(null);
         UserBD.save(user);
     }
+
+    public void createUserImage(long id, URI location, InputStream inputStream, long size) {
+        UserName user = UserBD.findById(id).orElseThrow();
+        user.setProfilePicture(BlobProxy.generateProxy(inputStream, size));
+        UserBD.save(user);
+    }
+
+    @Transactional
+    public void deleteUserDTO(String username) {
+        UserName user = UserBD.findByUsername(username);
+        if (user != null) {
+            commentService.deleteCommentsByUser(user.getId());
+            UserBD.delete(user);
+        }
+    }
+
+    public Resource getUserImage(long id) throws SQLException {
+        UserName user = UserBD.findById(id).orElseThrow();
+        if (user.getProfilePicture() != null) {
+        return (Resource) new InputStreamResource(user.getProfilePicture().getBinaryStream());
+        } else {
+        throw new NoSuchElementException();
+        }
+    }
+
+    /*public UserNameDTO replaceUserImage(long id, UserNameDTO updatedUserDTO) throws SQLException {
+        UserName oldUser = UserBD.findById(id).orElseThrow();
+        UserName updatedUser = userNameMapper.toDomain(updatedUserDTO);
+        updatedUser.setId(id);
+        if (oldUser.getProfilePicture() != null) {
+        updatedUser.setProfilePicture(BlobProxy.generateProxy(
+        oldUser.getProfilePicture().getBinaryStream(),
+        oldUser.getProfilePicture().length()));
+        updatedUser.setProfilePicture(oldUser.getProfilePicture());
+        }
+        UserBD.save(updatedUser);
+        return userNameMapper.toDTO(updatedUser);
+    }*/
+
+    public void replaceUserImage(long id, InputStream inputStream, long size) {
+        UserName user = UserBD.findById(id).orElseThrow();
+        if(user.getProfilePicture() == null){
+        throw new NoSuchElementException();
+        }
+        user.setProfilePicture(BlobProxy.generateProxy(inputStream, size));
+        UserBD.save(user);
+    }
+
+
+    public void deleteUserImage(long id) {
+        UserName user = UserBD.findById(id).orElseThrow();
+        if(user.getProfilePicture() == null){
+        throw new NoSuchElementException();
+        }
+        user.setProfilePicture(null);
+        UserBD.save(user);
+    }
+
 }

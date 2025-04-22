@@ -38,7 +38,7 @@ public class ControlRestComment {
         }
 
         try {
-            CommentDTO result = CommentService.registerCommentDTO(commentDTO); // Cambiado de String a CommentDTO
+            CommentDTO result = CommentService.registerCommentDTO(commentDTO); 
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

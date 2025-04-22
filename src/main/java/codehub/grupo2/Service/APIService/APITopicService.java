@@ -51,7 +51,7 @@ public class APITopicService {
    public TopicDTO deleteTopicDTO(long id) {
     Topic topic = TopicBD.findById(id).get();
 
-    // Creamos una copia segura de los posts
+    
     List<Post> postsToDelete = new ArrayList<>(topic.getPosts());
 
     for (Post post : postsToDelete) {

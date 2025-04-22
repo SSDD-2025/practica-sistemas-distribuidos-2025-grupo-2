@@ -104,6 +104,9 @@ public class UserName{
     public void setProfilePicture(Blob profilePicture) {
         this.profilePicture = profilePicture;
     }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Blob getProfilePicture() {
         return this.profilePicture;

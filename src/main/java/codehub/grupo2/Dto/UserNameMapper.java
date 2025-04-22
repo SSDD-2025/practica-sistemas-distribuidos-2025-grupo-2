@@ -14,7 +14,10 @@ public interface UserNameMapper {
     @Mapping(target = "profilePicture", ignore = true)
     @Mapping(target = "posts", ignore = true)
     
+    UserName toDomain(UserNameDTO user);
+
     UserNameDTO toDTO(UserName user);
 
     Collection<UserNameDTO> toDTOs(List<UserName> users);
+
 }

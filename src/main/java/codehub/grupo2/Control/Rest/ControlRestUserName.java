@@ -6,11 +6,13 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Security.jwt.AuthResponse;
@@ -18,6 +20,8 @@ import codehub.grupo2.Security.jwt.JwtTokenProvider;
 import codehub.grupo2.Security.jwt.LoginRequest;
 import codehub.grupo2.Security.jwt.TokenType;
 import codehub.grupo2.Service.UserService;
+import io.jsonwebtoken.io.IOException;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -30,7 +34,8 @@ public class ControlRestUserName {
 	
 	@Autowired
 	private UserService userService;
-@Autowired
+
+    @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -130,6 +135,36 @@ public class ControlRestUserName {
 	public void deleteUserName(@PathVariable long id) {
         userService.deleteUser(userService.getUserByIdDTO(id).username());
 	}
+
+    @PostMapping("/{id}/image")
+    public ResponseEntity<Object> createUserImage(
+        @PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException, java.io.IOException {
+        URI location = fromCurrentRequest().build().toUri();
+        userService.createUserImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+        return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<Object> getUserImage(@PathVariable long id) throws SQLException, IOException {
+        Resource userImage = userService.getUserImage(id);
+        return ResponseEntity.ok()
+        .header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(userImage);
+    }
+
+    @PutMapping("/{id}/image")
+    public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException, java.io.IOException {
+        userService.replaceUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<Object> deletePostImage(@PathVariable long id) throws IOException {
+        userService.deleteUserImage(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 
 }
 

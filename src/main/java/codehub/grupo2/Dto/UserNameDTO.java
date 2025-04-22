@@ -1,6 +1,7 @@
 package codehub.grupo2.Dto;
 
 import java.util.List;
+import java.sql.Blob;
 
 import codehub.grupo2.DB.Entity.Post;
 
@@ -9,7 +10,7 @@ public record UserNameDTO(
     String username,
     String password,
     String email,
-    boolean profilePicture,
+    Blob profilePicture,
     List<Post> posts,
     List<String> roles) {
 }
