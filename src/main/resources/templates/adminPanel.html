@@ -240,7 +240,7 @@
           <li>
             <p><strong>Username:</strong> {{username}}</p>
             <p><strong>Email:</strong> {{email}}</p>
-            <p><strong>Roles:</strong> {{#rol}}<span>{{.}}</span> {{/rol}}</p>
+            <p><strong>Roles:</strong> {{roles}}</p>
             <form action="/admin/deleteUser" method="post">
                 <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
                 <input type="hidden" name="user" value="{{username}}" />
@@ -265,7 +265,7 @@
             <p><strong>Topic:</strong> {{topic.topicName}}</p>
             <form action="/admin/deletePost" method="post">
                 <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
-                <input type="hidden" name="post" value="{{title}}" />
+                <input type="hidden" name="post" value="{{title}}"/>
                 <button class="delete-button" type="submit">Delete</button>
             </form>
           </li>
