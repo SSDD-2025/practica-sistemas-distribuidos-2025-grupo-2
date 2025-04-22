@@ -2,17 +2,13 @@ package codehub.grupo2.Control.Rest;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import java.net.URI;
-import java.sql.SQLException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Security.jwt.AuthResponse;
@@ -20,28 +16,32 @@ import codehub.grupo2.Security.jwt.JwtTokenProvider;
 import codehub.grupo2.Security.jwt.LoginRequest;
 import codehub.grupo2.Security.jwt.TokenType;
 import codehub.grupo2.Service.UserService;
-import io.jsonwebtoken.io.IOException;
-import jakarta.annotation.Resource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 
 
 
 @RestController
-@RequestMapping("/api/UserNames")
+@RequestMapping("/api/UserName")
 public class ControlRestUserName {
 	
 	@Autowired
 	private UserService userService;
-
-    @Autowired
+@Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
 
+    @Operation(summary = "Login a user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User logged in successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid username or password")
+    })
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         Boolean isAuthenticated = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
@@ -78,49 +78,33 @@ public class ControlRestUserName {
     }
 
 
+    @Operation(summary = "Get a user logged")
+    @ApiResponse(responseCode = "200", description = "User found")
 	@GetMapping("/acc")
 	public UserNameDTO me() {
 		return userService.getLoggedUserDTO();
 	}
+
+    @Operation(summary = "Get all users")
+    @ApiResponse(responseCode = "200", description = "Users retrieved successfully")
     @GetMapping("/")
 	public Collection<UserNameDTO> getUserNames() {
 
 		return userService.getAllUsersDTO();
 	}
-    @PutMapping("/{id}")
-    public ResponseEntity<?> replaceUserName(@PathVariable Long id, @Valid @RequestBody UserNameDTO updatedUserDTO) {
-        if (updatedUserDTO == null) {
-            return ResponseEntity.badRequest().body("El cuerpo de la solicitud no puede estar vacío");
-        }
-        if (updatedUserDTO.id() != null && !id.equals(updatedUserDTO.id())) {
-            return ResponseEntity.badRequest().body("El ID en la URL no coincide con el ID en el cuerpo");
-        }
 
-        try {
-            int result = userService.editUser(
-                updatedUserDTO.username(),
-                updatedUserDTO.password(),
-                updatedUserDTO.email(),
-                id
-            );
-
-            if (result == 0) {
-
-                UserNameDTO updatedUser = userService.getUserByIdDTO(id);
-                return ResponseEntity.ok(updatedUser);
-            } else {
-                return ResponseEntity.badRequest().body("No se pudo actualizar el usuario: username o email ya en uso, o validación fallida");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error al procesar la solicitud: " + e.getMessage());
-        }
-    }
+    @Operation(summary = "Get a user by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User found"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
 	@GetMapping("/{id}")
 	public UserNameDTO getUser(@PathVariable long id) {
 		return userService.getUserByIdDTO(id); 
 	}
 
+    @Operation(summary = "Create a new user")
+    @ApiResponse(responseCode = "201", description = "User created successfully")
 	@PostMapping("/")
 	public ResponseEntity<UserNameDTO> createUserName(@RequestBody UserNameDTO UserNameDTO) {
 
@@ -131,40 +115,15 @@ public class ControlRestUserName {
 		return ResponseEntity.created(location).body(UserNameDTO);
 	}
 
+    @Operation(summary = "Delete a user by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
 	@DeleteMapping("/{id}")
 	public void deleteUserName(@PathVariable long id) {
         userService.deleteUser(userService.getUserByIdDTO(id).username());
 	}
-
-    @PostMapping("/{id}/image")
-    public ResponseEntity<Object> createUserImage(
-        @PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException, java.io.IOException {
-        URI location = fromCurrentRequest().build().toUri();
-        userService.createUserImage(id, location, imageFile.getInputStream(), imageFile.getSize());
-        return ResponseEntity.created(location).build();
-    }
-
-    @GetMapping("/{id}/image")
-    public ResponseEntity<Object> getUserImage(@PathVariable long id) throws SQLException, IOException {
-        Resource userImage = userService.getUserImage(id);
-        return ResponseEntity.ok()
-        .header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(userImage);
-    }
-
-    @PutMapping("/{id}/image")
-    public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException, java.io.IOException {
-        userService.replaceUserImage(id, imageFile.getInputStream(), imageFile.getSize());
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{id}/image")
-    public ResponseEntity<Object> deletePostImage(@PathVariable long id) throws IOException {
-        userService.deleteUserImage(id);
-        return ResponseEntity.noContent().build();
-    }
-
-
-
 
 }
 
