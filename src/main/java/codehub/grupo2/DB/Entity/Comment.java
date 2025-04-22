@@ -34,6 +34,10 @@ public class Comment {
         return this.user;
     }
 
+    public UserName getUser() {
+        return this.user;
+    }
+
     public LocalDate getDate() {
         return this.date;
     }

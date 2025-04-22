@@ -25,7 +25,7 @@
                 <h2>Comments</h2>
                 {{#comments}}
                     <div class="comment">
-                        <p><strong>{{comment.username.username}}:</strong> {{comment.text}}</p>
+                        <p><strong>{{comment.user.username}}:</strong> {{comment.text}}</p>
                         {{#isOwner}}
                         <form action="/deleteComment" method="post" style="display:inline;">
                             <input type="hidden" name="_csrf" value="{{csrfToken.token}}"><input type="hidden" name="_csrf" value="{{csrfToken.token}}">

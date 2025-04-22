@@ -105,21 +105,21 @@ public class CommentService {
     @Transactional
     public CommentDTO registerCommentDTO(CommentDTO commentDTO) {
         if (commentDTO.text() == null) {
-            throw new IllegalArgumentException("El texto del comentario no puede ser nulo");
+            throw new IllegalArgumentException("The text of the comment cant be null");
         }
         if (commentDTO.user() == null || commentDTO.user().id() == null) {
-            throw new IllegalArgumentException("El usuario no puede ser nulo");
+            throw new IllegalArgumentException("The user can't be null");
         }
         if (commentDTO.post() == null || commentDTO.post().id() == null) {
-            throw new IllegalArgumentException("El post no puede ser nulo");
+            throw new IllegalArgumentException("The post can't be null");
         }
         if (commentDTO.text().length() > 140) {
-            throw new IllegalArgumentException("Número de caracteres excedido");
+            throw new IllegalArgumentException("Number of caracter ist exceded");
         }
         UserName user = userBD.findById(commentDTO.user().id())
-        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        .orElseThrow(() -> new RuntimeException("User can't be found"));
         Post post = PostBD.findById(commentDTO.post().id())
-        .orElseThrow(() -> new RuntimeException("Post no encontrado"));
+        .orElseThrow(() -> new RuntimeException("Post can't be found"));
        
         Comment comment = new Comment(user, commentDTO.text(), post);
         comment.setText(commentDTO.text());

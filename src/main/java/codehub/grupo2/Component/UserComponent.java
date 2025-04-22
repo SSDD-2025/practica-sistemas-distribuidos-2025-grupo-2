@@ -11,7 +11,6 @@ import codehub.grupo2.Dto.UserNameDTO;
 @SessionScope
 public class UserComponent {
     
-@Autowired
 private UserNameDTO user;
 
 public UserNameDTO getUser() {
