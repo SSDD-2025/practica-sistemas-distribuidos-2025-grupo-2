@@ -53,4 +53,15 @@ public class Comment {
     public Long getId() {
         return this.id;
     }
+    public void setUsername(UserName user) {
+        this.user = user;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
 }
