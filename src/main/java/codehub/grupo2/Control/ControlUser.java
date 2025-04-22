@@ -273,4 +273,13 @@ public String GoAccPost(Model model, HttpServletRequest request) throws SQLExcep
         }
         return "home";
     }
+
+    @GetMapping("/accessDenied")
+    public String showAccessDenied(Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (token != null) {
+            model.addAttribute("csrfToken", token);
+        }
+        return "accessDenied";
+    }
 }

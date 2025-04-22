@@ -56,30 +56,33 @@ public class Security {
         http.authenticationProvider(authenticationProvider());
     
         http
-                .securityMatcher("/api/**")
-                .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
+            .securityMatcher("/api/**")
+            .exceptionHandling(handling -> handling
+                .authenticationEntryPoint(unauthorizedHandlerJwt)
+                .accessDeniedPage("/accessDenied") 
+            );
     
         http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/api/UserNames/acc").hasAnyRole( "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/UserNames/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/UserNames/").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/UserNames/").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/UserNames/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/Comments/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/Comments/").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/Comments/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/Posts/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/Posts/").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/Posts/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/Topics/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/Topics/").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/Topics/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/v3/api-docs*/**").permitAll()
-                        .requestMatchers("/swagger-ui.html").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .anyRequest().permitAll()
-                );
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(HttpMethod.GET, "/api/UserNames/acc").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/UserNames/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/UserNames/").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/UserNames/").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/UserNames/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/Comments/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/Comments/").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/Comments/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/Posts/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/Posts/").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/Posts/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/Topics/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/Topics/").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/Topics/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/v3/api-docs*/**").permitAll()
+                .requestMatchers("/swagger-ui.html").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .anyRequest().permitAll()
+            );
     
         http.formLogin(formLogin -> formLogin.disable());
         http.csrf(csrf -> csrf.disable());
@@ -90,23 +93,25 @@ public class Security {
         return http.build();
     }
 
-
     @Bean
     @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authenticationProvider());
     
         http
+            .exceptionHandling(handling -> handling
+                .accessDeniedPage("/accessDenied")
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/init", "/login", "/register", "/topic", "/topic/{id}", 
                     "/post", "/showMoreP/{id}", "/home", "/css/**", "/js/**", "/images/**", 
-                    "/favicon.ico", "/error", "/adminLogin", "/guest","/logout").permitAll()
+                    "/favicon.ico", "/error", "/adminLogin", "/guest", "/logout", "/accessDenied").permitAll()
                 .requestMatchers("/deleteTopic", "/admin/deleteTopic", "/admin/deletePost", "/admin/deleteComment", "/admin/deleteUser").hasRole("ADMIN")
                 .requestMatchers("/acc", "/showPassword", "/hidePassword", "/deleteUserConfirmation", 
                     "/deleteUserDefinitive", "/editProfile", "/updateProfile", "/SonacaWasHere", 
                     "/uploadProfilePicture", "/addTopic", "/addPost", "/createComment", 
-                    "/deleteProfilePicture","/deletePost","/init/logout", 
-                    "/deleteComment","/search/**").hasRole("USER")
+                    "/deleteProfilePicture", "/deletePost", "/init/logout", 
+                    "/deleteComment", "/search/**").hasRole("USER")
                 .requestMatchers("/adminPanel", "/adminPanel/**").hasRole("ADMIN")
                 .requestMatchers("/v3/api-docs*/**").permitAll()
                 .requestMatchers("/swagger-ui.html").permitAll()
