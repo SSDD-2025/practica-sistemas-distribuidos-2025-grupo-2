@@ -1,15 +1,21 @@
 package codehub.grupo2.Control.Rest;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
+import java.io.IOException;
 import java.net.URI;
+import org.springframework.http.HttpHeaders;
 import java.sql.SQLException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.mysql.cj.jdbc.Blob;
 
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Security.jwt.AuthResponse;
@@ -20,6 +26,7 @@ import codehub.grupo2.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -130,6 +137,46 @@ public class ControlRestUserName {
 
 		 userService.editUser(updatedUserDTO, id);
          return updatedUserDTO;
+	}
+    @PostMapping("/{id}/image")
+	public ResponseEntity<Object> createBookImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+			throws IOException {
+
+		userService.createUserImage(id, fromCurrentRequest().build().toUri(), imageFile.getInputStream(), imageFile.getSize());
+
+		URI location = fromCurrentRequest().build().toUri();
+
+		return ResponseEntity.created(location).build();
+	}
+
+	
+	@GetMapping("/{id}/image")
+    public ResponseEntity<Object> getBookImage(@PathVariable long id) throws SQLException, IOException {
+        Blob imageBlob = userService.getUserImage(id);
+        if (imageBlob == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                .body(image);
+}
+
+	@PutMapping("/{id}/image")
+	public ResponseEntity<Object> replaceBookImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+			throws IOException {
+
+		userService.replaceUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping("/{id}/image")
+	public ResponseEntity<Object> deleteBookImage(@PathVariable long id) throws IOException {
+
+		userService.deleteUserImage(id);
+
+		return ResponseEntity.noContent().build();
 	}
 
 }

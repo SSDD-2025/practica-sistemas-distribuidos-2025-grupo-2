@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.sql.rowset.serial.SerialException;
+import org.springframework.core.io.InputStreamResource;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import codehub.grupo2.DB.UserRepository;
 import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Dto.UserNameDTO;
 import codehub.grupo2.Dto.UserNameMapper;
+import jakarta.annotation.Resource;
 
 @Service
 public class UserService {
@@ -167,13 +169,11 @@ public class UserService {
         }
     }
 
-    public Blob getUserImage(long id) {
-        Optional<UserName> userOptional = UserBD.findById(id);
-        if (userOptional.isEmpty()) {
-            return null;
-        }
-        UserName user = userOptional.get();
-        return user.getProfilePicture();
+public Resource getUserProfilePicture(Long id) throws SQLException {
+        Optional<UserName> user = UserBD.findById(id);
+        Blob profilePicture = user.get().getProfilePicture();
+
+        return new InputStreamResource(profilePicture.getBinaryStream());
     }
 
     /*public UserNameDTO replaceUserImage(long id, UserNameDTO updatedUserDTO) throws SQLException {
