@@ -210,8 +210,8 @@ Esta es la pantalla que aparece cuando entras al menú principal, desde donde se
 # Diagrama de clases y Templates
 ![Descripción](READMEDATA/DiagramaClases2.png)
 
-
-
+# Diagrama de clases y Templates
+![Descripción](READMEDATA/Diagrama.jpeg)
 
 
 # COMMITS MÁS SIGNIFICATIVOS
@@ -239,5 +239,30 @@ Esta es la pantalla que aparece cuando entras al menú principal, desde donde se
  -UserServicers: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Service/UserService.java
 
  -UserController: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Service/PostService.java](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/ControlUser.java)
+
+
+  ## Marc Burgos Ucendo
+
+-Creación de DTO y Mapper: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/6b075ab7137b57949e224fb30d82f904c7691693]
+
+-Borrado API + Solución interfaz: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/202109a7faf554f8802fbd3188b474cc48165572]
+
+-Cambio completo a DTO con Sonaca: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/f30e731699631170499de6360d777edd4c121f75](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/981ba4db41f0f96e1b89b955fdcdd53eff922bb6)
+
+-Arreglo Creacion Api: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/f230af962af7499cef801d97cef6a1f13b957c39]
+
+-Arreglos API + Imágenes: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/47f9c1ec7e0f20434c9cb7777e9420afdb94d5ba]
+
+### Archivos Importantes
+
+ -PostDTO: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Dto/PostDTO.java]
+ 
+ -ControlRestPost: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestPost.java]
+
+ -PostService: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/resources/templates/myProfile.html](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Service/PostService.java)
+
+ -PostMapper: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Service/UserService.java](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Dto/PostMapper.java)
+
+ -ControlRest UserName: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestUserName.java]
 
 
