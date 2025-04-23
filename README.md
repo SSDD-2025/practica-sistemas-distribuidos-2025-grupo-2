@@ -210,6 +210,16 @@ Esta es la pantalla que aparece cuando entras al menú principal, desde donde se
 ![Descripción](READMEDATA/Diagrama.jpeg)
 
 
+
+
+# Permisos de los usuarios
+GUEST: podrá ver topics,posts y comments, pero no realizar ninguna acción sobre ellos.
+ 
+USER: Podrá ver lo que todo lo que quiera además de poder crear topics, posts y comments y borrar los que sean de su autoría.
+
+ADMIN: Podrá borrar todo lo que se encuentre en la aplicación independientemente de su autoría
+
+
 # COMMITS MÁS SIGNIFICATIVOS
 
  ## Diego Ismael Cantador Trapero
