@@ -270,5 +270,24 @@ ADMIN: Podrá borrar todo lo que se encuentre en la aplicación independientemen
  -PostMapper: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Service/UserService.java](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Dto/PostMapper.java)
 
  -ControlRest UserName: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestUserName.java
+ 
 
+## Alberto Sastre Zorrilla
+
+- API Rest Doc: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/5c42ba89d0520ee86c9b8d797515af7e4cfadc82
+  
+- Versión Final: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/fd59c57c40d84b0f9de0525d256868ab473bea39
+  
+- Diagrama: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/8a4991003d0a8f0e3fee660e79998fc5127dbbac
+  
+
+### Archivos Importantes
+
+- ControlRestComment: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestComment.java
+
+- ControlRestPost: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestPost.java
+
+- ControlRestTopic: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestTopic.java
+
+- ControlRestUserName: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestUserName.java
 
