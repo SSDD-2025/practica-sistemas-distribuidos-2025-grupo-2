@@ -1,0 +1,873 @@
+{
+    "info": {
+        "name": "CodeHub Grupo2 API",
+        "_postman_id": "c7e8b9a2-4f8a-4b7e-9b3d-8f9e7c123456",
+        "description": "Colección para probar la API REST de CodeHub Grupo2",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Autenticación",
+            "item": [
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Login successful\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('accessToken');",
+                                    "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"password12345\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", "login"]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "UserNames",
+            "item": [
+                {
+                    "name": "Get Logged-in User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Logged-in user retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('username');",
+                                    "    pm.expect(jsonData).to.have.property('email');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/acc",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", "acc"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Users",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Users retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", ""]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('username');",
+                                    "    pm.expect(jsonData).to.have.property('email');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", "1"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User created\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "    pm.response.to.have.header(\"Location\");",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('username', 'newuser');",
+                                    "    pm.expect(jsonData).to.have.property('email', 'newuser@example.com');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": 0,\n    \"username\": \"newuser\",\n    \"password\": \"newpassword123\",\n    \"email\": \"newuser@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", ""]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User updated\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('username', 'updateduser');",
+                                    "    pm.expect(jsonData).to.have.property('email', 'updateduser@example.com');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": 1,\n    \"username\": \"updateduser\",\n    \"password\": \"updatedpassword123\",\n    \"email\": \"updateduser@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", "1"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User deleted\", function () {",
+                                    "    pm.response.to.have.status(204);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", "1"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User Profile Picture",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Profile picture retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    pm.response.to.have.header(\"Content-Type\", \"image/jpeg\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/1/image",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", "1", "image"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Set User Profile Picture",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Profile picture set\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "    pm.response.to.have.header(\"Location\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "imageFile",
+                                    "type": "file",
+                                    "src": ""
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/1/image",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", "1", "image"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update User Profile Picture",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Profile picture updated\", function () {",
+                                    "    pm.response.to.have.status(204);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "imageFile",
+                                    "type": "file",
+                                    "src": ""
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/1/image",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", "1", "image"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete User Profile Picture",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Profile picture deleted\", function () {",
+                                    "    pm.response.to.have.status(204);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/UserNames/1/image",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "UserNames", "1", "image"]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Topics",
+            "item": [
+                {
+                    "name": "Get All Topics",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Topics retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Topics/",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Topics", ""]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Topic by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Topic retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('topicName');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Topics/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Topics", "1"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Topic",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Topic created\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "    pm.response.to.have.header(\"Location\");",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('topicName', 'New Topic');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": 0,\n    \"topicName\": \"New Topic\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Topics/",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Topics", ""]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Topic",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Topic deleted\", function () {",
+                                    "    pm.response.to.have.status(204);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Topics/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Topics", "1"]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Posts",
+            "item": [
+                {
+                    "name": "Get All Posts",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Posts retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Posts/",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Posts", ""]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Post by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Post retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('title');",
+                                    "    pm.expect(jsonData).to.have.property('text');",
+                                    "    pm.expect(jsonData.user).to.have.property('id');",
+                                    "    pm.expect(jsonData.topic).to.have.property('id');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Posts/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Posts", "1"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Post",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Post created\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "    pm.response.to.have.header(\"Location\");",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('title', 'New Post');",
+                                    "    pm.expect(jsonData).to.have.property('text', 'Post content');",
+                                    "    pm.expect(jsonData.user).to.have.property('id', 1);",
+                                    "    pm.expect(jsonData.topic).to.have.property('id', 1);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": 0,\n    \"user\": {\"id\": 1},\n    \"title\": \"New Post\",\n    \"text\": \"Post content\",\n    \"topic\": {\"id\": 1}\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Posts/",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Posts", ""]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Post",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Post deleted\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Posts/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Posts", "1"]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Comments",
+            "item": [
+                {
+                    "name": "Get All Comments",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Comments retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Comments/",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Comments", ""]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Comment by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Comment retrieved\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('text');",
+                                    "    pm.expect(jsonData.user).to.have.property('id');",
+                                    "    pm.expect(jsonData.post).to.have.property('id');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Comments/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Comments", "1"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Comment",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Comment created\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "    pm.response.to.have.header(\"Location\");",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('text', 'New comment');",
+                                    "    pm.expect(jsonData.user).to.have.property('id', 1);",
+                                    "    pm.expect(jsonData.post).to.have.property('id', 1);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": 0,\n    \"user\": {\"id\": 1},\n    \"text\": \"New comment\",\n    \"post\": {\"id\": 1}\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Comments/",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Comments", ""]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Comment",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Comment deleted\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/Comments/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "Comments", "1"]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "https://localhost:8443"
+        },
+        {
+            "key": "accessToken",
+            "value": ""
+        }
+    ]
+}
