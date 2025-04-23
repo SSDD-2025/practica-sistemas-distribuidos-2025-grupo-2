@@ -182,7 +182,7 @@ Esta es la pantalla que aparece cuando entras al menú principal, desde donde se
  
  -Init.html: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/resources/templates/init.html
 
- ## Diego Ismael Cantador Trapero
+## Diego Ismael Cantador Trapero
 
 -Edición de perfil y mejora borrado comentarios: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/6c573be51b087c08327ae15c8a538546ee3d24a1
 
@@ -206,5 +206,38 @@ Esta es la pantalla que aparece cuando entras al menú principal, desde donde se
 
  -PostService: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Service/PostService.java
 
+
 # Diagrama de clases y Templates
 ![Descripción](READMEDATA/DiagramaClases2.png)
+
+
+
+
+
+# COMMITS MÁS SIGNIFICATIVOS
+
+ ## Diego Ismael Cantador Trapero
+
+-Manejo del admin más lógica de usuarios: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/6c573be51b087c08327ae15c8a538546ee3d24a1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/3b643ba2112d6ecc08e3d784231ddb0fc85b282a)
+
+-Primeros pasos en seguridad + SSL: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/a22431e65eaedfd9028fb0a1e721e3f5bc19ca7e](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/20846d44a2e93a8f7611d0d63b3ba1c3776f4f27)
+
+-Cambio completo a DTO con Burgos: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/f30e731699631170499de6360d777edd4c121f75](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/981ba4db41f0f96e1b89b955fdcdd53eff922bb6)
+
+-Arreglos generales (En ambas partes): [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/c339cf3740f30d5eb10c002b136e7bb96c70c045](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/4421361e2870d8d244bd44578e4189b82e9674ae)
+
+-Fin Arreglos: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/fef0e6daacd29f2b7be31ade22221ffc31b8079f](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/commit/489bb2351798ecb0bf4f75d41be9cf45f4a167ae)
+
+### Archivos Importantes
+
+ -Security: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control.java](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/tree/main/src/main/java/codehub/grupo2/Security)
+ 
+ -AdminController: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/resources/templates/editProfile.htmlç](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/ControlAdmin.java)
+
+ -Myprofile: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/resources/templates/myProfile.html
+
+ -UserServicers: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Service/UserService.java
+
+ -UserController: [https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Service/PostService.java](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/ControlUser.java)
+
+
