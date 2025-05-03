@@ -4,8 +4,12 @@ import java.net.URI;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import codehub.grupo2.DB.UserRepository;
+import codehub.grupo2.DB.Entity.UserName;
 import codehub.grupo2.Dto.CommentDTO;
 import codehub.grupo2.Service.CommentService;
 
@@ -17,17 +21,24 @@ import jakarta.validation.Valid;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @RestController
-@RequestMapping("/api/Comments")
+@RequestMapping("/api/comments")
 public class ControlRestComment {
 
     @Autowired
     private CommentService CommentService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @Operation(summary = "Get all comments")
     @ApiResponse(responseCode = "200", description = "Comments retrieved successfully")
+    @ApiResponse(responseCode = "204", description = "No comments found")
     @GetMapping("/")
-    public Collection<CommentDTO> getComments() {
-        return CommentService.getAllCommentsDTO();
+    public ResponseEntity<Collection<CommentDTO>> getComments() {
+        if (CommentService.getAllCommentsDTO().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(CommentService.getAllCommentsDTO());
     }
 
     @Operation(summary = "Get a comment by ID")
@@ -36,9 +47,12 @@ public class ControlRestComment {
             @ApiResponse(responseCode = "404", description = "Comment not found")
     })
     @GetMapping("/{id}")
-    public CommentDTO getComment(@PathVariable long id) {
-
-        return CommentService.getCommentByIdDTO(id);
+    public ResponseEntity<CommentDTO> getComment(@PathVariable long id) {
+        CommentDTO dto = CommentService.getCommentByIdDTO(id);
+        if (dto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dto);
     }
 
     @Operation(summary = "Create a new comment")
@@ -61,14 +75,26 @@ public class ControlRestComment {
     @Operation(summary = "Delete a comment by ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Comment deleted successfully"),
+            @ApiResponse(responseCode = "403", description = "Forbidden: User is not the owner of the comment"),
             @ApiResponse(responseCode = "404", description = "Comment not found")
     })
     @DeleteMapping("/{id}")
-    public CommentDTO deleteComment(@PathVariable long id) {
-        CommentDTO dto = CommentService.getCommentByIdDTO(id);
-        CommentService.deleteComment(dto.id());
-        return dto;
+    public ResponseEntity<String> deleteComment(@PathVariable long id) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+    
+        int deletedComment = CommentService.deleteCommentByUserAPI(id, username);
+        if (deletedComment == 1) {
+            return ResponseEntity.notFound().build(); 
+        }
+        else if (deletedComment == 2) {
+            return ResponseEntity.status(403).body("You are not the owner of this comment"); 
+        }else{
+        return ResponseEntity.ok().body("Comment deleted successfully"); 
+        }
+
     }
-   
+
 }
 

@@ -3,6 +3,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,9 +68,24 @@ public class CommentService {
     }
 
     @Transactional
+    public int deleteCommentByUserAPI(long commentId, String username) {
+        UserName user = userBD.findByUsername(username);
+        CommentDTO comment = getCommentByIdDTO(commentId);
+        if (comment == null) {
+            return 1; 
+        }
+        if (comment.user().id() != user.getId()) {
+            return 2;
+        }
+        deleteComment(commentId);
+        return 0;
+    }
+
+    @Transactional
     public void deleteCommentsByUser(long userId) {
         CommentBD.deleteByUserId(userId);
     }
+
     
     
     public List<Map<String, Object>> getCommentsWithOwnership(List<CommentDTO> comments, UserNameDTO user) {

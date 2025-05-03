@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import codehub.grupo2.Dto.PostDTO;
@@ -19,7 +21,7 @@ import jakarta.validation.Valid;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @RestController
-@RequestMapping("/api/Posts")
+@RequestMapping("/api/posts")
 public class ControlRestPost {
 
     @Autowired
@@ -29,10 +31,14 @@ public class ControlRestPost {
 
     @Operation(summary = "Get all posts")
     @ApiResponse(responseCode = "200", description = "Posts retrieved successfully")
+    @ApiResponse(responseCode = "204", description = "No posts found")
     @GetMapping("/")
-    public Collection<PostDTO> getPosts() {
-
-        return PostService.getAllPostDTO();
+    public ResponseEntity<Collection<PostDTO>> getPosts() {
+        Collection<PostDTO> posts = PostService.getAllPostDTO();
+        if (posts.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(posts);
     }
 
     @Operation(summary = "Get a post by ID")
@@ -41,9 +47,12 @@ public class ControlRestPost {
             @ApiResponse(responseCode = "404", description = "Post not found")
     })
     @GetMapping("/{id}")
-    public PostDTO getPost(@PathVariable long id) {
-
-        return PostService.getPostByIdDTO(id);
+    public ResponseEntity<PostDTO> getPost(@PathVariable long id) {
+        PostDTO dto = PostService.getPostByIdDTO(id);
+        if (dto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dto);
     }
 
     @Operation(summary = "Create a new post")
@@ -66,19 +75,25 @@ public class ControlRestPost {
     @Operation(summary = "Delete a post by ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Post deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Post not found")
-    })
+            @ApiResponse(responseCode = "403", description = "Forbidden: User is not the owner of the post"),
+            @ApiResponse(responseCode = "404", description = "Post not found")    })
     @DeleteMapping("/{id}")
     public ResponseEntity<PostDTO> deletePost(@PathVariable long id) {
-    PostDTO dto = PostService.getPostByIdDTO(id);
-    
-    if (dto == null) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(null);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+    PostDTO post = PostService.getPostByIdDTO(id);
+    if (post == null) {
+        return ResponseEntity.notFound().build();
     }
-
-    PostDTO deletedPost = PostService.deletePostDTO(dto.title());
-    return ResponseEntity.ok(deletedPost);
+    int isOwner = PostService.isOwnerPost(id, username);
+    if (isOwner == 1) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); 
+    } else if (isOwner == 2) {
+        PostDTO deletedPost = PostService.deletePostDTO(post.title());
+        return ResponseEntity.ok(deletedPost);
+    } else {
+        return ResponseEntity.notFound().build();
+    }
 }
 }
 

@@ -135,6 +135,18 @@ public class PostService {
         }
         return null;
     }
+
+    public int isOwnerPost(long id, String username) {
+        Post post = PostBD.findById(id).orElse(null);
+        if (post == null) {
+            return 1;
+        }
+        UserName user = UserBD.findByUsername(username);
+        if (user == null || !post.getUsername().getId().equals(user.getId())) {
+            return 2; 
+        }
+        return 0;
+    }
     
 
    

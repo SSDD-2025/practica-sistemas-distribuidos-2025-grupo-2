@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import codehub.grupo2.Dto.TopicDTO;
@@ -26,10 +28,14 @@ public class ControlRestTopic {
 
 	@Operation(summary = "Get all topics")
 	@ApiResponse(responseCode = "200", description = "Topics retrieved successfully")
+	@ApiResponse(responseCode = "204", description = "No topics found")
 	@GetMapping("/")
-	public Collection<TopicDTO> getTopics() {
-
-		return TopicService.getAllTopicsDTO();
+	public ResponseEntity<Collection<TopicDTO>> getTopics() {
+		Collection<TopicDTO> topics = TopicService.getAllTopicsDTO();
+		if (topics.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(topics);
 	}
 
 	@Operation(summary = "Get a topic by ID")
@@ -38,9 +44,12 @@ public class ControlRestTopic {
 			@ApiResponse(responseCode = "404", description = "Topic not found")
 	})
 	@GetMapping("/{id}")
-	public Optional<TopicDTO> getTopic(@PathVariable long id) {
-
-		return TopicService.getTopicByIdDTO(id);
+	public ResponseEntity<TopicDTO> getTopic(@PathVariable long id) {
+		Optional<TopicDTO> dto = TopicService.getTopicByIdDTO(id);
+		if (dto.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(dto.get());
 	}
 
 	@Operation(summary = "Create a new topic")
@@ -58,11 +67,22 @@ public class ControlRestTopic {
 	@Operation(summary = "Delete a topic by ID")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Topic deleted successfully"),
-			@ApiResponse(responseCode = "404", description = "Topic not found")
+			@ApiResponse(responseCode = "404", description = "Topic not found"),
+			@ApiResponse(responseCode = "403", description = "Access denied")
 	})
 	@DeleteMapping("/{id}")
-	public TopicDTO deleteTopic(@PathVariable long id) {
-        return TopicService.deleteTopicDTO(id);
+	public ResponseEntity<TopicDTO> deleteTopic(@PathVariable long id) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+		if (!username.equals("admin")) {
+			return ResponseEntity.status(403).build(); 
+		}
+		Optional<TopicDTO> dto = TopicService.getTopicByIdDTO(id);
+		if (dto.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		TopicService.deleteTopic(dto.get().id());
+		return ResponseEntity.ok(dto.get());
 	}
 
 }
