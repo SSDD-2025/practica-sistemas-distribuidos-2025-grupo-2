@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>es.codeurjc</groupId>
-	<artifactId>ejemplo-practica2</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>codehub</artifactId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<parent>
@@ -94,6 +94,9 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
+					<image>
+					<name>sonaca/codehub:${project.version}</name>
+					</image>
 					<source>21</source>
 					<target>21</target>
 					<annotationProcessorPaths>
