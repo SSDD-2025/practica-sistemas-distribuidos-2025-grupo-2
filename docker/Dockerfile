@@ -17,8 +17,8 @@ COPY /src /project/src
 RUN mvn -B package -DskipTests
 
 
-# Imagen base para el contenedor de la aplicación
-FROM eclipse-temurin:21-jre
+# Imagen base para el contenedor de la aplicación // uso alpine porque es más ligera
+FROM eclipse-temurin:21-jre-alpine
 
 # Define el directorio de trabajo donde se encuentra el JAR
 WORKDIR /usr/src/app/
