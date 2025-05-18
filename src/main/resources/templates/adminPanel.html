@@ -221,10 +221,10 @@
             <p><strong>Post:</strong> {{post.title}}</p>
             <p><strong>Date:</strong> {{date}}</p>
             <p><strong>Text:</strong> {{text}}</p>
-            <form action="/admin/deleteComment" method="post" >
-                <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
-                <input type="hidden" name="comment" value="{{id}}" />
-                <button class="delete-button" type="submit">Delete</button>
+            <form action="/admin/deleteComment" method="post">
+              <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
+              <input type="hidden" name="comment" value="{{id}}" />
+              <button class="delete-button" type="submit">Delete</button>
             </form>
           </li>
           {{/comments}}

@@ -5,12 +5,4 @@ import java.sql.Blob;
 
 import codehub.grupo2.DB.Entity.Post;
 
-public record UserNameDTO(
-    Long id,
-    String username,
-    String password,
-    String email,
-    Blob profilePicture,
-    List<PostDTO> posts,
-    List<String> roles) {
-}
+public record UserNameDTO(Long id, String username, String email, String password, List<String> roles) {}

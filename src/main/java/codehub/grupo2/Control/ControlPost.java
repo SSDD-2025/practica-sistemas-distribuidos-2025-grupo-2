@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import codehub.grupo2.Component.PostComponent;
 import codehub.grupo2.Component.UserComponent;
+import codehub.grupo2.Dto.CommentDTO;
 import codehub.grupo2.Dto.PostDTO;
 import codehub.grupo2.Dto.TopicDTO;
 import codehub.grupo2.Dto.UserNameDTO;
@@ -98,7 +99,9 @@ public class ControlPost {
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 
             Map<String, Object> postData = PostService.getPostWithOwnership(post, user);
-            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.comments(), user);
+            List<CommentDTO> comments = CommentService.getCommentsByPostId(post.id());
+            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(comments, user);
+
 
             model.addAttribute("isLogged", isLogged);
             model.addAttribute("csrfToken", token);
@@ -129,7 +132,8 @@ public class ControlPost {
             CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 
             Map<String, Object> postData = PostService.getPostWithOwnership(post, user);
-            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(post.comments(), user);
+            List<Map<String, Object>> commentData = CommentService.getCommentsWithOwnership(CommentService.getCommentsByPostId(post.id())
+, user);
 
             model.addAttribute("isLogged", isLogged);
             model.addAttribute("csrfToken", token);

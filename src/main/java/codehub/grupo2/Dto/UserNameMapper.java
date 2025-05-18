@@ -2,6 +2,7 @@ package codehub.grupo2.Dto;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,15 +10,16 @@ import org.mapstruct.Mapping;
 import codehub.grupo2.DB.Entity.UserName;
 
 @Mapper(componentModel = "spring")
-public interface UserNameMapper {
+public abstract class UserNameMapper {
 
-    @Mapping(target = "profilePicture", ignore = true)
-    @Mapping(target = "posts", ignore = true)
-    UserNameDTO toDTO(UserName userName);
+    public abstract UserNameDTO toDTO(UserName user);
 
-    @Mapping(target = "posts", ignore = true)
-    UserName toDomain(UserNameDTO userNameDTO);
+    public abstract UserName toDomain(UserNameDTO dto);
 
-    Collection<UserNameDTO> toDTOs(List<UserName> users);
+    public List<UserNameDTO> toDTOs(List<UserName> users) {
+        return users.stream()
+            .map(this::toDTO)
+            .collect(Collectors.toList());
+    }
 
 }

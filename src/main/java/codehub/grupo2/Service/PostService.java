@@ -47,16 +47,17 @@ public class PostService {
 
     public PostDTO getPostDTO(String title) {
         Post post = PostBD.findByTitle(title);
-        return PostMapper.toDTO(post);
+        return post != null ? PostMapper.toDTO(post) : null;
     }
 
     public List<PostDTO> getPostByTopicDTO(TopicDTO topic) {
         if (topic == null || topic.id() == null) {
             throw new IllegalArgumentException("TopicDTO or its ID cannot be null");
         }
-        Optional<Topic> topicEntity = TopicBD.findById(topic.id());
-        List<Post> list = PostBD.findByTopic(topicEntity.get());
-        return PostMapper.toDTOs(list);
+        Topic topicEntity = TopicBD.findById(topic.id())
+                .orElseThrow(() -> new EntityNotFoundException("Topic with id " + topic.id() + " not found"));
+        List<Post> list = PostBD.findByTopic(topicEntity);
+        return list != null ? PostMapper.toDTOs(list) : List.of();
     }
 
     public List<PostDTO> findPostsByRegexDTO(String regex) {
@@ -142,7 +143,7 @@ public class PostService {
             return 1;
         }
         UserName user = UserBD.findByUsername(username);
-        if (user == null || !post.getUsername().getId().equals(user.getId())) {
+        if (user == null || !post.getUser().getId().equals(user.getId())) {
             return 2; 
         }
         return 0;

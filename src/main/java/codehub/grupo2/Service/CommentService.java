@@ -139,7 +139,7 @@ public class CommentService {
         if (commentDTO.user() == null || commentDTO.user().id() == null) {
             throw new IllegalArgumentException("user cannot be null and must have a valid ID");
         }
-        if (commentDTO.post() == null || commentDTO.post().id() == null) {
+        if (commentDTO.postId() == null || commentDTO.postId() == null) {
             throw new IllegalArgumentException("post cannot be null and must have a valid ID");
         }
         if (commentDTO.text().length() > 140) {
@@ -147,8 +147,8 @@ public class CommentService {
         }
         UserName user = userBD.findById(commentDTO.user().id())
                 .orElseThrow(() -> new EntityNotFoundException("user with id " + commentDTO.user().id() + " not found"));
-        Post post = PostBD.findById(commentDTO.post().id())
-                .orElseThrow(() -> new EntityNotFoundException("post with id " + commentDTO.post().id() + " not found"));
+        Post post = PostBD.findById(commentDTO.postId())
+                .orElseThrow(() -> new EntityNotFoundException("post with id " + commentDTO.postId() + " not found"));
         Comment comment = new Comment(user, commentDTO.text(), post);
         Comment savedComment = CommentBD.save(comment);
         post.getComments().add(savedComment);
@@ -156,25 +156,11 @@ public class CommentService {
         return commentMapper.toDTO(savedComment);
     }
 
-    public List<CommentDTO> getCommentsByPostId(Long postId) {
-        List<Comment> comments = commentRepository.findByPostId(postId);
-        return comments.stream()
-            .map(comment -> new CommentDTO(
-                comment.getId(),
-                comment.getDate(),
-                comment.getText(),
-                userNameMapper.toDTO(comment.getUser()),
-                new PostDTO(
-                    comment.getPost().getId(),
-                    comment.getPost().getDate(),
-                    comment.getPost().getTitle(),
-                    comment.getPost().getText(),
-                    userNameMapper.toDTO(comment.getPost().getUsername()),
-                    null,
-                    topicMapper.toDTO(comment.getPost().getTopic())
-                )
-            ))
-            .collect(Collectors.toList());
-    }
+public List<CommentDTO> getCommentsByPostId(Long postId) {
+    List<Comment> comments = commentRepository.findByPostId(postId);
+    return comments.stream()
+        .map(commentMapper::toDTO)
+        .collect(Collectors.toList());
+}
     
 }

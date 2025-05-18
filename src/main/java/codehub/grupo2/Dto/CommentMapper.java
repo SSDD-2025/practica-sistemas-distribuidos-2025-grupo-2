@@ -2,25 +2,51 @@ package codehub.grupo2.Dto;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import codehub.grupo2.DB.Entity.Comment;
 import codehub.grupo2.DB.Entity.Post;
+import codehub.grupo2.Service.PostService;
 
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {UserNameMapper.class})
-public interface CommentMapper {
-    @Mapping(target = "post", ignore = true)
-    @Mapping(target = "user", expression = "java(userNameMapper.toDTO(comment.getUser()))")
-    CommentDTO toDTO(Comment comment);
+@Mapper(componentModel = "spring")
+public abstract class CommentMapper {
 
-    @Mapping(target = "post", ignore = true)
-    List<CommentDTO> toDTOs(Collection<Comment> comments);
+    @Autowired
+    protected UserNameMapper userNameMapper;
 
-    @Mapping(target = "post", ignore = true)
-    Comment toDomain(CommentDTO commentDTO);
+    @Autowired
+    protected PostService postService;
 
-    @Mapping(target = "comments", ignore = true)
-    Post toDomain(PostDTO postDTO);
+    @Autowired
+    protected PostMapper postMapper;
+
+    public CommentDTO toDTO(Comment comment) {
+        return new CommentDTO(
+            comment.getId(),
+            comment.getText(),
+            comment.getDate(),
+            userNameMapper.toDTO(comment.getUser()),
+            comment.getPost().getId()
+        );
+    }
+
+    public Comment toDomain(CommentDTO dto) {
+        Comment comment = new Comment(
+            userNameMapper.toDomain(dto.user()),
+            dto.text(),
+            postMapper.toDomain(postService.getPostByIdDTO(dto.postId()))
+);
+        comment.setDate(dto.date());
+        return comment;
+    }
+public List<CommentDTO> toDTOs(Collection<Comment> comments) {
+    if (comments == null) {
+        return List.of();
+    }
+    return comments.stream().map(this::toDTO).toList();
 }
+}
+

@@ -223,16 +223,15 @@ public class UserService {
         return posts.stream()
             .map(post -> new PostDTO(
                 post.getId(),
-                post.getDate(),
                 post.getTitle(),
                 post.getText(),
-                userNameMapper.toDTO(post.getUsername()),
-                commentService.getCommentsByPostId(post.getId()),
+                post.getDate(),
+                userNameMapper.toDTO(post.getUser()),
                 topicMapper.toDTO(post.getTopic())
             ))
             .collect(Collectors.toList());
     }
-    
+
 
 
 }

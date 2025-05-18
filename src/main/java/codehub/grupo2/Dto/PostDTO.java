@@ -6,13 +6,4 @@ import codehub.grupo2.DB.Entity.Comment;
 import codehub.grupo2.DB.Entity.Topic;
 import codehub.grupo2.DB.Entity.UserName;
 
-public record PostDTO(
-        Long id,
-        LocalDate date,
-        String title,
-        String text,
-        UserNameDTO user,
-        List<CommentDTO> comments,
-        TopicDTO topic
-) {
-}
+public record PostDTO(Long id, String title, String text, LocalDate date, UserNameDTO user, TopicDTO topic) {}

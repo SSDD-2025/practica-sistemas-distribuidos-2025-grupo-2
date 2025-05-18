@@ -30,20 +30,18 @@ public class UserName{
     private List<Post> posts = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> rol;
+    private List<String> roles = new ArrayList<>(List.of("USER"));
 
         public UserName() {
     }
 
-    public UserName(String username, String password, String email){
+    public UserName(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.profilePicture = null;
-        this.rol = new ArrayList<>();
-        this.rol.add("USER");
+        this.posts = new ArrayList<>();
     }
-    
 
     public String getUsername(){
         return this.username;
@@ -58,11 +56,11 @@ public class UserName{
     }
 
     public List<String> getRoles() {
-        return rol;
+        return roles;
     }
 
     public void setRoles(List<String> roles) {
-        this.rol = roles;
+        this.roles = roles;
     }
 
     public List<Post> getPosts(){
@@ -91,6 +89,8 @@ public class UserName{
     public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
+
+    
 
     public Long getId(){
         return this.id;

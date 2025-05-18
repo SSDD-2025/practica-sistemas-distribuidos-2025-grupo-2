@@ -50,7 +50,7 @@ public class ControlUser {
     @PostMapping("/register")
     public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        UserNameDTO userDTO = new UserNameDTO(null, username, password, email, null, null, null);
+        UserNameDTO userDTO = new UserNameDTO(null, username, password, email, null);
         userService.registerUsername(userDTO.username(), userDTO.password(), userDTO.email());
         model.addAttribute("check", userDTO);
         model.addAttribute("csrfToken", token);
@@ -201,7 +201,7 @@ public String GoAccPost(Model model, HttpServletRequest request) throws SQLExcep
             return "redirect:/home";
         }
 
-        UserNameDTO updatedUserDTO = new UserNameDTO(user.id(), username, password, email, null, null, null);
+        UserNameDTO updatedUserDTO = new UserNameDTO(user.id(), username, password, email, null);
         if (userService.editUser(updatedUserDTO, user.id()) == 1) {
             model.addAttribute("error", "Error updating the profile, make sure you followed our rules");
             return "myProfile";
@@ -217,7 +217,7 @@ public String GoAccPost(Model model, HttpServletRequest request) throws SQLExcep
         model.addAttribute("check", "User Uploaded Correctly");
         model.addAttribute("csrfToken", token);
         model.addAttribute("user", updatedUser); 
-        model.addAttribute("posts", updatedUser.posts());
+        model.addAttribute("posts", userService.getUserPosts(updatedUser.id()));
         model.addAttribute("profilePicture", userService.convertBlobToBase64(userService.getUserImage(updatedUser.id())));
         
         return "myProfile";

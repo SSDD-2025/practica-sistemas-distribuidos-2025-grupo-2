@@ -15,14 +15,13 @@ public class Topic {
     private String topicName;
 
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
 
     protected Topic() {}
 
-    public Topic(String topicName){
+    public Topic(String topicName) {
         this.topicName = topicName;
-        this.posts = new ArrayList<>();
-    }       
+    }    
 
     public String getTopicName(){
         return this.topicName;
@@ -47,6 +46,11 @@ public class Topic {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public void setId(Long id2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setId'");
     }
 
 }

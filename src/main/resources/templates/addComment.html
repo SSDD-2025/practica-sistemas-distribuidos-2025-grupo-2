@@ -11,6 +11,7 @@
         <h1>Create a comment</h1>
         <form action="/createComment" method="post">
             <input type="hidden" name="_csrf" value="{{csrfToken.token}}">
+            <input type="hidden" name="postId" value="{{postId}}">
             <div class="form-group">
                 <label for="content">Comment:</label>
                 <textarea id="content" name="content" placeholder="Write your comment" required></textarea>

@@ -18,7 +18,7 @@ public class Post {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private UserName user;
 
 
@@ -41,7 +41,7 @@ public class Post {
         this.topic = topic;
     }
 
-    public UserName getUsername(){
+    public UserName getUser() {
         return this.user;
     }
 

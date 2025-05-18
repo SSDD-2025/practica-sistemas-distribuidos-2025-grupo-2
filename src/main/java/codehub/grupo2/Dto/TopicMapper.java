@@ -7,14 +7,24 @@ import codehub.grupo2.DB.Entity.Topic;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
-public interface TopicMapper {
-    @Mapping(target = "posts", ignore = true)
-    TopicDTO toDTO(Topic Topic);
-    @Mapping(target = "posts", ignore = true)
-    List<TopicDTO> toDTOs(Collection<Topic> Topics);
+public class TopicMapper {
 
-    @Mapping(target = "posts", ignore = true)
-    Topic toDomain(TopicDTO TopicDTO);
+    public TopicDTO toDTO(Topic topic) {
+        return new TopicDTO(topic.getId(), topic.getTopicName());
+    }
+
+    public Topic toDomain(TopicDTO dto) {
+        Topic topic = new Topic(dto.topicName());
+        topic.setId(dto.id());
+        return topic;
+    }
+
+    public List<TopicDTO> toDTOs(List<Topic> topics) {
+        return topics.stream()
+            .map(this::toDTO)
+            .collect(Collectors.toList());
+    }
 }

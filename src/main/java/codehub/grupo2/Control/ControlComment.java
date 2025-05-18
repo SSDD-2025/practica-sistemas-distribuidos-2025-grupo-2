@@ -50,22 +50,38 @@ public class ControlComment {
     }
 
     @PostMapping("/createComment")
-    public String createComment(@RequestParam String content, Model model, HttpServletRequest request) {
+    public String createComment(
+        @RequestParam String content,
+        @RequestParam long postId,
+        Model model,
+        HttpServletRequest request
+    ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         UserNameDTO user = userDetails.getUserNameDTO(); 
+
         if (user == null) {
             return "redirect:/home";  
         }
-        PostDTO post = postComponent.getPost();
-        if (post == null || PostService.getPostByIdDTO(post.id()) == null) {
+
+        PostDTO post = PostService.getPostByIdDTO(postId);
+        if (post == null) {
             model.addAttribute("error", "Post not found or deleted");
             return "redirect:/post";    
         }
-        CommentDTO commentDTO = new CommentDTO(null, LocalDate.now(), content, user, post);
+
+        CommentDTO commentDTO = new CommentDTO(
+            null,
+            content,
+            LocalDate.now(),
+            user,
+            postId
+        );
         CommentService.registerCommentDTO(commentDTO);
-        return "redirect:/showMoreP/" + post.id();
+
+        return "redirect:/showMoreP/" + postId;
     }
+
 
     @PostMapping("/deleteComment")
     public String deleteComment(@RequestParam long id, Model model, HttpServletRequest request) {
@@ -79,7 +95,7 @@ public class ControlComment {
         CommentDTO comment = CommentService.getCommentByIdDTO(id);
         if (comment == null || !comment.user().id().equals(user.id())) {
             model.addAttribute("error", "You can't delete this comment");
-            return "redirect:/showMoreP/" + (comment != null ? comment.post().id() : "post");
+            return "redirect:/showMoreP/" + (comment != null ? comment.postId() : "post");
         }
 
         int comp = CommentService.deleteComment(id);
