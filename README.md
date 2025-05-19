@@ -332,7 +332,7 @@ docker run --name mysql-container \
   -e MYSQL_DATABASE=pixeltrade \
   -e MYSQL_PASSWORD=password \
   -p 3306:3306 \
-  -d mysql:8
+  -d mysql:9.2
 
 - En la máquina de aplicación, lanza:
 docker run -p 8443:8443 \
@@ -342,6 +342,10 @@ docker run -p 8443:8443 \
 ### Acceder a la aplicación en producción:
 - https://193.147.60.42:8443/
 
-User        Password
-sonaca
+
+| Usuario de GitHub       | Password                          |
+|-------------------------|-----------------------------------|
+| sonaca                  | 123451234512345                   |
+| admin                   | adminPassword                     |
+
 
