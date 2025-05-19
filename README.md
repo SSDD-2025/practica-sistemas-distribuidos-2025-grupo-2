@@ -342,3 +342,6 @@ docker run -p 8443:8443 \
 ### Acceder a la aplicación en producción:
 - https://193.147.60.42:8443/
 
+User        Password
+sonaca
+
