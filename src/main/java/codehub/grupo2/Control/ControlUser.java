@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -191,37 +192,45 @@ public String GoAccPost(Model model, HttpServletRequest request) throws SQLExcep
     }
 
     @PostMapping("/updateProfile")
-    public String updateProfile(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model, HttpServletRequest request) throws SQLException, IOException {
+public String updateProfile(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model, HttpServletRequest request) throws SQLException, IOException {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()) {
+        return "redirect:/home";
+    }
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    UserNameDTO user = userDetails.getUserNameDTO();
+    
+    if (user == null) {
+        return "redirect:/home";
+    }
+
+    UserNameDTO updatedUserDTO = new UserNameDTO(user.id(), username, email, password, null);
+    if (userService.editUser(updatedUserDTO, user.id()) == 1) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserNameDTO user = userDetails.getUserNameDTO();
-        
-        if (user == null) {
-            return "redirect:/home";
-        }
-
-        UserNameDTO updatedUserDTO = new UserNameDTO(user.id(), username, password, email, null);
-        if (userService.editUser(updatedUserDTO, user.id()) == 1) {
-            model.addAttribute("error", "Error updating the profile, make sure you followed our rules");
-            return "myProfile";
-        }
-
-        UserNameDTO updatedUser = userService.getUser(username);
-        CustomUserDetails newDetails = new CustomUserDetails(updatedUser);
-        Authentication newAuth = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-            newDetails, authentication.getCredentials(), newDetails.getAuthorities()
-        );
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-        model.addAttribute("check", "User Uploaded Correctly");
-        model.addAttribute("csrfToken", token);
-        model.addAttribute("user", updatedUser); 
-        model.addAttribute("posts", userService.getUserPosts(updatedUser.id()));
-        model.addAttribute("profilePicture", userService.convertBlobToBase64(userService.getUserImage(updatedUser.id())));
-        
+        model.addAttribute("csrfToken", token != null ? token : request.getAttribute("_csrf")); // Fallback
+        model.addAttribute("error", "Error updating the profile, make sure you followed our rules");
+        model.addAttribute("user", user);
+        model.addAttribute("posts", userService.getUserPosts(user.id()));
+        model.addAttribute("profilePicture", userService.convertBlobToBase64(userService.getUserImage(user.id())));
         return "myProfile";
     }
+
+    UserNameDTO updatedUser = userService.getUser(username);
+    CustomUserDetails newDetails = new CustomUserDetails(updatedUser);
+    Authentication newAuth = new UsernamePasswordAuthenticationToken(
+        newDetails, authentication.getCredentials(), newDetails.getAuthorities()
+    );
+    SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+    CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+    model.addAttribute("csrfToken", token != null ? token : request.getAttribute("_csrf")); // Fallback
+    model.addAttribute("check", "User Updated Correctly");
+    model.addAttribute("user", updatedUser);
+    model.addAttribute("posts", userService.getUserPosts(updatedUser.id()));
+    model.addAttribute("profilePicture", userService.convertBlobToBase64(userService.getUserImage(updatedUser.id())));
+    
+    return "myProfile";
+}
 
     @GetMapping("/uploadProfilePicture")
     public String getMethodName(Model model, HttpServletRequest request) {

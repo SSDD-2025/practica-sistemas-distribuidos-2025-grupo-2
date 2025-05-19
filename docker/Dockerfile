@@ -11,11 +11,10 @@ COPY pom.xml /project/
 RUN mvn dependency:go-offline
 
 # Copy the project source code
-COPY /src /project/src
+COPY src /project/src
 
 # Build the project and download libraries
 RUN mvn -B package -DskipTests
-
 
 # Base image for the application container (Alpine is used for a smaller image)
 FROM eclipse-temurin:21-jre-alpine
