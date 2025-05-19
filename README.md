@@ -291,3 +291,54 @@ ADMIN: Podrá borrar todo lo que se encuentre en la aplicación independientemen
 
 - ControlRestUserName: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestUserName.java
 
+###Entrega 3
+
+## docker-compose.prod.yml
+Este archivo está diseñado para lanzar de forma conjunta:
+- Un contenedor con la aplicación web, utilizando una imagen ya publicada en DockerHub.
+- Un contenedor de base de datos MySQL, basado en la imagen oficial. Incluye configuración de volumen persistente para conservar los datos entre reinicios o eliminaciones.
+- Para iniciar el entorno en modo producción: docker compose -f docker-compose.prod.yml up
+- Cuando todo esté activo, puedes entrar a la aplicación desde: https://localhost:8443
+
+## docker-compose.local.yml
+- Este fichero es útil para entornos de desarrollo. Si no tienes una imagen preconstruida de la app, se generará automáticamente a partir del Dockerfile.
+- Utiliza MySQL como base de datos, con un volumen local del sistema anfitrión para mantener los datos.
+- Para lanzarlo: docker compose -f docker-compose.local.yml up
+- Una vez desplegado, accede a la aplicación desde tu navegador: https://localhost:8443
+
+## Construir la imagen Docker
+# A partir del Dockerfile
+docker build -f ./Dockerfile -t sonaca/codehub:version ..
+
+
+# Usando Buildpacks (Spring Boot)
+- Spring Boot permite generar imágenes de forma sencilla con Buildpacks. Para ello, basta con ejecutar: mvn spring-boot:build-image
+
+## Scripts automáticos
+Para facilitar el proceso, también se incluyen scripts:
+- Crear imagen: ./create_image.sh
+- Subir imagen a DockerHub: ./publish_image.sh
+Estos scripts automatizan la construcción y publicación si todo está correctamente configurado.
+
+## Despliegue en entornos virtuales (URJC)
+- Asegúrate de instalar Docker en ambas máquinas virtuales: curl -fsSL https://get.docker.com -o get-docker.sh
+- Servidor de aplicación: ssh -i ssh-keys/sidi12.key vmuser@193.147.60.52
+- Servidor de base de datos: ssh -i ssh-keys/sidi12.key vmuser@sidi12-1.sidi.etsii.urjc.es
+
+# Desplegar MySQL en la máquina de base de datos
+- Ejecuta lo siguiente en la segunda máquina:
+docker run --name mysql-container \
+  -e MYSQL_ROOT_PASSWORD=password \
+  -e MYSQL_DATABASE=pixeltrade \
+  -e MYSQL_PASSWORD=password \
+  -p 3306:3306 \
+  -d mysql:8
+
+- En la máquina de aplicación, lanza:
+docker run -p 8443:8443 \
+  -e SPRING_DATASOURCE_URL=jdbc: mysql://192.168.110.7/pixeltrade \
+  sonaca/pixeltrade:1.0.0
+
+# Acceder a la aplicación en producción:
+- https://
+
