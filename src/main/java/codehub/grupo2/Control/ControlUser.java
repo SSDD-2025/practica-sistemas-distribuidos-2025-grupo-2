@@ -50,7 +50,7 @@ public class ControlUser {
     @PostMapping("/register")
     public String Register(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model, HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        UserNameDTO userDTO = new UserNameDTO(null, username, password, email, null);
+        UserNameDTO userDTO = new UserNameDTO(null, username, email, password, null);
         userService.registerUsername(userDTO.username(), userDTO.password(), userDTO.email());
         model.addAttribute("check", userDTO);
         model.addAttribute("csrfToken", token);
