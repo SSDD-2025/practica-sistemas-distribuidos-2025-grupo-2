@@ -291,7 +291,7 @@ ADMIN: Podrá borrar todo lo que se encuentre en la aplicación independientemen
 
 - ControlRestUserName: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestUserName.java
 
-###Entrega 3
+### Entrega 3
 
 ## docker-compose.prod.yml
 Este archivo está diseñado para lanzar de forma conjunta:
