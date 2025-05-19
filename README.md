@@ -291,7 +291,7 @@ ADMIN: Podrá borrar todo lo que se encuentre en la aplicación independientemen
 
 - ControlRestUserName: https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-2/blob/main/src/main/java/codehub/grupo2/Control/Rest/ControlRestUserName.java
 
-### Entrega 3
+# Entrega 3
 
 ## docker-compose.prod.yml
 Este archivo está diseñado para lanzar de forma conjunta:
@@ -307,11 +307,11 @@ Este archivo está diseñado para lanzar de forma conjunta:
 - Una vez desplegado, accede a la aplicación desde tu navegador: https://localhost:8443
 
 ## Construir la imagen Docker
-# A partir del Dockerfile
+### A partir del Dockerfile
 docker build -f ./Dockerfile -t sonaca/codehub:version ..
 
 
-# Usando Buildpacks (Spring Boot)
+### Usando Buildpacks (Spring Boot)
 - Spring Boot permite generar imágenes de forma sencilla con Buildpacks. Para ello, basta con ejecutar: mvn spring-boot:build-image
 
 ## Scripts automáticos
@@ -325,7 +325,7 @@ Estos scripts automatizan la construcción y publicación si todo está correcta
 - Servidor de aplicación: ssh -i ssh-keys/sidi12.key vmuser@193.147.60.52
 - Servidor de base de datos: ssh -i ssh-keys/sidi12.key vmuser@sidi12-1.sidi.etsii.urjc.es
 
-# Desplegar MySQL en la máquina de base de datos
+### Desplegar MySQL en la máquina de base de datos
 - Ejecuta lo siguiente en la segunda máquina:
 docker run --name mysql-container \
   -e MYSQL_ROOT_PASSWORD=password \
@@ -339,6 +339,6 @@ docker run -p 8443:8443 \
   -e SPRING_DATASOURCE_URL=jdbc: mysql://192.168.110.7/pixeltrade \
   sonaca/pixeltrade:1.0.0
 
-# Acceder a la aplicación en producción:
-- https://
+### Acceder a la aplicación en producción:
+- https://193.147.60.42:8443/
 
