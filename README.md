@@ -343,7 +343,7 @@ docker run -p 8443:8443 \
 - https://193.147.60.42:8443/
 
 
-| Usuario de GitHub       | Password                          |
+| Usuario                 | Password                          |
 |-------------------------|-----------------------------------|
 | sonaca                  | 123451234512345                   |
 | admin                   | adminPassword                     |
